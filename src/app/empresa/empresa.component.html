@@ -1,0 +1,20 @@
+<div class="div-space " [@routerTransition]>
+    <div class="row">
+        <div class="col-6">
+            <h1 class="text-muted">Empresa </h1>
+        </div>
+    </div>  
+    <div class="row">
+        <table class="col">
+            <tr>
+                <th class=" text-center">Número de empresa</th>
+                <th class=" text-center"> Empresa </th>
+            </tr>
+            <tr class="text-center" *ngFor="let empresa of resultadoEmpresas; let i = index;">
+               <td class="text-center"> {{ empresa.em_IdEmpresa }} </td>
+               <td class="text-center"> {{ empresa.em_Descripcion }} </td>
+            </tr>
+        </table>
+    </div>  
+</div>
+

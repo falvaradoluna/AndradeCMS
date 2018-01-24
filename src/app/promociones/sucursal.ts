@@ -1,0 +1,23 @@
+export interface ISucursal {
+    su_IdSucursal:      number,
+    su_IdEmpresa:       number,
+    su_NombreCto:       string,   
+    su_Descripcion:     string,
+    su_IdEstatus:       number,
+    su_BaseDeDatos:     string,
+    su_IP:              string,
+    su_Calle:           string,
+    su_Numero:          string,
+    su_Colonia:         string,
+    su_Delegacion:      string,
+    su_Estado:          string,
+    su_CodigoPostal:    number,
+    su_telefono:        string,
+    su_Correo:          string,
+    su_Horario:         string,
+    su_WhatsApp:        number,
+    su_Latitud:         string,
+    su_Longitud:        string,
+    su_Ubicacion:       string,
+    su_Matriz:          number
+}
