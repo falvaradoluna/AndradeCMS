@@ -1,0 +1,114 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install',
+1 verbose cli   'animations@4.0.0' ]
+2 info using npm@3.10.10
+3 info using node@v6.10.1
+4 silly loadCurrentTree Starting
+5 silly install loadCurrentTree
+6 silly install readLocalPackageData
+7 silly fetchPackageMetaData animations@4.0.0
+8 silly fetchNamedPackageData animations
+9 silly mapToRegistry name animations
+10 silly mapToRegistry using default registry
+11 silly mapToRegistry registry https://registry.npmjs.org/
+12 silly mapToRegistry data Result {
+12 silly mapToRegistry   raw: 'animations',
+12 silly mapToRegistry   scope: null,
+12 silly mapToRegistry   escapedName: 'animations',
+12 silly mapToRegistry   name: 'animations',
+12 silly mapToRegistry   rawSpec: '',
+12 silly mapToRegistry   spec: 'latest',
+12 silly mapToRegistry   type: 'tag' }
+13 silly mapToRegistry uri https://registry.npmjs.org/animations
+14 verbose request uri https://registry.npmjs.org/animations
+15 verbose request no auth needed
+16 info attempt registry request try #1 at 18:12:26
+17 verbose request id 7812e5b27a7af92c
+18 http request GET https://registry.npmjs.org/animations
+19 http 200 https://registry.npmjs.org/animations
+20 verbose headers { 'content-type': 'application/json; charset=UTF-8',
+20 verbose headers   server: 'UploadServer',
+20 verbose headers   'cache-control': 'max-age=300',
+20 verbose headers   'last-modified': 'Fri, 8 Dec 2017 17:10:41 GMT',
+20 verbose headers   etag: '"5a2ac791-dc7"',
+20 verbose headers   'content-encoding': 'gzip',
+20 verbose headers   'content-length': '1523',
+20 verbose headers   'accept-ranges': 'bytes',
+20 verbose headers   date: 'Fri, 12 Jan 2018 00:12:25 GMT',
+20 verbose headers   via: '1.1 varnish',
+20 verbose headers   age: '0',
+20 verbose headers   connection: 'keep-alive',
+20 verbose headers   'x-served-by': 'cache-dfw18633-DFW',
+20 verbose headers   'x-cache': 'MISS',
+20 verbose headers   'x-cache-hits': '0',
+20 verbose headers   'x-timer': 'S1515715946.881847,VS0,VE67',
+20 verbose headers   vary: 'Accept-Encoding, Accept' }
+21 silly get cb [ 200,
+21 silly get   { 'content-type': 'application/json; charset=UTF-8',
+21 silly get     server: 'UploadServer',
+21 silly get     'cache-control': 'max-age=300',
+21 silly get     'last-modified': 'Fri, 8 Dec 2017 17:10:41 GMT',
+21 silly get     etag: '"5a2ac791-dc7"',
+21 silly get     'content-encoding': 'gzip',
+21 silly get     'content-length': '1523',
+21 silly get     'accept-ranges': 'bytes',
+21 silly get     date: 'Fri, 12 Jan 2018 00:12:25 GMT',
+21 silly get     via: '1.1 varnish',
+21 silly get     age: '0',
+21 silly get     connection: 'keep-alive',
+21 silly get     'x-served-by': 'cache-dfw18633-DFW',
+21 silly get     'x-cache': 'MISS',
+21 silly get     'x-cache-hits': '0',
+21 silly get     'x-timer': 'S1515715946.881847,VS0,VE67',
+21 silly get     vary: 'Accept-Encoding, Accept' } ]
+22 verbose get saving animations to C:\Users\Laura-PC\AppData\Roaming\npm-cache\registry.npmjs.org\animations\.cache.json
+23 verbose correctMkdir C:\Users\Laura-PC\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+24 silly fetchPackageMetaData Error: No compatible version found: animations@4.0.0
+24 silly fetchPackageMetaData Valid install targets:
+24 silly fetchPackageMetaData 0.0.0
+24 silly fetchPackageMetaData
+24 silly fetchPackageMetaData     at pickVersionFromRegistryDocument (C:\Program Files\nodejs\node_modules\npm\lib\fetch-package-metadata.js:178:16)
+24 silly fetchPackageMetaData     at C:\Program Files\nodejs\node_modules\npm\node_modules\iferr\index.js:13:50
+24 silly fetchPackageMetaData     at C:\Program Files\nodejs\node_modules\npm\lib\utils\pulse-till-done.js:20:8
+24 silly fetchPackageMetaData     at saved (C:\Program Files\nodejs\node_modules\npm\lib\cache\caching-client.js:174:7)
+24 silly fetchPackageMetaData     at C:\Program Files\nodejs\node_modules\npm\node_modules\graceful-fs\polyfills.js:241:18
+24 silly fetchPackageMetaData     at FSReqWrap.oncomplete (fs.js:123:15)
+24 silly fetchPackageMetaData  error for animations@4.0.0 { Error: No compatible version found: animations@4.0.0
+24 silly fetchPackageMetaData Valid install targets:
+24 silly fetchPackageMetaData 0.0.0
+24 silly fetchPackageMetaData
+24 silly fetchPackageMetaData     at pickVersionFromRegistryDocument (C:\Program Files\nodejs\node_modules\npm\lib\fetch-package-metadata.js:178:16)
+24 silly fetchPackageMetaData     at C:\Program Files\nodejs\node_modules\npm\node_modules\iferr\index.js:13:50
+24 silly fetchPackageMetaData     at C:\Program Files\nodejs\node_modules\npm\lib\utils\pulse-till-done.js:20:8
+24 silly fetchPackageMetaData     at saved (C:\Program Files\nodejs\node_modules\npm\lib\cache\caching-client.js:174:7)
+24 silly fetchPackageMetaData     at C:\Program Files\nodejs\node_modules\npm\node_modules\graceful-fs\polyfills.js:241:18
+24 silly fetchPackageMetaData     at FSReqWrap.oncomplete (fs.js:123:15) code: 'ETARGET' }
+25 silly rollbackFailedOptional Starting
+26 silly rollbackFailedOptional Finishing
+27 silly runTopLevelLifecycles Finishing
+28 silly install printInstalled
+29 verbose stack Error: No compatible version found: animations@4.0.0
+29 verbose stack Valid install targets:
+29 verbose stack 0.0.0
+29 verbose stack
+29 verbose stack     at pickVersionFromRegistryDocument (C:\Program Files\nodejs\node_modules\npm\lib\fetch-package-metadata.js:178:16)
+29 verbose stack     at C:\Program Files\nodejs\node_modules\npm\node_modules\iferr\index.js:13:50
+29 verbose stack     at C:\Program Files\nodejs\node_modules\npm\lib\utils\pulse-till-done.js:20:8
+29 verbose stack     at saved (C:\Program Files\nodejs\node_modules\npm\lib\cache\caching-client.js:174:7)
+29 verbose stack     at C:\Program Files\nodejs\node_modules\npm\node_modules\graceful-fs\polyfills.js:241:18
+29 verbose stack     at FSReqWrap.oncomplete (fs.js:123:15)
+30 verbose cwd C:\Users\Laura-PC\Documents\GitHub\WSiteFinanzas
+31 error Windows_NT 10.0.15063
+32 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "animations@4.0.0"
+33 error node v6.10.1
+34 error npm  v3.10.10
+35 error code ETARGET
+36 error notarget No compatible version found: animations@4.0.0
+36 error notarget Valid install targets:
+36 error notarget 0.0.0
+37 error notarget This is most likely not a problem with npm itself.
+37 error notarget In most cases you or one of your dependencies are requesting
+37 error notarget a package version that doesn't exist.
+38 verbose exit [ 1, true ]
