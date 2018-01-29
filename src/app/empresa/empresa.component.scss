@@ -1,5 +1,5 @@
 .div-space{
-    padding: 0 6% 0 6% !important;
+    padding: 0 5% 0 5% !important;
 }
 
 table {
@@ -26,3 +26,17 @@ tr:nth-child(even) {
     line-height: 1.428571429;
     border-radius: 15px;
   }
+
+  /*
+   server-side-angular-way.component.css
+*/
+.no-data-available {
+    text-align: center;
+}
+
+/*
+   src/styles.css (i.e. your global style)
+*/
+.dataTables_empty {
+    display: none;
+}

@@ -11,6 +11,7 @@ import {
   Validators,
   FormBuilder
 } from '@angular/forms';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -46,6 +47,13 @@ export class LoginComponent implements OnInit {
       this.mensajeUsuario = '';
       this.getAuth();
     }
+    if(this.usuario.value == "" && this.password.value == ""){
+      swal({
+        type: 'error',
+        title: 'Alto',
+        text: 'Favor de ingresar los datos necesarios.'
+      })
+    }
   }
 
   //Cuando todo OK, guarda la variable local que usa AuthGuard
@@ -72,7 +80,11 @@ export class LoginComponent implements OnInit {
             this.onLoggedIn();
           }
           else {
-            this.mensajeUsuario = this.authUsuario[0].MensajeUsuario;
+            swal({
+              type: 'error',
+              title: 'Alto',
+              text: 'Usuario y/o Contraseña incorrecta.'
+            });
           }
         } //LocalStorage para el usuario?
       );

@@ -16,7 +16,11 @@ const routes: Routes = [
             { path: 'grid', loadChildren: './grid/grid.module#GridModule' },
             { path: 'components', loadChildren: './bs-component/bs-component.module#BsComponentModule' },
             { path: 'promociones', loadChildren: '../promociones/promociones.module#PromocionesModule' },
-            { path: 'empresa', loadChildren: '../empresa/empresa.module#EmpresaModule' },
+            { path: 'control/empresa', loadChildren: '../empresa/empresa.module#EmpresaModule' },
+            { path: 'control/sucursales', loadChildren: '../empresa/empresa.module#EmpresaModule' },
+            { path: 'control/marcas', loadChildren: '../empresa/empresa.module#EmpresaModule' },
+            { path: 'control/tipounidad', loadChildren: '../tipounidad/tipounidad.module#TipounidadModule' },
+            { path: 'control/moneda', loadChildren: '../tipounidad/tipounidad.module#TipounidadModule' },
             { path: 'blank-page', loadChildren: './blank-page/blank-page.module#BlankPageModule' }
         ]
     }
