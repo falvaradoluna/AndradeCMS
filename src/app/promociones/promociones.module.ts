@@ -18,7 +18,7 @@ import {ReactiveFormsModule} from "@angular/forms";
         NgbModule.forRoot(),
         SharedPipesModule,
         SortableTableModule,
-        DataTablesModule,
+        DataTablesModule.forRoot(),
         ReactiveFormsModule
     ],
     declarations: [

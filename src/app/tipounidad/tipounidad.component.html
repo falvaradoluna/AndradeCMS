@@ -1,0 +1,30 @@
+<div class="div-space" [@routerTransition]>
+    <div class="row">
+        <div class="col-6">
+            <h1 class="text-muted">Tipo Unidad </h1>
+        </div>
+    </div>
+    
+<table class="col-12">
+    <tr>
+        <th class="" width="20"> # </th>
+        <th *ngFor="let cabecera of cabeceras;" class="">{{cabecera}} </th>
+    </tr>
+    <tr class="" *ngFor="let tipo of resultadosTipo; let i = index;">
+        <td class=""> {{ i + 1 }} </td>
+        <td class="" *ngFor="let item of items;">{{ tipo[ item ] }} </td>
+    </tr>
+    <!-- <span *ngIf="tableBody == 1"> -->
+    <!-- <tr class="text-center" *ngFor="let tipo of resultadosTipo; let i = index;">
+        <td class=" text-center"> {{ i + 1 }} </td>
+        <td class="text-center"> {{ tipo.tu_Descripcion }} </td>
+    </tr> -->
+    <!-- </span> -->
+    <!-- <span *ngIf="tableBody  == 2">
+        <tr class="text-center" *ngFor="let tipo of resultadosTipo; let i = index;">
+            <td class=" text-center"> {{ i + 1 }} </td>
+            <td class="text-center"> {{ tipo.tu_Descripcion }} </td>
+        </tr>
+    </span>     -->
+</table>
+</div>

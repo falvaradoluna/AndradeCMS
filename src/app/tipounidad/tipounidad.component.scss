@@ -1,0 +1,19 @@
+.div-space{
+    padding: 0 6% 0 6% !important;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border-top: 1px solid #302570;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #ccc2c2e7;
+}

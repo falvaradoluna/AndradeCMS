@@ -1,20 +1,238 @@
-<div class="div-space " [@routerTransition]>
-    <div class="row">
+<!-- E M P R E S A S -->
+<div *ngIf="(Selectdiv == 1 && usuRol != 1)"  >
+    <div class="row card-header div-space">
         <div class="col-6">
             <h1 class="text-muted">Empresa </h1>
         </div>
-    </div>  
-    <div class="row">
-        <table class="col">
-            <tr>
-                <th class=" text-center">Número de empresa</th>
-                <th class=" text-center"> Empresa </th>
-            </tr>
-            <tr class="text-center" *ngFor="let empresa of resultadoEmpresas; let i = index;">
-               <td class="text-center"> {{ empresa.em_IdEmpresa }} </td>
-               <td class="text-center"> {{ empresa.em_Descripcion }} </td>
-            </tr>
-        </table>
-    </div>  
+    </div>
+    <div class="card">  
+        <table datatable class="table row-border hover " *ngIf="this.temp_var">
+            <thead>
+                <tr>
+                    <th>Id Empresa</th>
+                    <th>Descripcion</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let empresa of data">
+                    <td>{{ empresa.em_IdEmpresa }}</td>
+                    <td>{{ empresa.em_Descripcion }}</td>
+                </tr>
+            </tbody>
+        </table> 
+    </div>    
 </div>
 
+<div  *ngIf="(Selectdiv == 1 && usuRol == 1)"  >
+    <div class="row card-header div-space">
+        <div class="col-6">
+            <h1 class="text-muted">Empresa </h1>
+        </div>
+        <div class="col-6">
+            <button type="button" class="btn btn-success pull-right" (click)="open(InsEmpModal)"> 
+                <i class="fa fa-plus" aria-hidden="true"></i> Agregar empresa 
+            </button>
+        </div>
+    </div>  
+    <div class="card">
+        <table datatable class="table row-border hover" *ngIf="this.temp_var">
+            <thead>
+                <tr>
+                    <th>Id Empresa</th>
+                    <th>Descripcion</th>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let empresa of data">
+                    <td>{{ empresa.em_IdEmpresa }}</td>
+                    <td>{{ empresa.em_Descripcion }}</td>
+                    <td> 
+                        <button type="button" class="btn btn-success btn-circle" (click)="openU(contentU, Dpromo.po_IdPromocion);">
+                            <i class="fa fa-pencil" aria-hidden="true" ></i>
+                        </button> 
+                        <button type="button" class="btn btn-danger btn-circle" (click)="deletePromocion(Dpromo.po_IdPromocion);">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- S U C U R S A L E S -->
+<div *ngIf="(Selectdiv == 2 && usuRol != 1)">
+    <div class="row card-header div-space">
+        <div class="col-6">
+            <h1 class="text-muted">Sucursales </h1>
+        </div>
+    </div>  
+    <div class="card">
+        <table datatable class="table row-border hover" *ngIf="this.temp_var">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th> Sucursal </th>
+                    <th> Direccion </th>
+                    <th> Telefono </th>
+                    <th> Correo </th>
+                    <th> Horario </th>
+                    <th> Empresa </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let sucursal of data; let i = index;">
+                    <td> {{ sucursal.su_IdSucursal }} </td>
+                    <td> {{ sucursal.su_NombreCto }} </td>
+                    <td> {{ sucursal.Direccion }} </td>
+                    <td> {{ sucursal.su_telefono }} </td>
+                    <td> {{ sucursal.su_Correo }} </td>
+                    <td> {{ sucursal.su_Horario }} </td>
+                    <td> {{ sucursal.em_Descripcion }} </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div *ngIf="(Selectdiv == 2 && usuRol == 1)">
+    <div class="row card-header div-space">
+        <div class="col-6">
+            <h1 class="text-muted">Sucursales </h1>
+        </div>
+        <div class="col-6">
+            <button type="button" class="btn btn-success pull-right" (click)="open(content)"> 
+                <i class="fa fa-plus" aria-hidden="true"></i> Agregar sucursal 
+            </button>
+        </div>
+    </div> 
+    <div class="card"> 
+        <table datatable class="table row-border hover" *ngIf="this.temp_var">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th> Sucursal </th>
+                    <th> Direccion </th>
+                    <th> Telefono </th>
+                    <th> Correo </th>
+                    <th> Horario </th>
+                    <th> Empresa </th>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let sucursal of data; let i = index;">
+                    <td> {{ sucursal.su_IdSucursal }} </td>
+                    <td> {{ sucursal.su_NombreCto }} </td>
+                    <td> {{ sucursal.Direccion }} </td>
+                    <td> {{ sucursal.su_telefono }} </td>
+                    <td> {{ sucursal.su_Correo }} </td>
+                    <td> {{ sucursal.su_Horario }} </td>
+                    <td> {{ sucursal.em_Descripcion }} </td>
+                    <td> 
+                        <button type="button" class="btn btn-success btn-circle" (click)="openU(contentU, Dpromo.po_IdPromocion);">
+                            <i class="fa fa-pencil" aria-hidden="true" ></i>
+                        </button> 
+                        <button type="button" class="btn btn-danger btn-circle" (click)="deletePromocion(Dpromo.po_IdPromocion);">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- M A R C A S -->
+<div *ngIf="(Selectdiv == 3 && usuRol != 1)">
+    <div class="row card-header div-space">
+        <div class="col-6">
+            <h1 class="text-muted">Marcas </h1>
+        </div>
+    </div> 
+    <div class="card"> 
+        <table datatable class="table row-border hover" *ngIf="this.temp_var">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th> Marca </th>
+                    <th>  </th>
+                    <th> Empresa </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr  *ngFor="let marca of data; let i = index;">
+                    <td> {{ i + 1 }} </td>
+                    <td> {{ marca.ma_DescripMarca }} </td>
+                    <td> Logo </td>
+                    <td> {{ marca.em_Descripcion }} </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div *ngIf="(Selectdiv == 3 && usuRol == 1)">
+    <div class="row card-header div-space">
+        <div class="col-6">
+            <h1 class="text-muted">Marcas </h1>
+        </div>
+        <div class="col-6">
+            <button type="button" class="btn btn-success pull-right" (click)="open(content)"> 
+                <i class="fa fa-plus" aria-hidden="true"></i> Agregar sucursal 
+            </button>
+        </div>
+    </div>
+    <div class="card">
+        <table datatable class="table row-border hover" *ngIf="this.temp_var">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th> Marca </th>
+                    <th>  </th>
+                    <th> Empresa </th>
+                    <th>  </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr  *ngFor="let marca of data; let i = index;">
+                    <td> {{ i + 1 }} </td>
+                    <td> {{ marca.ma_DescripMarca }} </td>
+                    <td> Logo </td>
+                    <td> {{ marca.em_Descripcion }} </td>
+                    <td> 
+                        <button type="button" class="btn btn-success btn-circle" (click)="openU(contentU, Dpromo.po_IdPromocion);">
+                            <i class="fa fa-pencil" aria-hidden="true" ></i>
+                        </button> 
+                        <button type="button" class="btn btn-danger btn-circle" (click)="deletePromocion(Dpromo.po_IdPromocion);">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+                                            <!--  M O D A L E S  -->
+
+<!-- Inicia el modal  Insert empresa-->
+<!-- <ng-template #InsEmpModal let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title text-muted">Agregar promocion</h4>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="EmpInsForm" (ngSubmit)="savePromocion()">
+            <div class="row div-space">
+                <div class="col space-6">
+                    <h6 class="text-muted">Tipo Promocion </h6>
+                    <select class="form-control form-control-sm" formControlName="SelectTipoPromocion">
+                        <option value="0">Seleccione un tipo de promocion</option>
+                        <option *ngFor = "let TPromo of resultadoTPromocion;" [value]="TPromo.tip_id" > {{ TPromo.tip_nombre }} </option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-template> -->

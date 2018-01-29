@@ -1,54 +1,51 @@
-<div class="div-space " [@routerTransition]>
-        <div>
-            <div class="row">
-                <div class="col-6">
-                    <h1 class="text-muted">Promociones </h1>
-                </div>
-                <div class="col-6">
-                    <button type="button" class="btn btn-success pull-right" (click)="open(content)"> <i class="fa fa-plus" aria-hidden="true"></i> Agregar promocion </button>
-                </div>
+<div [@routerTransition]>
+    <div>
+        <div class="row  card-header">
+            <div class="col-6">
+                <h1 class="text-muted">Promociones </h1>
             </div>
-            <div class="row">
-                <table class="col">
+            <div class="col-6">
+                <button type="button" class="btn btn-success pull-right" (click)="open(content)" style="margin-top:3%;"> 
+                    <i class="fa fa-plus" aria-hidden="true"></i> Agregar promocion 
+                </button>
+            </div>
+        </div>
+        <div class="card">
+            <table datatable class="table row-border hover" *ngIf="this.temp_var">
+                <thead>
                     <tr>
-                        <th class=" text-center">#</th>
-                        <th class=" text-center">Tipo Promocion</th>
-                        <th class=" text-center">Marca</th>  
-                        <th class=" text-center">Descripcion</th> 
-                        <th class=" text-center"></th>
-                        <th class=" text-center"></th>
+                        <th>#</th>
+                        <th>Tipo Promocion</th>
+                        <th>Marca</th>  
+                        <th>Descripcion</th> 
+                        <!-- <th></th> -->
+                        <th></th>
                     </tr>
+                </thead>
+                <tbody>    
                     <tr class="text-center" *ngFor="let Dpromo of resultadoPromociones; let i = index;">
-                        <td class=" text-center"> {{ i + 1 }}</td>
-                        <td class=" text-center">{{ Dpromo.tip_nombre }}</td>
-                        <td class=" text-center">{{ Dpromo.ma_NombreCto }}</td>
-                        <td class=" text-center">{{ Dpromo.po_Descripcion }}</td>
-                        <td class="text-center"> <button type="button" class="btn btn-info btn-circle" (click)="openImg(contentImg, Dpromo.pathImagen, Dpromo.po_Descripcion, Dpromo.po_IdPromocion);"> <i class="fa fa-file-image-o" aria-hidden="true"></i></button> </td>
-                        <td class=" text-center"> 
-                            <button type="button" class="btn btn-success btn-circle" (click)="openU(contentU, Dpromo.po_IdPromocion);"><i class="fa fa-pencil" aria-hidden="true" ></i></button> 
-                            <button type="button" class="btn btn-danger btn-circle" (click)="deletePromocion(Dpromo.po_IdPromocion);"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                        <td> {{ i + 1 }}</td>
+                        <td>{{ Dpromo.tip_nombre }}</td>
+                        <td>{{ Dpromo.ma_NombreCto }}</td>
+                        <td>{{ Dpromo.po_Descripcion }}</td>
+                        <!-- <td> <button type="button" class="btn btn-info btn-circle" (click)="openImg(contentImg, Dpromo.pathImagen, Dpromo.po_Descripcion, Dpromo.po_IdPromocion);"> 
+                            <i class="fa fa-file-image-o" aria-hidden="true"></i>
+                            </button> 
+                        </td> -->
+                        <td> 
+                            <button type="button" class="btn btn-success btn-circle" (click)="openU(contentU, Dpromo.po_IdPromocion, Dpromo.pathImagen);">
+                                <i class="fa fa-pencil" aria-hidden="true" ></i>
+                            </button> 
+                            <button type="button" class="btn btn-danger btn-circle" (click)="deletePromocion(Dpromo.po_IdPromocion);">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </button>
                         </td>
                     </tr>
-                </table>
-            </div>
-        </div>    
-      <!-- <table datatable [dtOptions]="dtOptions" class="row-border hover">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>First name</th>
-                    <th>Last name</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let promos of resultadoPromociones">
-                    <td>{{ promos.em_Descripcion}}</td>
-                    <td>{{ promos.em_Concentradora }}</td>
-                    <td>{{ promos.su_Numero }}</td>
-                </tr>
-            </tbody>
-        </table> -->
-
+                </tbody>
+            </table>
+        </div>
+    </div>
+                                                    <!-- M O D A L E S -->
     <!-- Inicia el modal  Insert-->
     <ng-template #content let-c="close" let-d="dismiss">
         <div class="modal-header">
@@ -106,9 +103,6 @@
                         </label>
                     </div>
                 </div> 
-                <!-- <p>
-                    <button >Submit</button>
-                </p> -->
                 <div class="modal-footer">
                     <button class="btn btn-outline-success" type="submit" [disabled]="!form.valid">Guardar</button>
                     <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
@@ -166,13 +160,22 @@
                         </textarea>
                 </div>
             </div>
-
+            <br>
+            <div class="col">
+                <img src="{{ModalImg}}" width="100%">
+            </div>
             <div class="row div-space">
-                <!-- <div class="col">
+                <form [formGroup]="formUpdate">
+                    <div class="col">
                         <h6 class="text-muted">Imagen</h6>
-                        <input class="form-control form-control-sm" type="text" [(ngModel)]="img"> 
-                </div> -->
-            </div> 
+                        <label class="btn btn-secondary btn-file">Browse
+                            <input name="file" type="file" (change)="onFileChangeUp($event)" formControlName="RealImgUpdate">
+                            <input type="hidden" name="fileHidden" formControlName="imageInputUpdate"/>
+                            <input type="hidden" name="fileHidden" formControlName="promoIdUp"/>
+                        </label>
+                    </div>
+                </form>    
+            </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-outline-success" (click)="updatePromocion(idPromocion)">Actualizar</button>
@@ -181,7 +184,7 @@
     </ng-template>
 
     <!-- Inicia el modal VerImagen-->
-    <ng-template #contentImg let-c="close" let-d="dismiss">
+    <!-- <ng-template #contentImg let-c="close" let-d="dismiss">
         <div class="modal-header">
             <h4 class="modal-title text-muted">{{ModalDesc}}</h4>
         </div>
@@ -209,6 +212,6 @@
             <button class="btn btn-outline-success" type="button" (click)="updateImage(ModalIdPromo)">Actualizar</button>
             <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
         </div>
-    </ng-template>
+    </ng-template> -->
 </div>
 

@@ -25,6 +25,12 @@ import { stringify } from 'querystring';
 import { IPromise } from 'protractor/node_modules/@types/q';
 import { IPromocionesById } from "./promocionById";
 import { Iimage } from "./Img";
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/throw';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/do';
+import { HttpClient, HttpErrorResponse, HttpParams, HttpHeaders } from '@angular/common/http';
+import  swal  from "sweetalert2";
 
 
 @Component({
@@ -67,8 +73,10 @@ export class PromocionesComponent implements OnInit {
 
     closeResult: string;
     idPromocion: number = 0;
+    public data : object;
+    public temp_var: Object=false;
 
-    constructor( private _Promoservice: PromocionesService, private modalService: NgbModal, public fb: FormBuilder ) { 
+    constructor( private _Promoservice: PromocionesService, private modalService: NgbModal, public fb: FormBuilder, private _http: HttpClient ) { 
         this.form = fb.group({
             "SelectTipoPromocion": this.SelectTipoPromocion,
             "SelectEmpresa": this.SelectEmpresa,
@@ -105,6 +113,7 @@ export class PromocionesComponent implements OnInit {
     getTablaPromociones(): void{
         this._Promoservice.getPromoColumn()
         .subscribe( resultadoPromociones => {
+            this.temp_var = true;
             this.resultadoPromociones = resultadoPromociones;
             this.resultadoPromociones.forEach(function( item, key ){
                 item.pathImagen = 'file/promociones/' + item.po_RutaImagen;
@@ -117,7 +126,6 @@ export class PromocionesComponent implements OnInit {
         this._Promoservice.getEmpresas()
         .subscribe( resultadoEmpresas => {
             this.resultadoEmpresas = resultadoEmpresas;
-            //console.log( resultadoEmpresas );
         },
         error => this.errorMessage = <any>error);
     }
@@ -126,7 +134,6 @@ export class PromocionesComponent implements OnInit {
         this._Promoservice.getTipoPromocion()
         .subscribe( resultadoTPromocion => {
             this.resultadoTPromocion = resultadoTPromocion;
-            //console.log( resultadoTPromocion );
         },
         error => this.errorMessage = <any>error);
     }
@@ -159,7 +166,11 @@ export class PromocionesComponent implements OnInit {
         let file = $event.target.files[0]; 
         console.log( file.type );
         if( file.type != "image/jpeg" && file.type != "image/png" && file.type != "application/pdf" ){
-            confirm( "Seleccione una imagen JPG/PNG o un archivo PDF" );
+            swal({
+                type: 'error',
+                title: 'Oops...',
+                text: 'Seleccione una imagen JPG/PNG'
+              });
             this.form.controls['RealImg'].setValue("");
         }else{
             reader.readAsDataURL(file);
@@ -169,32 +180,56 @@ export class PromocionesComponent implements OnInit {
                     filetype: file.type,
                     value: reader.result.split(',')[1]
                 });
-              };
-    
+            };
             this.form.controls['imageInput'].setValue(file ? file : '');
             this.form.controls['idUsuario'].setValue(JSON.parse(localStorage.getItem("UserData")).usu_id);
         }   
     }
 
     savePromocion() {
-        console.log(this.form);
-        var r = confirm("¿Desea guardar esta promoción?");
-        if( r ){
-            this._Promoservice.savePromocion( this.form )
-            .subscribe( serverResponse => {
-                this.serverResponse = serverResponse;
-                console.log( this.serverResponse );
-                this.getTablaPromociones();
-            },
-            error => this.errorMessage = <any>error );
-        }
-    }
+        swal({
+            title: '¿Guardar la promoción?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Guardar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false,
+        }).then((result) => {
+            if (result.value) {
+                this._Promoservice.savePromocion( this.form )
+                .subscribe( serverResponse => {
+                    swal(
+                        'Guardado',
+                        'Se guardo la promción con éxito.',
+                        'success'
+                    );
+                    this.serverResponse = serverResponse;
+                    this.getTablaPromociones();
+                },
+                error => this.errorMessage = <any>error );
+            } else if (result.dismiss === 'cancel') {
+              swal(
+                'Canelado',
+                'No se guardo la promoción',
+                'error'
+              );
+            }
+        });
+    } 
 
-    onFileChangeUp($event) {
+    onFileChangeUp($event){
         let reader = new FileReader();
         let file = $event.target.files[0]; 
         if( file.type != "image/jpeg" && file.type != "image/png" && file.type != "application/pdf" ){
-            confirm( "Seleccione una imagen JPG/PNG o un archivo PDF" );
+            swal({
+                type: 'error',
+                title: 'Oops...',
+                text: 'Seleccione una imagen JPG/PNG'
+            });
             this.formUpdate.controls['RealImgUpdate'].setValue("");
         }else{
             reader.readAsDataURL(file);
@@ -204,53 +239,98 @@ export class PromocionesComponent implements OnInit {
                     filetype: file.type,
                     value: reader.result.split(',')[1]
                 });
-              }; 
+            }; 
             this.formUpdate.controls['imageInputUpdate'].setValue(file ? file : '');
         }   
     }
 
     updateImage(promoId){
         this.formUpdate.controls["promoIdUp"].setValue(promoId);
-        var r = confirm("¿Desea actualizar esta imagen?");
-        if( r ){
-            this._Promoservice.UpdateImage( this.formUpdate )
-            .subscribe( serverResponse => {
-                this.serverResponse = serverResponse;
-                console.log( this.serverResponse );
-                this.ModalImg = 'file/promociones/' + this.formUpdate.value.imageInputUpdate.filename;
-            },
-            error => this.errorMessage = <any>error );
-        }
-    }
-
-    updatePromocion(promoid){
-        this._Promoservice.UpdatePromocion({ 
-            po_IdTipoPromocion: this.selectedTPromocion,
-            po_idEmpresa: this.selectedEmpresa,
-            po_IdSucursal: this.selectedSucursal,
-            po_IdMarca: this.selectedMarca,
-            po_Descripcion: this.descripcion,
-            //po_RutaImagen: this.img,
-            po_IdUsuario: JSON.parse(localStorage.getItem("UserData")).usu_id,
-            po_IdPromocion: promoid
-         })
+        this._Promoservice.UpdateImage( this.formUpdate )
         .subscribe( serverResponse => {
+            swal(
+                'Actualizado',
+                'Se actualizo la promoción con éxito',
+                'success'
+                );
             this.serverResponse = serverResponse;
-            this.getTablaPromociones();
+            this.ModalImg = 'file/promociones/' + this.formUpdate.value.imageInputUpdate.filename;
         },
         error => this.errorMessage = <any>error );
     }
 
+    updatePromocion(promoid){
+        swal({
+            title: '¿Desea actualizar la promoción?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Actualizar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false,
+        }).then((result) => {
+            if (result.value) {
+                this._Promoservice.UpdatePromocion({ 
+                    po_IdTipoPromocion: this.selectedTPromocion,
+                    po_idEmpresa: this.selectedEmpresa,
+                    po_IdSucursal: this.selectedSucursal,
+                    po_IdMarca: this.selectedMarca,
+                    po_Descripcion: this.descripcion,
+                    po_IdUsuario: JSON.parse(localStorage.getItem("UserData")).usu_id,
+                    po_IdPromocion: promoid
+                 })
+                .subscribe( serverResponse => {
+                    this.updateImage(promoid);
+                    this.serverResponse = serverResponse;
+                    this.getTablaPromociones();
+                },
+                error => this.errorMessage = <any>error );
+            } else if (result.dismiss === 'cancel') {
+              swal(
+                'Cancelado',
+                'No se actualizo la promoción.',
+                'error'
+              )
+            }
+        });
+    }
+
     deletePromocion(promoId){
-        var r = confirm("¿Desea eliminar esta promoción?");
-        if( r ){
-            this._Promoservice.deletePromocion({ promoId: promoId })
-            .subscribe( serverResponse => {
-            this.serverResponse = serverResponse;
-            this.getTablaPromociones();
-            },
-            error => this.errorMessage = <any>error );
-        }
+        swal({
+            title: '¿Desea eliminar la promocón?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Eliminar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false,
+        }).then((result) => {
+            if (result.value) {
+                this._Promoservice.deletePromocion({ promoId: promoId })
+                .subscribe( serverResponse => {
+                    swal(
+                        'Eliminado!',
+                        'Se elimino la proción con éxito.',
+                        'success'
+                        );
+                this.serverResponse = serverResponse;
+                this.getTablaPromociones();
+                },
+                error => this.errorMessage = <any>error );
+            } else if (result.dismiss === 'cancel') {
+                swal(
+                    'Cancelado',
+                    'No se elimino la promoción.',
+                    'error'
+                );
+            }
+        })
     }
 
     //================================================================= M O D A L E S =================================================//
@@ -273,7 +353,7 @@ export class PromocionesComponent implements OnInit {
     }
 
     //========= MODAL UPDATE ========//
-    openU(contentU, promoId) {
+    openU(contentU, promoId, img) {
         this.modalService.open( contentU, {  size: "lg" });
         this._Promoservice.GetPromocion_ById({ promoId: promoId })
         .subscribe( resultadoPromocionesById => {
@@ -284,32 +364,13 @@ export class PromocionesComponent implements OnInit {
             this.selectedMarca          = this.resultadoPromocionesById[0].po_IdMarca;
             this.selectedSucursal       = this.resultadoPromocionesById[0].po_IdSucursal;
             this.descripcion            = this.resultadoPromocionesById[0].po_Descripcion;
-           // this.img                    = this.resultadoPromocionesById[0].po_RutaImagen;
+            this.ModalImg               = img;
             this.idPromocion            = this.resultadoPromocionesById[0].po_IdPromocion;
         },
         error => this.errorMessage = <any>error );
     }
 
     private getDismissReasonU(reason: any): string {
-        if (reason === ModalDismissReasons.ESC) {
-            return 'by pressing ESC';
-        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-            return 'by clicking on a backdrop';
-        } else {
-            return  `with: ${reason}`;
-        }
-    }
-
-    //========= MODAL IMAGEN ========//
-    openImg(contentImg, img, desc, promoId) {
-        this.modalService.open( contentImg, { 
-            size: "lg" });
-            this.ModalImg = img;
-            this.ModalDesc = desc;
-            this.ModalIdPromo = promoId;
-    }
-
-    private getDismissReasonImg(reason: any): string {
         if (reason === ModalDismissReasons.ESC) {
             return 'by pressing ESC';
         } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {

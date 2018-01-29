@@ -19,5 +19,6 @@ export interface ISucursal {
     su_Latitud:         string,
     su_Longitud:        string,
     su_Ubicacion:       string,
-    su_Matriz:          number
+    su_Matriz:          number,
+    Direccion:          string
 }

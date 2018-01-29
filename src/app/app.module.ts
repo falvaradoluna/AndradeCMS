@@ -10,7 +10,6 @@ import { DataTablesModule } from 'angular-datatables';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthGuard, SortService } from './shared';
-//import { PromocionesComponent } from './promociones/promociones.component';
 
 // AoT requires an exported function for factories
 export function createTranslateLoader(http: HttpClient) {
@@ -33,7 +32,7 @@ export function createTranslateLoader(http: HttpClient) {
             }
         }),
     AppRoutingModule,
-    DataTablesModule
+    DataTablesModule.forRoot()
   ],
     declarations: [AppComponent],
     providers: [AuthGuard, SortService],
