@@ -1,5 +1,8 @@
 <nav class="sidebar" [ngClass]="{sidebarPushRight: isActive}">
     <ul class="list-group">
+        <a *ngIf="userName == 3" [routerLink]="['/usuarios']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-users" aria-hidden="true"></i>&nbsp;{{ 'Usuarios' | translate }}
+        </a>
         <div class="nested-menu">
             <a class="list-group-item" (click)="addExpandClassEmp('pages')">
                 <span *ngIf="changeIconEmp == 0"><i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp; {{ 'Empresas' | translate }}</span>

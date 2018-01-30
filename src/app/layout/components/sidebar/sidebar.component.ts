@@ -10,6 +10,11 @@ export class SidebarComponent {
     showMenu: string = '';
 
     changeIconEmp: number = 0;
+    userName: number;
+
+    ngOnInit() {
+        this.userName = JSON.parse( localStorage.getItem("UserData") ).usu_rol;
+    }
 
     eventCalled() {
         this.isActive = !this.isActive;

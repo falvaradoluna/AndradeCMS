@@ -45,7 +45,7 @@ export class TipounidadComponent implements OnInit {
     formInsTipoUAct: FormGroup;
     tipoUnidadDescAct = new FormControl("", Validators.required);
     IdTipoUnidad = new FormControl("");
-  constructor(private _http: HttpClient, 
+    constructor(private _http: HttpClient, 
             private router: Router,
             private modalService: NgbModal,
             public fb: FormBuilder) {
@@ -94,19 +94,13 @@ export class TipounidadComponent implements OnInit {
             this.cabecerasTipo = data[0];
             this.temp_var = true;
             for (var key in this.cabecerasTipo) {
-                console.log( key );
                 this.items.push( key );
-                this.cabeceras.push( this.parseTitle( key ) );
-                console.log("Cab", this.cabeceras);
-                
+                this.cabeceras.push( this.parseTitle( key ));
             }
-            console.log( "items", this.items );
-            console.log( "CFianl", this.cabeceras );
           });
     }
 
     parseTitle( campo ){
-        // var campo    = 'cp_nombreCampo';
         var array    = campo.split('_');
         var capital1 = array[1].substring(0, 1);
         var capital2 = array[1].substring(0, 1).toUpperCase();
@@ -130,7 +124,6 @@ export class TipounidadComponent implements OnInit {
             if (result.value) {
                 var TipoU = this.formInsTipoU.value.tipoUnidadDesc;
                 var insert = "INSERT INTO [dbo].[TipoUnidad] VALUES ('" + TipoU +  "', 1)";
-                console.log( insert );
                 let Params = new HttpParams();
                 Params = Params.append("insert", insert);
                 this._http.get(this._urlInsert, {params: Params}).subscribe(data => {
@@ -168,7 +161,6 @@ export class TipounidadComponent implements OnInit {
                 console.log( this.formInsTipoUAct.value );
                 var descripcionUp = this.formInsTipoUAct.value.tipoUnidadDescAct
                 var update = "Update [dbo].[TipoUnidad] SET tu_Descripcion ='" + descripcionUp + "' WHERE tu_IdTipo = " + this.formInsTipoUAct.value.IdTipoUnidad;
-                // // console.log( insert );
                 let Params = new HttpParams();
                 Params = Params.append("update", update);
                 this._http.get(this._urlUpdate, {params: Params}).subscribe(data => {
@@ -205,7 +197,6 @@ export class TipounidadComponent implements OnInit {
             if (result.value) {
                 console.log( idTipo )
                 var deletes = "Update [dbo].[TipoUnidad] SET tu_IdEstatus = 0 WHERE tu_IdTipo = " + idTipo ;
-                // console.log( insert );
                 let Params = new HttpParams();
                 Params = Params.append("deletes", deletes);
                 this._http.get(this._urlDelete, {params: Params}).subscribe(data => {
