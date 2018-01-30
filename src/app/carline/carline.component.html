@@ -1,0 +1,49 @@
+<div class="div-space" [@routerTransition]>
+    <div>
+      <div class="row  card-header">
+          <div class="col-6">
+              <h1 class="text-muted">Carline </h1>
+          </div>
+          <div class="col-6">
+              <button type="button" class="btn btn-success pull-right" (click)="open(content)" style="margin-top:3%;"> 
+                  <i class="fa fa-plus" aria-hidden="true"></i> Agregar carline 
+              </button>
+          </div>
+      </div>
+      <div class="card">
+        <table datatable class="table row-border hover" *ngIf="this.temp_var">
+              <thead>
+                  <tr>
+                      <th>#</th>
+                      <th class="text-center">Nombre</th>
+                      <th class="text-center">Carline</th>  
+                      <th class="text-center">Descripcion</th> 
+                      <th class="text-center">Concentradora</th> 
+                      <th></th>
+                      <th></th>
+                  </tr>
+              </thead>
+              <tbody>    
+                  <tr class="text-center" *ngFor="let carline of carlines; let i = index;">
+                      <td> {{ i + 1 }}</td>
+                      <td>{{ carline.ca_NombreCto }}</td>
+                      <td>{{ carline.ca_DescripCarline }}</td>
+                      <td>{{ carline.em_Descripcion }}</td>
+                      <td>{{ carline.em_Concentradora }}</td>
+                      <td> 
+                          <button type="button" class="btn btn-success btn-circle" (click)="openU(carline);">
+                              <i class="fa fa-pencil" aria-hidden="true" ></i>
+                          </button> 
+                      </td>
+                      <td>
+                        <button type="button" class="btn btn-danger btn-circle" (click)="deleteCarline(carline.ca_IdCarline);">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+  </div>
+  </div>
+  
