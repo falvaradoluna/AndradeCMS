@@ -1,30 +1,83 @@
-<div class="div-space" [@routerTransition]>
-    <div class="row">
+<div [@routerTransition]>
+    <div class="row card-header div-space">
         <div class="col-6">
-            <h1 class="text-muted">Tipo Unidad </h1>
+            <h1 class="text-muted">Tipo unidad </h1>
+        </div>
+        <div class="col-6">
+            <button type="button" class="btn btn-success pull-right" (click)="openInsTU(InsTipoUnidad)"> 
+                <i class="fa fa-plus" aria-hidden="true"></i> Agregar Tipo Unidad 
+            </button>
         </div>
     </div>
+    <div class="card">  
+        <table datatable class="table row-border hover " *ngIf="this.temp_var">
+            <thead>
+                <tr>
+                    <!-- <th class="" width="20"> # </th> -->
+                    <th *ngFor="let cabecera of cabeceras;" class="">{{cabecera}} </th>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let tipo of resultadosTipo; let i = index;">
+                    <!-- <td class=""> {{ i + 1 }} </td> -->
+                    <td  *ngFor="let item of items;">{{ tipo[ item ] }}</td>
+                    <td> 
+                        <button type="button" class="btn btn-success btn-circle" (click)="openUpdTU(UpdTipoUnidad, tipo['tu_IdTipo']);">
+                            <i class="fa fa-pencil" aria-hidden="true" ></i>
+                        </button> 
+                        <button type="button" class="btn btn-danger btn-circle" (click)="deleteTipo(tipo['tu_IdTipo']);">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table> 
+    </div>  
     
-<table class="col-12">
-    <tr>
-        <th class="" width="20"> # </th>
-        <th *ngFor="let cabecera of cabeceras;" class="">{{cabecera}} </th>
-    </tr>
-    <tr class="" *ngFor="let tipo of resultadosTipo; let i = index;">
-        <td class=""> {{ i + 1 }} </td>
-        <td class="" *ngFor="let item of items;">{{ tipo[ item ] }} </td>
-    </tr>
-    <!-- <span *ngIf="tableBody == 1"> -->
-    <!-- <tr class="text-center" *ngFor="let tipo of resultadosTipo; let i = index;">
-        <td class=" text-center"> {{ i + 1 }} </td>
-        <td class="text-center"> {{ tipo.tu_Descripcion }} </td>
-    </tr> -->
-    <!-- </span> -->
-    <!-- <span *ngIf="tableBody  == 2">
-        <tr class="text-center" *ngFor="let tipo of resultadosTipo; let i = index;">
-            <td class=" text-center"> {{ i + 1 }} </td>
-            <td class="text-center"> {{ tipo.tu_Descripcion }} </td>
-        </tr>
-    </span>     -->
-</table>
+                                                    <!-- M O D A L E S -->
+    <!-- Inicia el modal  Insert Tipo Unidad-->
+    <ng-template #InsTipoUnidad let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h4 class="modal-title text-muted">Agregar Tipo Unidad</h4>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="formInsTipoU" (ngSubmit)="saveTipoUnidad()">
+                <div class="row div-space">
+                    <div class="col space-6">
+                        <h6 class="text-muted">Descripcion</h6>
+                        <input class="form-control form-control-sm" formControlName="tipoUnidadDesc">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-success" type="submit" [disabled]="!formInsTipoU.valid">Guardar</button>
+                    <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
+                </div>    
+            </form>
+        </div>
+    </ng-template>
+    <!-- Fin del modal Insert Tipo Unidad-->
+
+    <!-- Inicia el modal Update Tipo Unidad-->
+    <ng-template #UpdTipoUnidad let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h4 class="modal-title text-muted">Actualizar Tipo Unidad</h4>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="formInsTipoUAct" (ngSubmit)="updateTipoUnidad()">
+                <div class="row div-space">
+                    <div class="col space-6">
+                        <h6 class="text-muted">Descripcion</h6>
+                        <input class="form-control form-control-sm" formControlName="tipoUnidadDescAct" [(ngModel)]="descripUpdate">
+                        <input type="hidden" class="form-control form-control-sm" formControlName="IdTipoUnidad" [(ngModel)]="id_tipoUnidad">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-success" type="submit" [disabled]="!formInsTipoUAct.valid">Actualizar</button>
+                    <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
+                </div>    
+            </form>
+        </div>
+    </ng-template>
+    <!-- Fin del modal Update Tipo Unidad-->
 </div>
