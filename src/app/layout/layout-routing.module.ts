@@ -21,6 +21,7 @@ const routes: Routes = [
             { path: 'control/marcas', loadChildren: '../empresa/empresa.module#EmpresaModule' },
             { path: 'control/tipounidad', loadChildren: '../tipounidad/tipounidad.module#TipounidadModule' },
             { path: 'control/moneda', loadChildren: '../tipounidad/tipounidad.module#TipounidadModule' },
+            { path: 'usuarios', loadChildren: '../usuarios/usuarios.module#UsuariosModule' },
             { path: 'blank-page', loadChildren: './blank-page/blank-page.module#BlankPageModule' }
         ]
     }
