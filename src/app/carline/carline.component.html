@@ -18,7 +18,7 @@
                         <th class="text-center">Nombre</th>
                         <th class="text-center">Carline</th>
                         <th class="text-center">Descripcion</th>
-                        <th class="text-center">Concentradora</th>
+                        <!--<th class="text-center">Concentradora</th>-->
                         <th></th>
                         <th></th>
                     </tr>
@@ -29,7 +29,7 @@
                         <td>{{ carline.ca_NombreCto }}</td>
                         <td>{{ carline.ca_DescripCarline }}</td>
                         <td>{{ carline.em_Descripcion }}</td>
-                        <td>{{ carline.em_Concentradora }}</td>
+                        <!--<td>{{ carline.em_Concentradora }}</td>-->
                         <td>
                             <button type="button" class="btn btn-success btn-circle" (click)="showUpdate(contentUpdate, carline);">
                                 <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -52,7 +52,7 @@
 <!-- Actializacion del carline -->
 <ng-template #contentUpdate let-c="close" let-d="dismiss">
     <div class="modal-header">
-        <h4 class="modal-title text-muted">Modificar carline</h4>
+        <h4 class="modal-title text-muted">Modificar CarLine</h4>
     </div>
     <div class="modal-body">
         <div class="row div-space">
@@ -63,25 +63,25 @@
         </div>
         <div class="row div-space">
             <div class="form-group">
-                <label for="exampleInputEmail1">Descripción de carline</label>
+                <label for="exampleInputEmail1">Descripción de CarLine</label>
                 <input class="form-control" [(ngModel)]="carlineTemp.ca_DescripCarline" type="text" placeholder="Descripción de carline">
             </div>
         </div>
-        <div class="row div-space">
+        <!--<div class="row div-space">
             <div class="form-group">
                 <label for="exampleInputEmail1">Descripción de empresa</label>
                 <input class="form-control" [(ngModel)]="carlineTemp.em_Descripcion" type="text" placeholder="Descripción de empresa">
             </div>
-        </div>
-        <div class="row div-space">
+        </div>-->
+        <!--<div class="row div-space">
             <div class="form-group">
                 <label for="exampleInputEmail1">Concentradora</label>
                 <input class="form-control" [(ngModel)]="carlineTemp.em_Concentradora" type="text" placeholder="Concentradora">
             </div>
-        </div>
+        </div>-->
         <div class="row div-space">
             <div class="form-group">
-                <label for="exampleInputEmail1">Empresas</label>
+                <label for="exampleInputEmail1">Empresa</label>
                 <select class="form-control form-control-sm" name="SelectEmpresas" [(ngModel)]="carlineTemp.em_IdEmpresa">
                     <option value="0">Seleccione una empresa</option>
                     <option *ngFor = "let empresa of empresas;" [value]="empresa.em_IdEmpresa" > {{ empresa.em_Descripcion }} </option>
@@ -109,13 +109,13 @@
         </div>
         <div class="row div-space">
             <div class="form-group">
-                <label for="exampleInputEmail1">Descripción de carline</label>
-                <input class="form-control" [(ngModel)]="carlineAdd.pv_DescripCarline" type="text" placeholder="Descripción de carline">
+                <label for="exampleInputEmail1">Descripción</label>
+                <input class="form-control" [(ngModel)]="carlineAdd.pv_DescripCarline" type="text" placeholder="Descripción">
             </div>
         </div>
         <div class="row div-space">
             <div class="form-group">
-                <label for="exampleInputEmail1">Empresas</label>
+                <label for="exampleInputEmail1">Empresa</label>
                 <select class="form-control form-control-sm" name="SelectEmpresas" [(ngModel)]="carlineAdd.pi_IdEmpresa">
                     <option value="0">Seleccione una empresa</option>
                     <option *ngFor = "let empresa of empresas;" [value]="empresa.em_IdEmpresa" > {{ empresa.em_Descripcion }} </option>
@@ -124,7 +124,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline-success" (click)="addCarline(); c('Close click');">Actualizar</button>
+        <button type="button" class="btn btn-outline-success" (click)="addCarline(); c('Close click');">Agregar</button>
         <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
     </div>
 </ng-template>

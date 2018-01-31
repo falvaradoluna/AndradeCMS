@@ -1,49 +1,120 @@
 <div class="div-space" [@routerTransition]>
     <div>
-      <div class="row  card-header">
-          <div class="col-6">
-              <h1 class="text-muted">Marcasemi </h1>
-          </div>
-          <div class="col-6">
-              <button type="button" class="btn btn-success pull-right" (click)="open(content)" style="margin-top:3%;"> 
-                  <i class="fa fa-plus" aria-hidden="true"></i> Agregar marcasemi 
-              </button>
-          </div>
-      </div>
-      <div class="card">
-        <table datatable class="table row-border hover" *ngIf="this.temp_var">
-              <thead>
-                  <tr>
-                      <th>#</th>
-                      <th>Nombre</th>
-                      <th>Descripción</th>  
-                      <th>Descripción</th> 
-                      <th>Concentradora</th>
-                      <th></th>
-                      <th></th>
-                  </tr>
-              </thead>
-              <tbody>    
-                  <tr class="text-center" *ngFor="let marcasemi of marcasemis; let i = index;">
-                      <td> {{ i + 1 }}</td>
-                      <td>{{ marcasemi.ms_NombreCto }}</td>
-                      <td>{{ marcasemi.ms_Descripcion }}</td>
-                      <td>{{ marcasemi.em_Descripcion }}</td>
-                      <td>{{ marcasemi.em_Concentradora }}</td>
-                      <td> 
-                          <button type="button" class="btn btn-success btn-circle" (click)="openU(marcasemi.ms_NombreCto);">
-                              <i class="fa fa-pencil" aria-hidden="true" ></i>
-                          </button> 
-                      </td>
-                      <td>
-                        <button type="button" class="btn btn-danger btn-circle" (click)="deleteMarcasemi(marcasemi.ms_IdMarca);">
-                            <i class="fa fa-trash" aria-hidden="true"></i>
-                        </button>
-                      </td>
-                  </tr>
-              </tbody>
-          </table>
-      </div>
-  </div>
-  </div>
+        <div class="row  card-header">
+            <div class="col-6">
+                <h1 class="text-muted">Marcasemi </h1>
+            </div>
+            <div class="col-6">
+                <button type="button" class="btn btn-success pull-right" (click)="showNuevo(contentAdd)" style="margin-top:3%;">
+                    <i class="fa fa-plus" aria-hidden="true"></i> Agregar marcasemi
+                </button>
+            </div>
+        </div>
+        <div class="card">
+            <table datatable class="table row-border hover" *ngIf="this.temp_var">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre Corto</th>
+                        <th>Descripción</th>
+                        <th>Empresa</th>
+                        <!--<th>Concentradora</th>-->
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="text-center" *ngFor="let marcasemi of marcasemis; let i = index;">
+                        <td> {{ i + 1 }}</td>
+                        <td>{{ marcasemi.ms_NombreCto }}</td>
+                        <td>{{ marcasemi.ms_Descripcion }}</td>
+                        <td>{{ marcasemi.em_Descripcion }}</td>
+                        <!--<td>{{ marcasemi.em_Concentradora }}</td>-->
+                        <td>
+                            <button type="button" class="btn btn-success btn-circle" (click)="showUpdate(contentUpdate, marcasemi);">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-circle" (click)="deleteMarcasemi(marcasemi.ms_IdMarca);">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+                                                   <!-- M O D A L E S -->
+
+<!-- Actializacion del carline -->
+<ng-template #contentUpdate let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h4 class="modal-title text-muted">Modificar marcasemi</h4>
+        </div>
+        <div class="modal-body">
+            <div class="row div-space">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Nombre Corto</label>
+                    <input class="form-control" [(ngModel)]="MarcasemiTemp.ms_NombreCto" type="text" placeholder="Nombre Corto">
+                </div>
+            </div>
+            <div class="row div-space">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Descripción</label>
+                    <input class="form-control" [(ngModel)]="MarcasemiTemp.ms_Descripcion" type="text" placeholder="Descripción">
+                </div>
+            </div>
+            <div class="row div-space">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Empresa</label>
+                    <select class="form-control form-control-sm" name="SelectEmpresas" [(ngModel)]="MarcasemiTemp.em_IdEmpresa">
+                        <option value="0">Seleccione una empresa</option>
+                        <option *ngFor = "let empresa of empresas;" [value]="empresa.em_IdEmpresa" > {{ empresa.em_Descripcion }} </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-success" (click)="updateMarcasemi(); c('Close click');">Actualizar</button>
+            <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
+        </div>
+    </ng-template>
+
+<!-- Agregar del carline -->
+<ng-template #contentAdd let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h4 class="modal-title text-muted">Agregar marcasemi</h4>
+        </div>
+        <div class="modal-body">
+            <div class="row div-space">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Nombre Corto</label>
+                    <input class="form-control" [(ngModel)]="MarcasemiAdd.pv_NombreCto" type="text" placeholder="Nombre Corto">
+                </div>
+            </div>
+            <div class="row div-space">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Descripción</label>
+                    <input class="form-control" [(ngModel)]="MarcasemiAdd.pv_Descripcion" type="text" placeholder="Descripción">
+                </div>
+            </div>
+            <div class="row div-space">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Empresa</label>
+                    <select class="form-control form-control-sm" name="SelectEmpresas" [(ngModel)]="MarcasemiAdd.pi_IdEmpresa">
+                        <option value="0">Seleccione una empresa</option>
+                        <option *ngFor = "let empresa of empresas;" [value]="empresa.em_IdEmpresa" > {{ empresa.em_Descripcion }} </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-success" (click)="addMarcasemi(); c('Close click');">Agregar</button>
+            <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
+        </div>
+    </ng-template>
   

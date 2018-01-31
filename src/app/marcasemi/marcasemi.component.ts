@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { routerTransition } from '../router.animations';
 import { MarcasemiService } from './marcasemi.service';
 import { IMarcasemi } from './marcasemi';
@@ -29,11 +30,15 @@ export class MarcasemiComponent implements OnInit {
 
   public temp_var: Object= false;
   marcasemis: IMarcasemi[];
+  MarcasemiTemp: any;
+  MarcasemiAdd: any;
+  empresas: any[];
 
-  constructor(private marcasemiService: MarcasemiService) { }
+  constructor(private marcasemiService: MarcasemiService, private modalService: NgbModal) { }
 
   ngOnInit() {
     this.getMarcasemis();
+    this.getEmpresas();
   }
 
   private getMarcasemis() {
@@ -44,6 +49,15 @@ export class MarcasemiComponent implements OnInit {
       console.log(this.marcasemis);
     }, error => {
       console.log('Ocurrio un error al obtener los directorios');
+    });
+  }
+
+  private getEmpresas() {
+    this.marcasemiService.getEmpresas().subscribe(respuesta => {
+      this.empresas = respuesta;
+      console.log(this.empresas);
+    }, error => {
+      console.log('Ocurrio un error al obtener las empresas');
     });
   }
 
@@ -83,48 +97,41 @@ export class MarcasemiComponent implements OnInit {
     });
   }
 
-  // updateDirectorio(idDirectorio) {
-  //   swal({
-  //     title: '¿Desea actualizar el directorio?',
-  //     type: 'warning',
-  //     showCancelButton: true,
-  //     confirmButtonColor: '#3085d6',
-  //     cancelButtonColor: '#d33',
-  //     confirmButtonText: 'Actualizar',
-  //     cancelButtonText: 'Cancelar',
-  //     confirmButtonClass: 'btn btn-success',
-  //     cancelButtonClass: 'btn btn-danger',
-  //     buttonsStyling: false,
-  //   }).then((result) => {
-  //     if (result.value) {
-  //       this.directorioService.UpdateDirectorio({
-  //         idDirectorio: idDirectorio,
-  //         idEmpresa: this.idEmpresa,
-  //         IdSucursal: this.IdSucursal,
-  //         IdPuesto: this.IdPuesto,
-  //         ApellidoPaterno: this.ApellidoPaterno,
-  //         ApellidoMaterno: this.ApellidoMaterno,
-  //         Nombre: this.Nombre,
-  //         Correo: this.Correo,
-  //         TelefonoOf: this.TelefonoOf,
-  //         TelefonoCel: this.TelefonoCel,
-  //         WhatsApp: this.WhatsApp,
-  //         FaceBook: this.FaceBook,
-  //         IdUsuario: JSON.parse(localStorage.getItem('UserData')).usu_id
-  //       })
-  //         .subscribe(serverResponse => {
-  //           this.getDirectorios();
-  //         },
-  //         error => {
-  //           console.log('Ocurrio un error al actualizar el directorio');
-  //         });
-  //     } else if (result.dismiss === 'cancel') {
-  //       swal(
-  //         'Cancelado',
-  //         'No se actualizó.',
-  //         'error'
-  //       );
-  //     }
-  //   });
-  // }
+  showUpdate(contentUpdate, updateMarcasemi) {
+    this.modalService.open(contentUpdate);
+    this.MarcasemiTemp = JSON.parse(JSON.stringify(updateMarcasemi));
+  }
+
+  updateMarcasemi() {
+    this.marcasemiService.UpdateMarcasemi(this.MarcasemiTemp).subscribe(respuesta => {
+      console.log(respuesta);
+      this.getMarcasemis();
+    }, error => {
+      console.log('Ocurrio un error al actualizar el marcasemi');
+    });
+  }
+
+  showNuevo(contentAdd) {
+    this.modalService.open(contentAdd);
+    this.MarcasemiAdd = {};
+  }
+
+  addMarcasemi() {
+    this.marcasemiService.InsertMarcasemi(this.MarcasemiAdd).subscribe(respuesta => {
+      console.log(respuesta);
+      this.getMarcasemis();
+    }, error => {
+      console.log('Ocurrio un error al actualizar el marcasemi');
+    });
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
 }

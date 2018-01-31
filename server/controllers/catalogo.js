@@ -28,24 +28,32 @@ catalogo.prototype.get_empresas = function (req, res, next) {
     });
 };
 
-catalogo.prototype.get_empresasById = function (req, res, next) {
+catalogo.prototype.get_sucursales = function (req, res, next) {
     var self = this;
-    var idCarline = req.query.idCarline;
+    var params = [];
 
-    var params = [
-        { name: 'idCarline', value: idCarline, type: self.model.types.INT }
-    ];
-
-    this.model.query('[Catalogo].[SEL_CarlineById_SP]', params, function (error, result) {
-
+    this.model.query("[Catalogo].[SP_SelIdSucursal]", params, function (error, result) {
         if (result.length > 0) {
         }
         self.view.expositor(res, {
             error: error,
-            result: result,
+            result: result
         });
     });
 };
 
+catalogo.prototype.get_puestos = function (req, res, next) {
+    var self = this;
+    var params = [];
+
+    this.model.query("[Catalogo].[SP_SelIdPuestos]", params, function (error, result) {
+        if (result.length > 0) {
+        }
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
 
 module.exports = catalogo;

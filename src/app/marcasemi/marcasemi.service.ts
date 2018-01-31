@@ -17,13 +17,19 @@ import { IMarcasemi } from './marcasemi';
 export class MarcasemiService {
 
     private url = 'api/marcasemi/';
+    private catalogo = 'api/catalogo/';
 
     constructor(private _http: HttpClient) { }
 
     getMarcasemis(): Observable<IMarcasemi[]> {
         const Params = new HttpParams();
         return this._http.get<IMarcasemi[]>(this.url + 'marcasemis', { params: Params })
-        //return this._http.get<IMarcasemi[]>('api/promociones/promociones', { params: Params })
+            .catch(this.handleError);
+    }
+
+    getEmpresas(): Observable<IMarcasemi[]> {
+        const Params = new HttpParams();
+        return this._http.get<IMarcasemi[]>(this.catalogo + 'empresas', { params: Params })
             .catch(this.handleError);
     }
 
@@ -35,42 +41,20 @@ export class MarcasemiService {
             .catch(this.handleError);
     }
 
-    UpdateDirectorio(parameters): Observable<IResponse[]> {
+    UpdateMarcasemi(parameters): Observable<IResponse[]> {
         let Params = new HttpParams();
-        Params = Params.append('idDirectorio', parameters.idDirectorio);
-        Params = Params.append('idEmpresa', parameters.idEmpresa);
-        Params = Params.append('IdSucursal', parameters.IdSucursal);
-        Params = Params.append('IdPuesto', parameters.IdPuesto);
-        Params = Params.append('ApellidoPaterno', parameters.ApellidoPaterno);
-        Params = Params.append('ApellidoMaterno', parameters.ApellidoMaterno);
-        Params = Params.append('Nombre', parameters.Nombre);
-        Params = Params.append('Correo', parameters.Correo);
-        Params = Params.append('TelefonoOf', parameters.TelefonoOf);
-        Params = Params.append('TelefonoCel', parameters.TelefonoCel);
-        Params = Params.append('WhatsApp', parameters.WhatsApp);
-        Params = Params.append('FaceBook', parameters.FaceBook);
-        Params = Params.append('IdUsuario', parameters.IdUsuario);
+        Params = Params.append('pi_id', parameters.ms_IdMarca);
+        Params = Params.append('pv_NombreCto', parameters.ms_NombreCto);
+        Params = Params.append('pv_Descripcion', parameters.ms_Descripcion);
+        Params = Params.append('pi_IdEmpresa', parameters.em_IdEmpresa);
 
-        return this._http.post<IResponse[]>(this.url + 'updateDirectorio', { params: Params })
+        return this._http.get<IResponse[]>(this.url + 'updateMarcasemi', { params: Params })
             .catch(this.handleError);
     }
 
-    InsertDirectorio(parameters): Observable<IResponse[]> {
-        let Params = new HttpParams();
-        Params = Params.append('idEmpresa', parameters.idEmpresa);
-        Params = Params.append('IdSucursal', parameters.IdSucursal);
-        Params = Params.append('IdPuesto', parameters.IdPuesto);
-        Params = Params.append('ApellidoPaterno', parameters.ApellidoPaterno);
-        Params = Params.append('ApellidoMaterno', parameters.ApellidoMaterno);
-        Params = Params.append('Nombre', parameters.Nombre);
-        Params = Params.append('Correo', parameters.Correo);
-        Params = Params.append('TelefonoOf', parameters.TelefonoOf);
-        Params = Params.append('TelefonoCel', parameters.TelefonoCel);
-        Params = Params.append('WhatsApp', parameters.WhatsApp);
-        Params = Params.append('FaceBook', parameters.FaceBook);
-        Params = Params.append('IdUsuario', parameters.IdUsuario);
+    InsertMarcasemi(parameters): Observable<IResponse[]> {
 
-        return this._http.post<IResponse[]>(this.url + 'insertDirectorio', { params: Params })
+        return this._http.post<IResponse[]>(this.url + 'insertMarcasemi', parameters)
             .catch(this.handleError);
     }
 
