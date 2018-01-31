@@ -3,5 +3,5 @@ module.exports = {
     empresa:        require('./controllers/empresa'),
     promociones:    require("./controllers/promociones"),
     tipo:           require("./controllers/tipo"),
-    usuarios:        require("./controllers/usuarios")
+    usuarios:       require("./controllers/usuarios")
 }
