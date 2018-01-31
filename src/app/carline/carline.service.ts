@@ -17,13 +17,19 @@ import { ICarline } from './carline';
 export class CarlineService {
 
     private url = 'api/carline/';
+    private catalogo = 'api/catalogo/';
 
     constructor(private _http: HttpClient) { }
 
     getCarlines(): Observable<ICarline[]> {
         const Params = new HttpParams();
         return this._http.get<ICarline[]>(this.url + 'carlines', { params: Params })
-        //return this._http.get<ICarline[]>('api/promociones/promociones', { params: Params })
+            .catch(this.handleError);
+    }
+
+    getEmpresas(): Observable<ICarline[]> {
+        const Params = new HttpParams();
+        return this._http.get<ICarline[]>(this.catalogo + 'empresas', { params: Params })
             .catch(this.handleError);
     }
 
@@ -35,42 +41,20 @@ export class CarlineService {
             .catch(this.handleError);
     }
 
-    UpdateDirectorio(parameters): Observable<IResponse[]> {
+    UpdateCarline(parameters): Observable<IResponse[]> {
         let Params = new HttpParams();
-        Params = Params.append('idDirectorio', parameters.idDirectorio);
-        Params = Params.append('idEmpresa', parameters.idEmpresa);
-        Params = Params.append('IdSucursal', parameters.IdSucursal);
-        Params = Params.append('IdPuesto', parameters.IdPuesto);
-        Params = Params.append('ApellidoPaterno', parameters.ApellidoPaterno);
-        Params = Params.append('ApellidoMaterno', parameters.ApellidoMaterno);
-        Params = Params.append('Nombre', parameters.Nombre);
-        Params = Params.append('Correo', parameters.Correo);
-        Params = Params.append('TelefonoOf', parameters.TelefonoOf);
-        Params = Params.append('TelefonoCel', parameters.TelefonoCel);
-        Params = Params.append('WhatsApp', parameters.WhatsApp);
-        Params = Params.append('FaceBook', parameters.FaceBook);
-        Params = Params.append('IdUsuario', parameters.IdUsuario);
+        Params = Params.append('pi_id', parameters.ca_IdCarline);
+        Params = Params.append('pv_NombreCto', parameters.ca_NombreCto);
+        Params = Params.append('pv_Descripcion', parameters.ca_DescripCarline);
+        Params = Params.append('pi_IdEmpresa', parameters.em_IdEmpresa);
 
-        return this._http.post<IResponse[]>(this.url + 'updateDirectorio', { params: Params })
+        return this._http.get<IResponse[]>(this.url + 'updateCarline', { params: Params })
             .catch(this.handleError);
     }
 
-    InsertDirectorio(parameters): Observable<IResponse[]> {
-        let Params = new HttpParams();
-        Params = Params.append('idEmpresa', parameters.idEmpresa);
-        Params = Params.append('IdSucursal', parameters.IdSucursal);
-        Params = Params.append('IdPuesto', parameters.IdPuesto);
-        Params = Params.append('ApellidoPaterno', parameters.ApellidoPaterno);
-        Params = Params.append('ApellidoMaterno', parameters.ApellidoMaterno);
-        Params = Params.append('Nombre', parameters.Nombre);
-        Params = Params.append('Correo', parameters.Correo);
-        Params = Params.append('TelefonoOf', parameters.TelefonoOf);
-        Params = Params.append('TelefonoCel', parameters.TelefonoCel);
-        Params = Params.append('WhatsApp', parameters.WhatsApp);
-        Params = Params.append('FaceBook', parameters.FaceBook);
-        Params = Params.append('IdUsuario', parameters.IdUsuario);
+    InsertCarline(parameters): Observable<IResponse[]> {
 
-        return this._http.post<IResponse[]>(this.url + 'insertDirectorio', { params: Params })
+        return this._http.post<IResponse[]>(this.url + 'insertCarline', parameters)
             .catch(this.handleError);
     }
 
