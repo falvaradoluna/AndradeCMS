@@ -1,0 +1,47 @@
+.div-space{
+    padding: 0 6% 0 6% !important;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border-top: 1px solid #302570;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #ccc2c2e7;
+}
+
+textarea {
+    resize: none;
+}
+
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+  }
+
+   /*
+   server-side-angular-way.component.css
+*/
+.no-data-available {
+    text-align: center;
+}
+
+/*
+   src/styles.css (i.e. your global style)
+*/
+.dataTables_empty {
+    display: none;
+}
