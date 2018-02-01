@@ -22,6 +22,7 @@ const routes: Routes = [
             { path: 'control/tipounidad', loadChildren: '../tipounidad/tipounidad.module#TipounidadModule' },
             { path: 'control/moneda', loadChildren: '../tipounidad/tipounidad.module#TipounidadModule' },
             { path: 'usuarios', loadChildren: '../usuarios/usuarios.module#UsuariosModule' },
+            { path: 'miperfil', loadChildren: '../perfilusuario/perfilusuario.module#PerfilusuarioModule' },
             { path: 'blank-page', loadChildren: './blank-page/blank-page.module#BlankPageModule' }
         ]
     }

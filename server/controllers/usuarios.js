@@ -111,9 +111,10 @@ usuarios.prototype.get_delete = function( req, res, next ){
 
 //"api/usuarios/getusubyid";
 usuarios.prototype.get_getusubyid = function( req, res, next ){
+    // console.log( "Hola" );
     var self = this;
     var usu_id = req.query.usu_id;
-    // console.log("Query", req.query);
+    // console.log("QueryById", req.query);
     var params = [
         {name: 'usu_id', value: usu_id, type: self.model.types.INT}
     ];
@@ -121,7 +122,7 @@ usuarios.prototype.get_getusubyid = function( req, res, next ){
     this.model.query("Usuario_GetUsuById_SP", params, function( error, result ){
         // console.log( result );
         if( result.length > 0){
-            //console.log( "Resultado: " + result );
+            // console.log( "Resultado: " + result );
         }
         self.view.expositor(res, {
             error: error,
@@ -142,7 +143,7 @@ usuarios.prototype.get_updateusuario = function( req, res, next ){
     var usu_correo      = req.query.usu_correo;
     var CorreoId        = req.query.CorreoId;
     var usu_id          = req.query.usu_id;
-    console.log("Query", req.query);
+   // console.log("Query", req.query);
     var params = [
         { name: 'usu_nombre',       value: usu_nombre, type: self.model.types.STRING },
         { name: 'usu_apellidoP',    value: usu_apellidoP, type: self.model.types.STRING },
@@ -156,6 +157,29 @@ usuarios.prototype.get_updateusuario = function( req, res, next ){
     ];
 
     this.model.query("Usuario_UpdUsuario_SP", params, function( error, result ){
+        // console.log( result );
+        if( result.length > 0){
+            //console.log( "Resultado: " + result );
+        }
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+//api/usuarios/updatepass
+usuarios.prototype.get_updatepass = function( req, res, next ){
+    var self      = this;
+    var Pass      = req.query.Pass;
+    var newPass   = req.query.newPass;
+    console.log("Query", req.query);
+    var params = [
+        { name: 'Pass',       value: Pass, type: self.model.types.STRING },
+        { name: 'newPass',    value: newPass, type: self.model.types.STRING }
+    ];
+
+    this.model.query("Usuario_UpdatePass_SP", params, function( error, result ){
         // console.log( result );
         if( result.length > 0){
             //console.log( "Resultado: " + result );

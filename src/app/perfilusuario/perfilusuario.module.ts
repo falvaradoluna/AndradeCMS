@@ -8,6 +8,7 @@ import { SharedPipesModule,
          SortableTableModule }      from '../shared';
 import { ReactiveFormsModule }      from "@angular/forms";
 import { DataTablesModule }         from 'angular-datatables';
+import { PromocionesService } from "../promociones/promociones.service";
 
 
 @NgModule({
@@ -24,5 +25,8 @@ import { DataTablesModule }         from 'angular-datatables';
   declarations: [
     PerfilusuarioComponent
   ],
+  providers:[
+    PromocionesService
+  ]
 })
 export class PerfilusuarioModule { }
