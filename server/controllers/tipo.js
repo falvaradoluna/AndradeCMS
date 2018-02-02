@@ -122,4 +122,25 @@ tipo.prototype.get_delete = function( req, res, next ){
     });
 };
 
+//api/tipo/monedabyid
+tipo.prototype.get_monedabyid = function( req, res, next ){
+    var self      = this;
+    var claveMon = req.query.claveMon;
+    //console.log("Query", req.query);
+    var params = [
+        { name: 'claveMon', value: claveMon, type: self.model.types.STRING }
+    ];
+
+    this.model.query("Monde_GetMonByID_SP", params, function( error, result ){
+        // console.log( result );
+        if( result.length > 0){
+            //console.log( "Resultado: " + result );
+        }
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 module.exports = tipo;
