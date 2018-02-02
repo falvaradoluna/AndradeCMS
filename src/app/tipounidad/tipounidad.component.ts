@@ -94,6 +94,9 @@ export class TipounidadComponent implements OnInit {
         }else if( array[2] === "moneda" ){
             this.getTipo(`SELECT mo_ClaveClasif, mo_Descripcion FROM [dbo].[Moneda] WHERE mo_Estatus = 1;`);
             this.showBody = 2;
+        }else if( array[2] === "pais" ){
+            this.getTipo(`SELECT po_ClavePais, po_Descripcion FROM [dbo].[PaisOrigen] WHERE po_IdStatus = 1;`);
+            this.showBody = 3;
         }
     }
 
