@@ -1,5 +1,5 @@
 .div-space{
-    padding: 0 6% 0 6% !important;
+    // padding: 0 6% 0 6% !important;
 }
 
 table {
@@ -18,6 +18,10 @@ tr:nth-child(even) {
     background-color: #ccc2c2e7;
 }
 
+textarea {
+    resize: none;
+}
+
 .btn-circle {
     width: 30px;
     height: 30px;
@@ -26,4 +30,18 @@ tr:nth-child(even) {
     font-size: 12px;
     line-height: 1.428571429;
     border-radius: 15px;
+  }
+
+   /*
+   server-side-angular-way.component.css
+*/
+.no-data-available {
+    text-align: center;
+}
+
+/*
+   src/styles.css (i.e. your global style)
+*/
+.dataTables_empty {
+    display: none;
 }

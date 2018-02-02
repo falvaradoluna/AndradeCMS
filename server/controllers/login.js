@@ -20,12 +20,12 @@ Login.prototype.get_auth = function (req, res, next) {
 
   var usuario = req.query.usuario;
   var password = req.query.password;
-  var mensajeUsuario = req.query.mensaje;
+  //var mensajeUsuario = req.query.mensaje;
 
   var params = [
     { name: 'User', value: usuario, type: self.model.types.STRING },
     { name: 'Pass', value: password, type: self.model.types.STRING },
-    { name: 'MensajeUsuario', value: mensajeUsuario, type: self.model.types.STRING }
+    //{ name: 'MensajeUsuario', value: mensajeUsuario, type: self.model.types.STRING }
   ];
 
   this.model.query('SP_LoginCMS', params, function (error, result) {

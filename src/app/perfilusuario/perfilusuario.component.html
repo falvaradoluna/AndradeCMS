@@ -1,0 +1,102 @@
+<div [@routerTransition]>  
+    <div class="row  card-header">
+        <div class="col-12">
+            <h1 class="text-muted">{{usu_nombre}} </h1>
+        </div>
+    </div>
+    <div class="card">
+        <form [formGroup]="formUpUsu" (ngSubmit)="updateUsuario()">
+            <div class="row div-space">
+                <div class="col-12">
+                    <h6 class="text-muted">Nombres </h6>
+                    <input type="text" class="col form-control form-control-sm" formControlName="TxtNombre">
+                </div>
+            </div>
+            <div class="row div-space">
+                <div class="col-6">
+                    <h6 class="text-muted">Apellido Materno</h6>
+                    <input type="text" class="col form-control form-control-sm" formControlName="TxtApellidoM">
+                </div>
+                <div class="col-6">
+                    <h6 class="text-muted">Apellido Paterno</h6>
+                    <input type="text" class="col form-control form-control-sm" formControlName="TxtApellidoP">
+                </div>
+            </div>
+            <div class="row div-space">
+                <div class="col-12 space-6">
+                    <h6 class="text-muted">Puesto</h6>
+                    <select class="form-control form-control-sm" formControlName="SelectPuesto">
+                        <option value="0">Seleccione un puesto</option>
+                        <option *ngFor = "let puestos of resultadoPuestos;" [value]="puestos.pu_IdPuesto" > {{ puestos.pu_Descripcion }} </option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <h6 class="text-muted">Empresa </h6>
+                    <select class="form-control form-control-sm" formControlName="SelectEmpresa"
+                        (ngModelChange)="onChangeEmpresa($event)">
+                        <option value="0">Seleccione una empresa</option>
+                        <option *ngFor = "let empresa of resultadoEmpresas;" [value]="empresa.em_IdEmpresa" > {{ empresa.em_Descripcion }} </option>
+                    </select>
+                </div>
+            </div>
+            <div class="row div-space">
+                <div class="col-12">
+                    <h6 class="text-muted">Sucursal </h6>
+                    <select class="form-control form-control-sm" formControlName="SelectSucursal">
+                        <option value="0">Seleccione una sucursal</option>
+                        <option *ngFor="let sucursal of resultadoSucursal;" [value]="sucursal.su_IdSucursal">{{sucursal.su_NombreCto}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row div-space">
+                <div class="col-12">
+                    <h6 class="text-muted">Correo</h6>
+                    <input type="text" class="col form-control form-control-sm" formControlName="TxtCorreo">
+                </div>
+            </div>
+            <br><br>
+            <div>
+                <button type="button" class="btn btn-outline-info pull-right" (click)="openChange(MchangePass)">
+                    Cambiar contraseña
+                </button>
+                <button class="btn btn-outline-success pull-right" type="submit" [disabled]="!formUpUsu.valid">
+                    Actualizar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+                                            <!-- M O D A L E S -->
+<!-- Inicia el modal changePass-->
+<ng-template #MchangePass let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title text-muted">Cambiar constraseña</h4>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="changePass" (ngSubmit)="updatePass()">
+            <div class="row div-space">
+                <div class="col-12">
+                    <h6 class="text-muted">Contraseña actual</h6>
+                    <input type="text" class="col form-control form-control-sm" formControlName="PassActual">
+                </div>
+            </div>
+            <div class="row div-space">
+                <div class="col-12">
+                    <h6 class="text-muted">Nueva contraseña</h6>
+                    <input type="text" class="col form-control form-control-sm" formControlName="PassNuevo">
+                </div>
+            </div>
+            <div class="row div-space">
+                <div class="col-12">
+                    <h6 class="text-muted">Confirmar Contraseña</h6>
+                    <input type="text" class="col form-control form-control-sm" formControlName="PassConfirmar">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline-success" type="submit" [disabled]="!changePass.valid">Actualizar</button>
+                <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
+            </div>
+        </form>
+    </div>
+</ng-template>

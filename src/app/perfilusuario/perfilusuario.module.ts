@@ -1,19 +1,20 @@
 import { NgModule } from '@angular/core';
-import { TipounidadRoutingModule } from "./tipounidad-routing.module";
-import { TipounidadComponent } from "./tipounidad.component";
-import { TipounidadService } from "./tipounidad.service";
 import { CommonModule } from '@angular/common';
+import { PerfilusuarioRoutingModule } from "./perfilusuario-routing.module";
+import { PerfilusuarioComponent } from "./perfilusuario.component";
 import { FormsModule }              from '@angular/forms';
 import { NgbModule }                from '@ng-bootstrap/ng-bootstrap';
 import { SharedPipesModule, 
          SortableTableModule }      from '../shared';
-import {ReactiveFormsModule} from "@angular/forms";
-import { DataTablesModule } from 'angular-datatables';
+import { ReactiveFormsModule }      from "@angular/forms";
+import { DataTablesModule }         from 'angular-datatables';
+import { PromocionesService } from "../promociones/promociones.service";
+
 
 @NgModule({
   imports: [
     CommonModule,
-    TipounidadRoutingModule,
+    PerfilusuarioRoutingModule,
     FormsModule,
     NgbModule.forRoot(),
     SharedPipesModule,
@@ -22,10 +23,10 @@ import { DataTablesModule } from 'angular-datatables';
     DataTablesModule.forRoot()
   ],
   declarations: [
-    TipounidadComponent
+    PerfilusuarioComponent
   ],
   providers:[
-    TipounidadService
-]
+    PromocionesService
+  ]
 })
-export class TipounidadModule { }
+export class PerfilusuarioModule { }
