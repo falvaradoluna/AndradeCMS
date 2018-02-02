@@ -67,8 +67,8 @@ export class LoginComponent implements OnInit {
   getAuth(): void {
     this._service.getAuth({
       usuario: this.usuario.value,
-      password: this.password.value
-      //mensajeUsuario: ''
+      password: this.password.value,
+      mensajeUsuario: ''
     })
       .subscribe(
         auth => { this.authUsuario = auth; },
@@ -97,7 +97,7 @@ export class LoginComponent implements OnInit {
     ]);
     this.password = new FormControl('', [
       Validators.required,
-      Validators.maxLength(20)
+      Validators.maxLength(10)
     ]);
   }
 

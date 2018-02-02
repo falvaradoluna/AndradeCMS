@@ -76,10 +76,7 @@ export class PromocionesComponent implements OnInit {
     public data : object;
     public temp_var: Object=false;
 
-    constructor(private _Promoservice: PromocionesService, 
-                private modalService: NgbModal,     
-                public fb: FormBuilder, 
-                private _http: HttpClient ) { 
+    constructor( private _Promoservice: PromocionesService, private modalService: NgbModal, public fb: FormBuilder, private _http: HttpClient ) { 
         this.form = fb.group({
             "SelectTipoPromocion": this.SelectTipoPromocion,
             "SelectEmpresa": this.SelectEmpresa,

@@ -8,7 +8,6 @@ import { NgbModule }                from '@ng-bootstrap/ng-bootstrap';
 import { SharedPipesModule, 
          SortableTableModule }      from '../shared';
 import {ReactiveFormsModule} from "@angular/forms";
-import { DataTablesModule } from 'angular-datatables';
 
 @NgModule({
   imports: [
@@ -18,8 +17,7 @@ import { DataTablesModule } from 'angular-datatables';
     NgbModule.forRoot(),
     SharedPipesModule,
     SortableTableModule,
-    ReactiveFormsModule,
-    DataTablesModule.forRoot()
+    ReactiveFormsModule
   ],
   declarations: [
     TipounidadComponent
