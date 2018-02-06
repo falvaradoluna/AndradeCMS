@@ -43,4 +43,35 @@ tipos.prototype.get_select = function( req, res, next ){
         });
     });
 };
+
+//api/tipos/insert
+tipos.prototype.get_insert = function( req, res, next ){
+    var self = this;
+    var query = req.query.query;
+    console.log("Query", query);
+    var params = [
+        { name: 'insert', value: query, type: self.model.types.STRING }
+    ];
+
+    this.model.query("INS_GenereicAnyTable_SP", params, function( error, result ){
+        // console.log( result );
+        // console.log( error );
+
+        // if( error ){
+
+        // }
+        // else{
+        //     if( result.length > 0){
+        //         //console.log( "Resultado: " + result );
+        //     }
+        // }
+        
+
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 module.exports = tipos;

@@ -28,6 +28,7 @@ const routes: Routes = [
             { path: 'usuarios',                 loadChildren: '../usuarios/usuarios.module#UsuariosModule' },
             { path: 'miperfil',                 loadChildren: '../perfilusuario/perfilusuario.module#PerfilusuarioModule' },
             { path: 'control/tipotransmision',  loadChildren: '../tipos/tipos.module#TiposModule' },
+            { path: 'control/tipocombustible',  loadChildren: '../tipos/tipos.module#TiposModule' },
             { path: 'blank-page',               loadChildren: './blank-page/blank-page.module#BlankPageModule' }
         ]
     }

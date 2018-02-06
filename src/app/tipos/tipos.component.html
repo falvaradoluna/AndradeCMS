@@ -4,8 +4,8 @@
             <h1 class="text-muted">Tipo transmisión </h1>
         </div>
         <div class="col-6">
-            <button type="button" class="btn btn-success pull-right" (click)="openInsTU(InsTipoUnidad)"> 
-                <i class="fa fa-plus" aria-hidden="true"></i> Agregar Tipo Unidad 
+            <button type="button" class="btn btn-success pull-right" (click)="openModalIns(ModalInsert)"> 
+                <i class="fa fa-plus" aria-hidden="true"></i> Agregar transmisión 
             </button>
         </div>
     </div>
@@ -33,3 +33,43 @@
         </table> 
     </div>  
 </div>
+
+<!-- M O D A L E S -->
+                                            
+                                            <!-- M O D A L E S /// T I P O - U N I D A D -->
+<!-- Inicia el modal Insert-->
+<ng-template #ModalInsert let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 *ngIf ="bodyshow == 1" class="modal-title text-muted">Agregar transmisión</h4>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="formInsert" (ngSubmit)="saveInsert()">
+            <div class="row">
+                <div class="col">
+                    <h6 class="text-muted">Clave</h6>
+                    <input class="form-control form-control-sm" formControlName="ModalClave">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h6 class="text-muted">Descripción</h6>
+                    <input class="form-control form-control-sm" formControlName="ModalDescripcion">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h6 class="text-muted">Empresa </h6>
+                    <select class="form-control form-control-sm" formControlName="SelectEmpresa">
+                        <option value="0">Seleccione una empresa</option>
+                        <option *ngFor = "let empresa of resultadoEmpresas;" [value]="empresa.em_IdEmpresa" > {{ empresa.em_Descripcion }} </option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline-success" type="submit" [disabled]="!formInsert.valid">Guardar</button>
+                <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
+            </div>    
+        </form>
+    </div>
+</ng-template>
+<!-- Fin del modal Insert Tipo Unidad-->

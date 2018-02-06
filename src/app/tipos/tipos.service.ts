@@ -7,6 +7,7 @@ import { HttpClient, HttpErrorResponse, HttpParams, HttpHeaders } from '@angular
 
 //Interfaces
 import { IdataSelect } from "./dataSelect";
+import { IServerResponse } from "./ServerResponse";
 
 
 @Injectable()
@@ -14,16 +15,27 @@ export class TiposService {
 
   constructor(private _http: HttpClient) { }
 
-  //URL para las peticiones
-  private _urltipos = "api/tipos/select";
+    //URL para las peticiones
+    private _urltipos   = "api/tipos/select";
+    private _urlInsert  = "api/tipos/insert";
 
-  getTable(parameters): Observable<IdataSelect[]>{
+    getTable(parameters): Observable<IdataSelect[]>{
 
-    //Inicializamos un nuevo onjeto de tipo HttpParams
-    let Params = new HttpParams();
-    Params = Params.append("query", parameters.query);
+        //Inicializamos un nuevo onjeto de tipo HttpParams
+        let Params = new HttpParams();
+        Params = Params.append("query", parameters.query);
 
-    return this._http.get<IdataSelect[]>(this._urltipos, {params: Params})
+        return this._http.get<IdataSelect[]>(this._urltipos, {params: Params})
+        .catch(this.handleError);
+    }
+
+    Insert(parameters): Observable<IServerResponse[]>{
+
+        //Inicializamos un nuevo onjeto de tipo HttpParams
+        let Params = new HttpParams();
+        Params = Params.append("query", parameters.insert);
+
+        return this._http.get<IServerResponse[]>(this._urlInsert, {params: Params})
         .catch(this.handleError);
     }
 

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TiposRoutingModule } from "./tipos-routing.module";
 import { TiposComponent } from "./tipos.component";
 import { TiposService } from "./tipos.service";
+import { PromocionesService }       from "../promociones/promociones.service";
 import { FormsModule }              from '@angular/forms';
 import { NgbModule }                from '@ng-bootstrap/ng-bootstrap';
 import { SharedPipesModule, 
@@ -25,7 +26,8 @@ import { DataTablesModule } from 'angular-datatables';
     TiposComponent
   ],
   providers:[
-    TiposService
+    TiposService,
+    PromocionesService
 ]
 })
 export class TiposModule { }
