@@ -18,6 +18,8 @@ export class TiposService {
     //URL para las peticiones
     private _urltipos   = "api/tipos/select";
     private _urlInsert  = "api/tipos/insert";
+    private _urlDelete  = "api/tipos/delete";
+    private _urlById    = "api/tipos/selectbyid"    
 
     getTable(parameters): Observable<IdataSelect[]>{
 
@@ -29,14 +31,40 @@ export class TiposService {
         .catch(this.handleError);
     }
 
+    getById(parameters): Observable<IdataSelect[]>{
+
+        //Inicializamos un nuevo onjeto de tipo HttpParams
+        let Params = new HttpParams();
+        Params = Params.append("clave", parameters.clave);
+        if( parameters.use == 1 ){
+            return this._http.get<IdataSelect[]>(this._urlById + "tipotransmision", {params: Params})
+            .catch(this.handleError);
+        }
+    }
+
     Insert(parameters): Observable<IServerResponse[]>{
 
         //Inicializamos un nuevo onjeto de tipo HttpParams
         let Params = new HttpParams();
-        Params = Params.append("query", parameters.insert);
+        Params = Params.append("clave", parameters.clave);
+        Params = Params.append("descripcion", parameters.descripcion);
+        Params = Params.append("empresa", parameters.empresa);
+        if( parameters.use == 1 ){ 
+            return this._http.get<IServerResponse[]>(this._urlInsert + "tipotransmision", {params: Params})
+            .catch(this.handleError);
+        }
+    }
 
-        return this._http.get<IServerResponse[]>(this._urlInsert, {params: Params})
-        .catch(this.handleError);
+    Delete(parameters): Observable<IServerResponse[]>{
+
+        //Inicializamos un nuevo onjeto de tipo HttpParams
+        let Params = new HttpParams();
+        Params = Params.append("claveId", parameters.claveId);
+
+        if( parameters.use == 1 ){ 
+            return this._http.get<IServerResponse[]>(this._urlDelete + "tipotransmision", {params: Params})
+            .catch(this.handleError);
+        }
     }
 
     private handleError(err: HttpErrorResponse) {

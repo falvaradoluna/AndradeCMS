@@ -18,7 +18,7 @@ var tipos = function(conf) {
 tipos.prototype.get_select = function( req, res, next ){
     var self = this;
     var query = req.query.query;
-    console.log("Query", query);
+    //console.log("Query", query);
     var params = [
         { name: 'table', value: query, type: self.model.types.STRING }
     ];
@@ -44,18 +44,82 @@ tipos.prototype.get_select = function( req, res, next ){
     });
 };
 
-//api/tipos/insert
-tipos.prototype.get_insert = function( req, res, next ){
+//api/tipos/inserttipotransmision
+tipos.prototype.get_inserttipotransmision = function( req, res, next ){
     var self = this;
-    var query = req.query.query;
-    console.log("Query", query);
+    var tt_ClaveTransmision = req.query.clave;
+    var tt_Descripcion      = req.query.descripcion;
+    var tt_idEmpresa        = req.query.empresa;
+    //console.log("Query", query);
     var params = [
-        { name: 'insert', value: query, type: self.model.types.STRING }
+        { name: 'tt_ClaveTransmision',  value: tt_ClaveTransmision, type: self.model.types.STRING },
+        { name: 'tt_Descripcion',       value: tt_Descripcion, type: self.model.types.STRING },
+        { name: 'tt_idEmpresa',         value: tt_idEmpresa, type: self.model.types.INT }
     ];
 
-    this.model.query("INS_GenereicAnyTable_SP", params, function( error, result ){
+    this.model.query("TipTrans_INSERT_SP", params, function( error, result ){
         // console.log( result );
         // console.log( error );
+
+        // if( error ){
+
+        // }
+        // else{
+        //     if( result.length > 0){
+        //         //console.log( "Resultado: " + result );
+        //     }
+        // }
+        
+
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+//api/tipos/deletetipotransmision
+tipos.prototype.get_deletetipotransmision = function( req, res, next ){
+    var self = this;
+    var claveId = req.query.claveId;
+    console.log("Query", claveId);
+    var params = [
+        { name: 'tt_ClaveTransmision', value: claveId, type: self.model.types.STRING }
+    ];
+
+    this.model.query("TipTrans_DELETE_SP", params, function( error, result ){
+        // console.log( result );
+        // console.log( error );
+
+        // if( error ){
+
+        // }
+        // else{
+        //     if( result.length > 0){
+        //         //console.log( "Resultado: " + result );
+        //     }
+        // }
+        
+
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+//api/tipo/selectbyidtipotransmision
+tipos.prototype.get_selectbyidtipotransmision = function( req, res, next ){
+    var self = this;
+    var tt_ClaveTransmision = req.query.clave;
+    //console.log("Query", query);
+    var params = [
+        { name: 'tt_ClaveTransmision', value: tt_ClaveTransmision, type: self.model.types.STRING }
+    ];
+
+    this.model.query("TipTrans_SELECTbyID_SP", params, function( error, result ){
+        console.log( result );
+        console.log( error );
 
         // if( error ){
 
