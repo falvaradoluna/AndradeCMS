@@ -234,7 +234,7 @@ export class TipounidadComponent implements OnInit {
               );
             }
         });
-    }
+    };
 
     saveMoneda(){
         swal({

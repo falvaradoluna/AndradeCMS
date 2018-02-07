@@ -128,6 +128,6 @@ export class PromocionesService {
     private handleError(err: HttpErrorResponse) {
         console.error(err.message);
         return Observable.throw(err.message);
-      }
+    }
 
 }
