@@ -8,5 +8,6 @@ module.exports = {
     marcasemi:      require("./controllers/marcasemi"),
     tipo:           require("./controllers/tipo"),
     usuarios:       require("./controllers/usuarios"),
-    tipos:          require("./controllers/tipos")
+    tipos:          require("./controllers/tipos"),
+    catunidad:      require("./controllers/catunidad")
 }

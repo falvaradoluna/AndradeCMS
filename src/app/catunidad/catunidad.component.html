@@ -1,0 +1,90 @@
+<div [@routerTransition]>
+    <div>
+        <div class="row  card-header">
+            <div class="col-6">
+                <h1 class="text-muted">Catalogo Unidades </h1>
+            </div>
+            <!-- <div class="col-6">
+                <button type="button" class="btn btn-success pull-right" (click)="open(content)" style="margin-top:3%;"> 
+                <i class="fa fa-plus" aria-hidden="true"></i> Agregar promocion 
+                </button>
+            </div> -->
+        </div>
+        <div class="card">
+            <table datatable class="table row-border hover" *ngIf="this.temp_var">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Catalogo</th>
+                        <th>Modelo</th>
+                        <th>Descripcion</th>
+                        <!-- <th></th> -->
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let unidad of data; let i = index;">
+                        <td>{{ unidad.cu_IdCatUnidad }}</td>
+                        <td>{{ unidad.cu_Catalogo }}</td>
+                        <td>{{ unidad.cu_Modelo }}</td>
+                        <td>{{ unidad.cu_Descripcion }}</td>
+                        <!-- <td> <button type="button" class="btn btn-info btn-circle" (click)="openImg(contentImg, Dpromo.pathImagen, Dpromo.po_Descripcion, Dpromo.po_IdPromocion);"> 
+                            <i class="fa fa-file-image-o" aria-hidden="true"></i>
+                            </button> 
+                            </td> -->
+                        <td> 
+                            <button type="button" class="btn btn-success btn-circle" (click)="openImgModal(ModalImg);">
+                            <i class="fa fa-pencil" aria-hidden="true" ></i>
+                            </button> 
+                            <button type="button" class="btn btn-danger btn-circle" (click)="deletePromocion(Dpromo.po_IdPromocion);">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+                                                    <!-- M O D A L E S -->
+
+<ng-template #ModalImg let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title text-muted">Imagenes Unidades</h4>
+    </div>
+    <div class="modal-body">
+        <ngb-carousel>
+            <ng-template ngbSlide>
+                <img src="https://lorempixel.com/900/500?r=1" alt="Random first slide">
+                <div class="carousel-caption">
+                    <h3>First slide label</h3>
+                    <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                </div>
+            </ng-template>
+            <ng-template ngbSlide>
+                <img src="https://lorempixel.com/900/500?r=2" alt="Random second slide">
+                <div class="carousel-caption">
+                    <h3>Second slide label</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+            </ng-template>
+            <ng-template ngbSlide>
+                <img src="https://lorempixel.com/900/500?r=3" alt="Random third slide">
+                <div class="carousel-caption">
+                    <h3>Third slide label</h3>
+                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+                </div>
+            </ng-template>
+        </ngb-carousel>
+        <label class="btn btn-secondary btn-file">Browse
+            <!-- <input name="file" type="file" (change)="onFileChangeUp($event)" formControlName="RealImgUpdate">
+            <input type="hidden" name="fileHidden" formControlName="imageInputUpdate"/>
+            <input type="hidden" name="fileHidden" formControlName="promoIdUp"/> -->
+        </label>
+        <div class="modal-footer">
+            <button class="btn btn-outline-success" type="submit">Guardar</button>
+            <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
+        </div>
+    </div>
+</ng-template>
