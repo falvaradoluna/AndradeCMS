@@ -1,0 +1,156 @@
+                                                <!-- T I P O  T R A N S M I S I O N  -->
+<div *ngIf="bodyshow == 1">
+    <div class="row card-header div-space">
+        <div class="col-6">
+            <h1 class="text-muted">Tipo transmisión </h1>
+        </div>
+        <div class="col-6">
+            <button type="button" class="btn btn-success pull-right" (click)="openModalIns(ModalInsert)"> 
+                <i class="fa fa-plus" aria-hidden="true"></i> Agregar transmisión 
+            </button>
+        </div>
+    </div>
+    <div class="card">  
+        <table datatable class="table row-border hover " *ngIf="this.temp_var">
+            <thead>
+                <tr>
+                    <th *ngFor="let cabecera of cabeceras;" class="">{{cabecera}} </th>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let tipo of resultadosTipo; let i = index;">
+                    <td  *ngFor="let item of items;">{{ tipo[ item ] }}</td>
+                    <td> 
+                        <button type="button" class="btn btn-success btn-circle" (click)="openModalUp(ModalUpdate, tipo['tt_ClaveTransmision']);">
+                            <i class="fa fa-pencil" aria-hidden="true" ></i>
+                        </button> 
+                        <button type="button" class="btn btn-danger btn-circle" (click)="delete(tipo['tt_ClaveTransmision']);">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table> 
+    </div>  
+</div>
+                                            <!-- F I N  T I P O  T R A N S M I S I O N  -->
+
+                                            <!-- T I P O  T R A N S M I S I O N  -->
+
+<div *ngIf="bodyshow == 2">
+    <div class="row card-header div-space">
+        <div class="col-6">
+            <h1 class="text-muted">Tipo combustible </h1>
+        </div>
+        <div class="col-6">
+            <button type="button" class="btn btn-success pull-right" (click)="openModalIns(ModalInsert)"> 
+                <i class="fa fa-plus" aria-hidden="true"></i> Agregar combustible 
+            </button>
+        </div>
+    </div>
+    <div class="card">  
+        <table datatable class="table row-border hover " *ngIf="this.temp_var">
+            <thead>
+                <tr>
+                    <th *ngFor="let cabecera of cabeceras;" class="">{{cabecera}} </th>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let tipo of resultadosTipo; let i = index;">
+                    <td  *ngFor="let item of items;">{{ tipo[ item ] }}</td>
+                    <td> 
+                        <button type="button" class="btn btn-success btn-circle" (click)="openModalUp(ModalUpdate, tipo['tu_IdTipo']);">
+                            <i class="fa fa-pencil" aria-hidden="true" ></i>
+                        </button> 
+                        <button type="button" class="btn btn-danger btn-circle" (click)="delete(tipo['tc_ClaveCombustible']);">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table> 
+    </div>  
+</div>
+
+                                                <!-- F I N  T I P O  C O M B U S T I B L E  -->
+
+                                                        <!-- M O D A L E S -->
+                                            
+                                            <!-- M O D A L E S /// T I P O - T R A N S M I S I O N -->
+<!-- Inicia el modal Insert-->
+<ng-template #ModalInsert let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 *ngIf ="bodyshow == 1" class="modal-title text-muted">Agregar transmisión</h4>
+        <h4 *ngIf ="bodyshow == 2" class="modal-title text-muted">Agregar combustible</h4>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="formInsert" (ngSubmit)="saveInsert()">
+            <div class="row">
+                <div class="col">
+                    <h6 class="text-muted">Clave</h6>
+                    <input class="form-control form-control-sm" formControlName="ModalClave">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h6 class="text-muted">Descripción</h6>
+                    <input class="form-control form-control-sm" formControlName="ModalDescripcion">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h6 class="text-muted">Empresa </h6>
+                    <select class="form-control form-control-sm" formControlName="SelectEmpresa">
+                        <option value="0">Seleccione una empresa</option>
+                        <option *ngFor = "let empresa of resultadoEmpresas;" [value]="empresa.em_IdEmpresa" > {{ empresa.em_Descripcion }} </option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline-success" type="submit" [disabled]="!formInsert.valid">Guardar</button>
+                <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
+            </div>    
+        </form>
+    </div>
+</ng-template>
+<!-- Fin del modal Insert -->
+
+<!-- Inicia el modal UPDATE-->
+<ng-template #ModalUpdate let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 *ngIf ="bodyshow == 1" class="modal-title text-muted">Actualizar transmisión</h4>
+        <h4 *ngIf ="bodyshow == 2" class="modal-title text-muted">Actualizar combustible</h4>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="formInsert" (ngSubmit)="saveInsert()">
+            <div class="row">
+                <div class="col">
+                    <h6 class="text-muted">Clave</h6>
+                    <input class="form-control form-control-sm" formControlName="ModalClave">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h6 class="text-muted">Descripción</h6>
+                    <input class="form-control form-control-sm" formControlName="ModalDescripcion">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h6 class="text-muted">Empresa </h6>
+                    <select class="form-control form-control-sm" formControlName="SelectEmpresa">
+                        <option value="0">Seleccione una empresa</option>
+                        <option *ngFor = "let empresa of resultadoEmpresas;" [value]="empresa.em_IdEmpresa" > {{ empresa.em_Descripcion }} </option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline-success" type="submit" [disabled]="!formInsert.valid">Guardar</button>
+                <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
+            </div>    
+        </form>
+    </div>
+</ng-template>
+<!-- Fin del modal UPDATE -->
