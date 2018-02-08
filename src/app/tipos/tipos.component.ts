@@ -253,9 +253,9 @@ export class TiposComponent implements OnInit {
             this.ResultadosTabla = ResultadosTabla;
             console.log( "ResultadoServerMOdal", ResultadosTabla );
             this.formInsert = this.fb.group({
-                "ModalClave":       ResultadosTabla[0].tt_ClaveTransmision,
-                "ModalDescripcion": ResultadosTabla[0].tt_Descripcion,
-                "SelectEmpresa":    ResultadosTabla[0].tt_idEmpresa
+                "ModalClave":       ResultadosTabla[0].tableId,
+                "ModalDescripcion": ResultadosTabla[0].tablesDescripcion,
+                "SelectEmpresa":    ResultadosTabla[0].tableEmpresa
             });
         },
         error => this.errorMessage = <any>error);

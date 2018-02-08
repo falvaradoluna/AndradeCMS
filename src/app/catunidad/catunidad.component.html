@@ -1,0 +1,102 @@
+<div [@routerTransition]>
+    <div>
+        <div class="row  card-header">
+            <div class="col-6">
+                <h1 class="text-muted">Catalogo Unidades </h1>
+            </div>
+            <!-- <div class="col-6">
+                <button type="button" class="btn btn-success pull-right" (click)="open(content)" style="margin-top:3%;"> 
+                <i class="fa fa-plus" aria-hidden="true"></i> Agregar promocion 
+                </button>
+            </div> -->
+        </div>
+        <div class="card">
+            <table datatable class="table row-border hover" *ngIf="this.temp_var">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Catalogo</th>
+                        <th>Modelo</th>
+                        <th>Descripcion</th>
+                        <!-- <th></th> -->
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let unidad of data; let i = index;">
+                        <td>{{ unidad.cu_IdCatUnidad }}</td>
+                        <td>{{ unidad.cu_Catalogo }}</td>
+                        <td>{{ unidad.cu_Modelo }}</td>
+                        <td>{{ unidad.cu_Descripcion }}</td>
+                        <!-- <td> <button type="button" class="btn btn-info btn-circle" (click)="openImg(contentImg, Dpromo.pathImagen, Dpromo.po_Descripcion, Dpromo.po_IdPromocion);"> 
+                            <i class="fa fa-file-image-o" aria-hidden="true"></i>
+                            </button> 
+                            </td> -->
+                        <td> 
+                            <button type="button" class="btn btn-success btn-circle" (click)="openImgModal(ModalImg, unidad.cu_IdCatUnidad);">
+                                <i class="fa fa-plus" aria-hidden="true" ></i>
+                            </button> 
+                            <!-- <button type="button" class="btn btn-danger btn-circle" (click)="deletePromocion(Dpromo.po_IdPromocion);">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                            </button> -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+                                                    <!-- M O D A L E S -->
+
+<ng-template #ModalImg let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title text-muted">Imagenes Unidades</h4>
+    </div>
+    <div class="modal-body">
+        <table datatable class="table row-border hover" *ngIf="this.img_var">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Imagen</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let imagen of resImganes; let i = index;">
+                    <td> {{ i + 1 }} </td>
+                    <td><img src="{{imagen.ci_RutaImagen}}" width="50%"></td>
+                    <!-- <td> <button type="button" class="btn btn-info btn-circle" (click)="openImg(contentImg, Dpromo.pathImagen, Dpromo.po_Descripcion, Dpromo.po_IdPromocion);"> 
+                        <i class="fa fa-file-image-o" aria-hidden="true"></i>
+                        </button> 
+                        </td> -->
+                    <!-- <td> 
+                        <button type="button" class="btn btn-success btn-circle" (click)="openImgModal(ModalImg);">
+                        <i class="fa fa-pencil" aria-hidden="true" ></i>
+                        </button> 
+                        <button type="button" class="btn btn-danger btn-circle" (click)="deletePromocion(Dpromo.po_IdPromocion);">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                    </td> -->
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="row div-space">
+            <div class="col">
+                <h6 class="text-muted">Imagen </h6>
+                <form [formGroup]="formImg" (ngSubmit)="saveImage()">
+                    <label class="btn btn-secondary btn-file">Browse
+                        <input name="file" type="file" (change)="onFileChange($event)" formControlName="RealImg">
+                        <input type="hidden" name="fileHidden" formControlName="imageInput"/> 
+                        <input type="hidden" name="IdCatUnidad" formControlName="IdCatUnidad"/> 
+                        <input type="hidden" name="tipoImg" formControlName="tipoImg"/> 
+                    </label>
+                    <div class="modal-footer">
+                        <button class="btn btn-outline-success" type="submit">Guardar</button>
+                        <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div> 
+    </div>
+</ng-template>
