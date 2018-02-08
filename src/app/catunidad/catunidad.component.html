@@ -18,8 +18,10 @@
                         <th>Catalogo</th>
                         <th>Modelo</th>
                         <th>Descripcion</th>
+                        <th>Imagenes</th>
+                        <th>Fichas</th>
                         <!-- <th></th> -->
-                        <th></th>
+                        <!-- <th></th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -28,17 +30,15 @@
                         <td>{{ unidad.cu_Catalogo }}</td>
                         <td>{{ unidad.cu_Modelo }}</td>
                         <td>{{ unidad.cu_Descripcion }}</td>
-                        <!-- <td> <button type="button" class="btn btn-info btn-circle" (click)="openImg(contentImg, Dpromo.pathImagen, Dpromo.po_Descripcion, Dpromo.po_IdPromocion);"> 
-                            <i class="fa fa-file-image-o" aria-hidden="true"></i>
-                            </button> 
-                            </td> -->
                         <td> 
                             <button type="button" class="btn btn-success btn-circle" (click)="openImgModal(ModalImg, unidad.cu_IdCatUnidad);">
                                 <i class="fa fa-plus" aria-hidden="true" ></i>
                             </button> 
-                            <!-- <button type="button" class="btn btn-danger btn-circle" (click)="deletePromocion(Dpromo.po_IdPromocion);">
-                            <i class="fa fa-trash" aria-hidden="true"></i>
-                            </button> -->
+                        </td>
+                        <td> 
+                            <button type="button" class="btn btn-success btn-circle" (click)="openFichaModal(ModalFicha, unidad.cu_IdCatUnidad);">
+                                <i class="fa fa-plus" aria-hidden="true" ></i>
+                            </button> 
                         </td>
                     </tr>
                 </tbody>
@@ -59,16 +59,27 @@
                 <tr>
                     <th>#</th>
                     <th>Imagen</th>
+                    <th>Editar imagen</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let imagen of resImganes; let i = index;">
                     <td> {{ i + 1 }} </td>
-                    <td><img src="{{imagen.ci_RutaImagen}}" width="50%"></td>
-                    <!-- <td> <button type="button" class="btn btn-info btn-circle" (click)="openImg(contentImg, Dpromo.pathImagen, Dpromo.po_Descripcion, Dpromo.po_IdPromocion);"> 
-                        <i class="fa fa-file-image-o" aria-hidden="true"></i>
-                        </button> 
-                        </td> -->
+                    <td><img src="{{imagen.ci_RutaImagen}}" width="100%"></td>
+                    <td> 
+                        <form [formGroup]="formImg" (ngSubmit)="updateImage(imagen.ci_IdImagen, imagen.ci_IdCatUnidad)">
+                            <label class="btn btn-secondary btn-file">Actualizar
+                                <input name="file" type="file" (change)="onFileChangeUp($event)" formControlName="RealImg">
+                                <input type="hidden" name="fileHidden" formControlName="imageInput"/> 
+                                <input type="hidden" name="IdCatUnidad" formControlName="IdCatUnidad"/> 
+                                <input type="hidden" name="tipoImg" formControlName="tipoImg"/>
+                                <input type="hidden" name="Idimg" formControlName="Idimg"/> 
+                            </label>
+                            <div class="modal-footer">
+                                <button class="btn btn-outline-success" type="submit">Actualizar</button>
+                            </div>
+                        </form> 
+                    </td>
                     <!-- <td> 
                         <button type="button" class="btn btn-success btn-circle" (click)="openImgModal(ModalImg);">
                         <i class="fa fa-pencil" aria-hidden="true" ></i>
@@ -84,6 +95,41 @@
         <div class="row div-space">
             <div class="col">
                 <h6 class="text-muted">Imagen </h6>
+                <form [formGroup]="formImg" (ngSubmit)="saveImage()">
+                    <label class="btn btn-secondary btn-file">Browse
+                        <input name="file" type="file" (change)="onFileChange($event)" formControlName="RealImg">
+                        <input type="hidden" name="fileHidden" formControlName="imageInput"/> 
+                        <input type="hidden" name="IdCatUnidad" formControlName="IdCatUnidad"/> 
+                        <input type="hidden" name="tipoImg" formControlName="tipoImg"/> 
+                    </label>
+                    <div class="modal-footer">
+                        <button class="btn btn-outline-success" type="submit">Guardar</button>
+                        <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div> 
+    </div>
+</ng-template>
+
+<ng-template #ModalFicha let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title text-muted">Fichas Unidades</h4>
+    </div>
+    <div class="modal-body">
+        <!-- <div class="row div-space text-center" *ngIf="showFicha == 1">
+            <div class="col space-12">
+                <img src="{{ModalImg}}" width="100%">
+            </div>
+        </div>
+        <div class="row div-space text-center" *ngIf="showFicha == 0">
+            <div class="col space-12">
+                <img src="{{ModalImg}}" width="100%">
+            </div>
+        </div> -->
+        <div class="row div-space">
+            <div class="col">
+                <h6 class="text-muted"> </h6>
                 <form [formGroup]="formImg" (ngSubmit)="saveImage()">
                     <label class="btn btn-secondary btn-file">Browse
                         <input name="file" type="file" (change)="onFileChange($event)" formControlName="RealImg">
