@@ -85,36 +85,5 @@
     </ng-template>
 
 <!-- Agregar del carline -->
-<ng-template #contentAdd let-c="close" let-d="dismiss">
-        <div class="modal-header">
-            <h4 class="modal-title text-muted">Agregar marcasemi</h4>
-        </div>
-        <div class="modal-body">
-            <div class="row div-space">
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Nombre Corto</label>
-                    <input class="form-control" [(ngModel)]="MarcasemiAdd.pv_NombreCto" type="text" placeholder="Nombre Corto">
-                </div>
-            </div>
-            <div class="row div-space">
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Descripción</label>
-                    <input class="form-control" [(ngModel)]="MarcasemiAdd.pv_Descripcion" type="text" placeholder="Descripción">
-                </div>
-            </div>
-            <div class="row div-space">
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Empresa</label>
-                    <select class="form-control form-control-sm" name="SelectEmpresas" [(ngModel)]="MarcasemiAdd.pi_IdEmpresa">
-                        <option value="0">Seleccione una empresa</option>
-                        <option *ngFor = "let empresa of empresas;" [value]="empresa.em_IdEmpresa" > {{ empresa.em_Descripcion }} </option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-outline-success" (click)="addMarcasemi(); c('Close click');">Agregar</button>
-            <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
-        </div>
-    </ng-template>
+z
   

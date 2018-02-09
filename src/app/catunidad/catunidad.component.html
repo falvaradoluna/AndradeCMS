@@ -117,25 +117,21 @@
         <h4 class="modal-title text-muted">Fichas Unidades</h4>
     </div>
     <div class="modal-body">
-        <!-- <div class="row div-space text-center" *ngIf="showFicha == 1">
+        <div class="row div-space text-center">
             <div class="col space-12">
-                <img src="{{ModalImg}}" width="100%">
+                <!-- <pdf-viewer src="{{rutaFicha}}"></pdf-viewer> -->
+                <!-- <iframe src="{{rutaFicha}}"></iframe> -->
             </div>
         </div>
-        <div class="row div-space text-center" *ngIf="showFicha == 0">
-            <div class="col space-12">
-                <img src="{{ModalImg}}" width="100%">
-            </div>
-        </div> -->
         <div class="row div-space">
             <div class="col">
                 <h6 class="text-muted"> </h6>
-                <form [formGroup]="formImg" (ngSubmit)="saveImage()">
+                <form [formGroup]="formFicha" (ngSubmit)="saveFicha()">
                     <label class="btn btn-secondary btn-file">Browse
-                        <input name="file" type="file" (change)="onFileChange($event)" formControlName="RealImg">
-                        <input type="hidden" name="fileHidden" formControlName="imageInput"/> 
-                        <input type="hidden" name="IdCatUnidad" formControlName="IdCatUnidad"/> 
-                        <input type="hidden" name="tipoImg" formControlName="tipoImg"/> 
+                        <input name="file" type="file" (change)="onFileChangeFicha($event)" formControlName="RealFicha">
+                        <input type="hidden" name="fileHidden" formControlName="FichaInput"/> 
+                        <input type="hidden" name="IdCatFichaUnidad" formControlName="IdCatFichaUnidad"/> 
+                        <input type="hidden" name="tipo" formControlName="tipo"/> 
                     </label>
                     <div class="modal-footer">
                         <button class="btn btn-outline-success" type="submit">Guardar</button>

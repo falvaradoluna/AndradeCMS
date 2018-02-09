@@ -38,6 +38,7 @@ export class CatunidadComponent implements OnInit {
     public img_var:     Object = false;
     ci_IdCatUnidad:     any;
     showFicha:          number;
+    rutaFicha:          any;
 
     //Formulario de la imagen
     formImg: FormGroup;
@@ -47,6 +48,13 @@ export class CatunidadComponent implements OnInit {
     tipoImg = new FormControl("");
     Idimg = new FormControl("");
 
+    //Formulario
+    formFicha: FormGroup;
+    RealFicha = new FormControl("");
+    FichaInput = new FormControl("");
+    IdCatFichaUnidad = new FormControl("");
+    tipo = new FormControl("");
+
     constructor(private _http: HttpClient, private modalService: NgbModal, private _serviceUnidad: CatunidadService, public fb: FormBuilder) { 
         this.formImg = fb.group({
             "RealImg": this.RealImg,
@@ -55,6 +63,14 @@ export class CatunidadComponent implements OnInit {
             "tipoImg": this.tipoImg,
             "Idimg": this.Idimg
         });
+
+        this.formFicha = fb.group({
+            "RealFicha": this.RealFicha,
+            "FichaInput": this.FichaInput,
+            "IdCatFichaUnidad": this.IdCatFichaUnidad,
+            "tipo": this.tipo,
+            //"Idimg": this.Idimg
+        })
     }
 
     private _urlgetUnidades = "api/catunidad/unidadesnuevas";
@@ -225,20 +241,47 @@ export class CatunidadComponent implements OnInit {
     };
 
     getFichas(caf_IdCatUnidad){
+        this.resFichas = [];
         this._serviceUnidad.GetFichasUnidad( { caf_IdCatUnidad: caf_IdCatUnidad } )
         .subscribe( resFichas => {
             this.resFichas = resFichas
             this.resFichas.forEach(function( item, key ){
-                item.caf_RutaFicha = 'http://localhost:3420/images/' + item.caf_RutaFicha;
+                item.caf_RutaFicha = 'http://localhost:3420/fichas/' + item.caf_RutaFicha;
             });
             if(this.resFichas[0].caf_RutaFicha == ""){
                 this.showFicha = 0;
             }else{
                 this.showFicha = 1;
             }
+            this.rutaFicha = this.resFichas[0].caf_RutaFicha;
         },
         error => this.errorMessage = <any>error);
-    }  
+    };
+
+    onFileChangeFicha($event, ci_IdImagen, ci_IdCatUnidad) {
+        let reader = new FileReader();
+        let file = $event.target.files[0]; 
+        console.log( file.type );
+        // if( file.type != "application/pdf" ){
+        //     swal({
+        //         type: 'error',
+        //         title: 'Oops...',
+        //         text: 'Seleccione una imagen JPG/PNG'
+        //       });
+        //     this.formImg.controls['RealFicha'].setValue("");
+        // }else{
+        //     this.formImg.controls['tipo'].setValue(1);
+        //     reader.readAsDataURL(file);
+        //     reader.onload = () => {
+        //         this.formImg.controls['FichaInput'].setValue({
+        //             filename: file.name,
+        //             filetype: file.type,
+        //             value: reader.result.split(',')[1]
+        //         });
+        //     };
+        //     this.formImg.controls['FichaInput'].setValue(file ? file : '');
+        // }   
+    };
 
     //================================================================= M O D A L E S =================================================//
 

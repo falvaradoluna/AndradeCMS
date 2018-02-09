@@ -15,6 +15,15 @@ var ExpressServer = function(config){
 
   this.expressServer.use(bodyParser.urlencoded({extended: true}))
   this.expressServer.use(bodyParser.json());
+  
+this.expressServer.use(function(req, res, next) {
+  // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5302')
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST')
+  res.setHeader('Access-Control-Allow-Headers', '*')
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  next()
+})
 
   for (var middleware in middlewares){
     this.expressServer.use(middlewares[middleware]);
@@ -52,6 +61,7 @@ var ExpressServer = function(config){
   this.expressServer.post('*', function(req, res){
       res.render('index', {});
   });
+
 };
 
 ExpressServer.prototype.router = function(controller,funcionalidad,method,url){
