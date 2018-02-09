@@ -39,6 +39,9 @@ export class CatunidadComponent implements OnInit {
     ci_IdCatUnidad:     any;
     showFicha:          number;
     rutaFicha:          any;
+    showIcono:          any;
+    cafIdCatUnidad:     any;
+    fichaId:            any;
 
     //Formulario de la imagen
     formImg: FormGroup;
@@ -52,24 +55,25 @@ export class CatunidadComponent implements OnInit {
     formFicha: FormGroup;
     RealFicha = new FormControl("");
     FichaInput = new FormControl("");
-    IdCatFichaUnidad = new FormControl("");
+    caf_idCatUnidad = new FormControl("");
     tipo = new FormControl("");
+    idFicha = new FormControl("");
 
     constructor(private _http: HttpClient, private modalService: NgbModal, private _serviceUnidad: CatunidadService, public fb: FormBuilder) { 
         this.formImg = fb.group({
-            "RealImg": this.RealImg,
-            "imageInput": this.imageInput,
-            "IdCatUnidad": this.IdCatUnidad,
-            "tipoImg": this.tipoImg,
-            "Idimg": this.Idimg
+            "RealImg":      this.RealImg,
+            "imageInput":   this.imageInput,
+            "IdCatUnidad":  this.IdCatUnidad,
+            "tipoImg":      this.tipoImg,
+            "Idimg":        this.Idimg
         });
 
         this.formFicha = fb.group({
-            "RealFicha": this.RealFicha,
-            "FichaInput": this.FichaInput,
-            "IdCatFichaUnidad": this.IdCatFichaUnidad,
-            "tipo": this.tipo,
-            //"Idimg": this.Idimg
+            "RealFicha":        this.RealFicha,
+            "FichaInput":       this.FichaInput,
+            "caf_idCatUnidad":  this.caf_idCatUnidad,
+            "tipo":             this.tipo,
+            "idFicha":          this.idFicha
         })
     }
 
@@ -137,7 +141,6 @@ export class CatunidadComponent implements OnInit {
     }
 
     saveImage() {
-        console.log( this.formImg );
         swal({
             title: '¿Guardar la imagen?',
             type: 'warning',
@@ -242,45 +245,136 @@ export class CatunidadComponent implements OnInit {
 
     getFichas(caf_IdCatUnidad){
         this.resFichas = [];
+        this.rutaFicha = "";
+
         this._serviceUnidad.GetFichasUnidad( { caf_IdCatUnidad: caf_IdCatUnidad } )
         .subscribe( resFichas => {
             this.resFichas = resFichas
             this.resFichas.forEach(function( item, key ){
                 item.caf_RutaFicha = 'http://localhost:3420/fichas/' + item.caf_RutaFicha;
             });
-            if(this.resFichas[0].caf_RutaFicha == ""){
+            
+            if(this.resFichas[0] == undefined){
                 this.showFicha = 0;
             }else{
                 this.showFicha = 1;
+                this.rutaFicha = this.resFichas[0].caf_RutaFicha;
+                console.log(this.resFichas[0]);
+                this.fichaId = this.resFichas[0].caf_idFicha;
             }
-            this.rutaFicha = this.resFichas[0].caf_RutaFicha;
         },
         error => this.errorMessage = <any>error);
     };
 
-    onFileChangeFicha($event, ci_IdImagen, ci_IdCatUnidad) {
+    onFileChangeFicha($event) {
         let reader = new FileReader();
-        let file = $event.target.files[0]; 
-        console.log( file.type );
-        // if( file.type != "application/pdf" ){
-        //     swal({
-        //         type: 'error',
-        //         title: 'Oops...',
-        //         text: 'Seleccione una imagen JPG/PNG'
-        //       });
-        //     this.formImg.controls['RealFicha'].setValue("");
-        // }else{
-        //     this.formImg.controls['tipo'].setValue(1);
-        //     reader.readAsDataURL(file);
-        //     reader.onload = () => {
-        //         this.formImg.controls['FichaInput'].setValue({
-        //             filename: file.name,
-        //             filetype: file.type,
-        //             value: reader.result.split(',')[1]
-        //         });
-        //     };
-        //     this.formImg.controls['FichaInput'].setValue(file ? file : '');
-        // }   
+        let file = $event.target.files[0];
+        console.log( file );
+        if( file.type != "application/pdf" ){
+            swal({
+                type: 'error',
+                title: 'Oops...',
+                text: 'Seleccione una archivo PDF.'
+              });
+            this.formFicha.controls['RealFicha'].setValue("");
+        }else{
+            this.formFicha.controls['tipo'].setValue(3);
+            this.formFicha.controls["caf_idCatUnidad"].setValue(this.cafIdCatUnidad);
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                this.formFicha.controls['FichaInput'].setValue({
+                    filename: file.name,
+                    filetype: file.type,
+                    value: reader.result.split(',')[1]
+                });
+            };
+            this.formFicha.controls['FichaInput'].setValue(file ? file : '');
+        }   
+    };
+
+    saveFicha(){
+        console.log( this.formFicha );
+        if(this.showFicha == 0){
+            var txtTitle    = "¿Guardar la ficha?";
+            var txtButton   = "Guardar";
+            var txtMsgDone  = "Se guardo la ficha con éxito.";
+            var txtMsgErr   = "No se guardo la ficha con éxito.";
+        }else if(this.showFicha == 1){
+            var txtTitle    = "Actualizar la ficha?";
+            var txtButton   = "Actualizar";
+            var txtMsgDone  = "Se actualizo la ficha con éxito.";
+            var txtMsgErr   = "No se actualizo la ficha con éxito.";
+        }
+        swal({
+            title: txtTitle,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: txtButton,
+            cancelButtonText: 'Cancelar',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false,
+        }).then((result) => {
+            if (result.value) {
+                console.log( this.formFicha );
+                this._serviceUnidad.saveFicha( this.formFicha )
+                .subscribe( serverResponse => {
+                    swal(
+                        'Guardado',
+                        txtMsgDone,
+                        'success'
+                    );
+                    this.serverResponse = serverResponse;
+                    this.getFichas(this.cafIdCatUnidad);
+                },
+                error => this.errorMessage = <any>error );
+            } else if (result.dismiss === 'cancel') {
+              swal(
+                'Canelado',
+                txtMsgErr,
+                'error'
+              );
+            }
+        });
+    };
+
+    updateFicha(){
+        this.formFicha.controls["idFicha"].setValue(this.fichaId);
+        swal({
+            title: "¿Actualizar la ficha?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: "Actualizar",
+            cancelButtonText: 'Cancelar',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false,
+        }).then((result) => {
+            if (result.value) {
+                // console.log( "FormUpdate", this.formFicha );
+                this._serviceUnidad.updateFicha( this.formFicha )
+                .subscribe( serverResponse => {
+                    swal(
+                        'Guardado',
+                        "Se actualizo la ficha con éxito.",
+                        'success'
+                    );
+                    this.serverResponse = serverResponse;
+                    this.getFichas(this.cafIdCatUnidad);
+                },
+                error => this.errorMessage = <any>error );
+            } else if (result.dismiss === 'cancel') {
+              swal(
+                'Canelado',
+                "No se actualizo la ficha.",
+                'error'
+              );
+            }
+        });
     };
 
     deleteImage( ci_IdImagen, ci_IdCatUnidad ){
@@ -321,6 +415,44 @@ export class CatunidadComponent implements OnInit {
         });
     };
 
+    deleteFicha( ci_IdImagen, ci_IdCatUnidad ){
+        swal({
+            title: '¿Desactivar la ficha?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Desactivar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false,
+        }).then((result) => {
+            if (result.value) {
+                console.log( "Id de la ficha", this.fichaId );
+                console.log( "Id del unidad", this.cafIdCatUnidad );
+                this._serviceUnidad.deleteFicha( {caf_idFicha: this.fichaId, caf_idCatUnidad: this.cafIdCatUnidad} )
+                .subscribe( serverResponse => {
+                    swal(
+                        'Desactivada',
+                        'Se desactivo la imagen con éxito.',
+                        'success'
+                    );
+                    this.serverResponse = serverResponse;
+                    this.getFichas(this.cafIdCatUnidad);
+                    this.formImg.controls['RealImg'].setValue("");
+                },
+                error => this.errorMessage = <any>error );
+            } else if (result.dismiss === 'cancel') {
+              swal(
+                'Canelado',
+                'No se desactivo la imagen.',
+                'error'
+              );
+            }
+        });
+    };
+
     //================================================================= M O D A L E S =================================================//
 
     //========= MODAL INSERT ========//
@@ -341,11 +473,13 @@ export class CatunidadComponent implements OnInit {
         }
     }
 
-    //========= MODAL INSERT ========//
+    //========= MODAL INSERT FICHA ========//
     openFichaModal(ModalFicha, caf_IdCatUnidad) {
-        this.modalService.open( ModalFicha, { size: "lg" } );
+        this.cafIdCatUnidad = 0;
+        this.modalService.open( ModalFicha);
         console.log( "Id de la unidad", caf_IdCatUnidad );
         this.getFichas(caf_IdCatUnidad);
+        this.cafIdCatUnidad = caf_IdCatUnidad;
         //this.ci_IdCatUnidad = ci_IdCatUnidad;
     }
 

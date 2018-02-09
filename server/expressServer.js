@@ -13,8 +13,10 @@ var ExpressServer = function(config){
   this.config = config || {};
   this.expressServer = express();
 
-  this.expressServer.use(bodyParser.urlencoded({extended: true}))
-  this.expressServer.use(bodyParser.json());
+  this.expressServer.use(bodyParser.urlencoded({limit: '250mb',extended: true}))
+  this.expressServer.use(bodyParser.json({limit: '250mb'}));
+  this.expressServer.use(bodyParser({limit: '250mb'}));
+  //app.use(express.bodyParser({}));
   
 this.expressServer.use(function(req, res, next) {
   // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5302')

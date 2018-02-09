@@ -172,4 +172,105 @@ catunidad.prototype.get_deleteimg = function( req, res, next ){
     });
 };
 
+// "api/catunidad/insertficha"
+catunidad.prototype.post_insertficha = function(req, res, next) {
+    //console.log( "Hola" );
+    //console.log( req.body );
+    var self = this;
+    var caf_idCatUnidad   = req.body.caf_idCatUnidad;
+    var caf_RutaFicha     = req.body.FichaInput.filename;
+    var caf_IdTipoImages  = req.body.tipo;
+    // //console.log('QueryString = ' + req.query);
+
+    var params = [
+        { name: 'caf_idCatUnidad',   value: caf_idCatUnidad, type: self.model.types.INT },
+        { name: 'caf_RutaFicha',     value: caf_RutaFicha, type: self.model.types.STRING },
+        { name: 'caf_IdTipoImages',  value: caf_IdTipoImages, type: self.model.types.INT }
+    ];
+    // console.log( "Parametros", params );
+
+    this.model.query('CatFic_INSERT_SP', params, function (error, result) {
+        if (result.length > 0) {
+            //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
+            var pathname = 'C:\\Users\\Laura-PC\\Documents\\NodeJs\\AndradeCMSDocumentos\\public\\fichas\\' + req.body.FichaInput.filename;
+            require("fs").writeFile( pathname , req.body.FichaInput.value, 'base64', function(err) {
+                //console.log(err);
+                if( err ){
+                    console.log('Ha ocurrido un error: ' + err);
+                }
+                else{
+                    console.log('Se ha guardado');
+                }
+            });
+         //console.log("resultaaaaaaa " + result[0]);
+        }
+        self.view.expositor(res, {
+            error: error,
+            result: result,
+        });
+    });
+};
+
+// "api/catunidad/updateficha"
+catunidad.prototype.post_updateficha = function(req, res, next) {
+    //console.log( "Hola" );
+    //console.log( req.body );
+    var self = this;
+    var caf_idFicha         = req.body.idFicha;
+    var caf_idCatUnidad     = req.body.caf_idCatUnidad
+    var caf_RutaFicha       = req.body.FichaInput.filename;
+    var caf_IdTipoImages    = req.body.tipo;
+    // //console.log('QueryString = ' + req.query);
+
+    var params = [
+        { name: 'caf_idFicha',          value: caf_idFicha, type: self.model.types.INT },
+        { name: 'caf_idCatUnidad',      value: caf_idCatUnidad, type: self.model.types.INT },
+        { name: 'caf_RutaFicha',        value: caf_RutaFicha, type: self.model.types.STRING },
+        { name: 'caf_IdTipoImages',     value: caf_IdTipoImages, type: self.model.types.INT }
+    ];
+    console.log( "Parametros", params );
+
+    this.model.query('CatFic_UPDATE_SP', params, function (error, result) {
+        if (result.length > 0) {
+            //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
+            var pathname = 'C:\\Users\\Laura-PC\\Documents\\NodeJs\\AndradeCMSDocumentos\\public\\fichas\\' + req.body.FichaInput.filename;
+            require("fs").writeFile( pathname , req.body.FichaInput.value, 'base64', function(err) {
+                //console.log(err);
+                if( err ){
+                    console.log('Ha ocurrido un error: ' + err);
+                }
+                else{
+                    console.log('Se ha guardado');
+                }
+            });
+         //console.log("resultaaaaaaa " + result[0]);
+        }
+        self.view.expositor(res, {
+            error: error,
+            result: result,
+        });
+    });
+};
+
+//api/catunidad/deleteficha
+catunidad.prototype.get_deleteficha = function( req, res, next ){
+    var self = this;
+    var caf_idFicha     = req.query.caf_idFicha;
+    var caf_idCatUnidad = req.query.caf_idCatUnidad
+    // console.log("Query", req.query);
+    var params = [
+        { name: 'caf_idFicha',      value: caf_idFicha, type: self.model.types.INT },
+        { name: 'caf_idCatUnidad',  value: caf_idCatUnidad, type: self.model.types.INT }
+    ];
+
+    this.model.query("CatFicha_DELETE_SP", params, function( error, result ){
+        // console.log(result);
+        // console.log(error);
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 module.exports = catunidad;

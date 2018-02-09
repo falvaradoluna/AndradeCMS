@@ -65,10 +65,10 @@
             <tbody>
                 <tr *ngFor="let imagen of resImganes; let i = index;">
                     <td> {{ i + 1 }} </td>
-                    <td><img src="{{imagen.ci_RutaImagen}}" width="100%"></td>
+                    <td><img src="{{imagen.ci_RutaImagen}}" width="230"></td>
                     <td> 
                         <form [formGroup]="formImg" (ngSubmit)="updateImage(imagen.ci_IdImagen, imagen.ci_IdCatUnidad)">
-                            <label class="btn btn-secondary btn-file">Actualizar
+                            <label class="btn btn-secondary btn-file">
                                 <input name="file" type="file" (change)="onFileChangeUp($event)" formControlName="RealImg">
                                 <input type="hidden" name="fileHidden" formControlName="imageInput"/> 
                                 <input type="hidden" name="IdCatUnidad" formControlName="IdCatUnidad"/> 
@@ -119,24 +119,49 @@
 
 <ng-template #ModalFicha let-c="close" let-d="dismiss">
     <div class="modal-header">
-        <h4 class="modal-title text-muted">Fichas Unidades</h4>
+        <h4 *ngIf="showFicha == 1" class="modal-title text-muted">Actualizar Ficha</h4>
+        <h4 *ngIf="showFicha == 0" class="modal-title text-muted">Agregar Ficha</h4>
     </div>
     <div class="modal-body">
         <div class="row div-space text-center">
-            <div class="col space-12">
+            <div *ngIf="showFicha == 1" class="col space-12">
                 <!-- <pdf-viewer src="{{rutaFicha}}"></pdf-viewer> -->
                 <!-- <iframe src="{{rutaFicha}}"></iframe> -->
-                <a href="{{rutaFicha}}">PDF</a>
+                <a href="{{rutaFicha}}" target="_blank"><img src="assets/images/PDF.ico" width="20%"> </a>
+            </div>
+            <div *ngIf="showFicha == 0" class="col space-12">
+                    <h3 class="text-muted">Aun no se carga un PDF</h3>
             </div>
         </div>
-        <div class="row div-space">
+        <div class="row div-space" *ngIf="showFicha == 1">
+            <div class="col">
+                <h6 class="text-muted"> </h6>
+                <form [formGroup]="formFicha" (ngSubmit)="updateFicha()">
+                    <label class="btn btn-secondary btn-file">
+                        <input name="file" type="file" (change)="onFileChangeFicha($event)" formControlName="RealFicha">
+                        <input type="hidden" name="fileHidden" formControlName="FichaInput"/> 
+                        <input type="hidden" name="caf_idCatUnidad" formControlName="caf_idCatUnidad"/> 
+                        <input type="hidden" name="tipo" formControlName="tipo"/>
+                        <input type="hidden" name="idFicha" formControlName="idFicha"/> 
+                    </label>
+                    <button type="button" class="btn btn-danger pull-right" (click)="deleteFicha();">
+                        <i class="fa fa-trash" aria-hidden="true" ></i>
+                    </button> 
+                    <div class="modal-footer">
+                        <button class="btn btn-outline-success" type="submit">Actualizar</button>
+                        <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div> 
+        <div class="row div-space" *ngIf="showFicha == 0">
             <div class="col">
                 <h6 class="text-muted"> </h6>
                 <form [formGroup]="formFicha" (ngSubmit)="saveFicha()">
                     <label class="btn btn-secondary btn-file">Browse
                         <input name="file" type="file" (change)="onFileChangeFicha($event)" formControlName="RealFicha">
                         <input type="hidden" name="fileHidden" formControlName="FichaInput"/> 
-                        <input type="hidden" name="IdCatFichaUnidad" formControlName="IdCatFichaUnidad"/> 
+                        <input type="hidden" name="caf_idCatUnidad" formControlName="caf_idCatUnidad"/> 
                         <input type="hidden" name="tipo" formControlName="tipo"/> 
                     </label>
                     <div class="modal-footer">
@@ -145,6 +170,6 @@
                     </div>
                 </form>
             </div>
-        </div> 
+        </div>
     </div>
 </ng-template>

@@ -19,6 +19,9 @@ export class CatunidadService {
     private _urlUpdateImagen    = "api/catunidad/updateimagen";
     private _urlGetFichas       = "api/catunidad/fichaunidad";
     private _urlDeleteImagen    = "api/catunidad/deleteimg";
+    private _urlInsertFicha     = "api/catunidad/insertficha";
+    private _urlUpdateFicha     = "api/catunidad/updateficha";
+    private _urlDeleteFicha     = "api/catunidad/deleteficha";
 
     constructor(private _http: HttpClient) { }
 
@@ -32,18 +35,16 @@ export class CatunidadService {
     }
 
     saveImagen(cuerpo): Observable<IServerResponse[]>{
-        console.log( 'cuerpo', cuerpo.value );
         var headers = new HttpHeaders();
         headers.append('Content-Type', 'application/form-data');
         return this._http.post<IServerResponse[]>(this._urlInsertImagen, cuerpo.value, { headers: headers});
-    }
+    };
 
     updateImagen(cuerpo): Observable<IServerResponse[]>{
-        console.log( 'cuerpo', cuerpo.value );
         var headers = new HttpHeaders();
         headers.append('Content-Type', 'application/form-data');
         return this._http.post<IServerResponse[]>(this._urlUpdateImagen, cuerpo.value, { headers: headers});
-    }
+    };
 
     GetFichasUnidad(parameters): Observable<ICatFichas[]>{
         
@@ -64,9 +65,31 @@ export class CatunidadService {
         .catch( this.handleError );
     };
 
+    saveFicha(cuerpo): Observable<IServerResponse[]>{
+        var headers = new HttpHeaders();
+        headers.append('Content-Type', 'application/form-data');
+        return this._http.post<IServerResponse[]>(this._urlInsertFicha, cuerpo.value, { headers: headers});
+    };
+
+    updateFicha(cuerpo): Observable<IServerResponse[]>{
+        var headers = new HttpHeaders();
+        headers.append('Content-Type', 'application/form-data');
+        return this._http.post<IServerResponse[]>(this._urlUpdateFicha, cuerpo.value, { headers: headers});
+    };
+
+    deleteFicha(parameters): Observable<IServerResponse[]>{
+        
+        let Params = new HttpParams();
+        Params = Params.append("caf_idFicha", parameters.caf_idFicha);
+        Params = Params.append("caf_idCatUnidad", parameters.caf_idCatUnidad);
+
+        return this._http.get<IServerResponse[]>(this._urlDeleteFicha, {params: Params})
+        .catch( this.handleError );
+    };
+
     private handleError(err: HttpErrorResponse) {
         console.error(err.message);
         return Observable.throw(err.message);
-    }
+    };
 
 }
