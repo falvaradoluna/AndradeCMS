@@ -18,6 +18,7 @@ export class CatunidadService {
     private _urlInsertImagen    = "api/catunidad/insertimagen";
     private _urlUpdateImagen    = "api/catunidad/updateimagen";
     private _urlGetFichas       = "api/catunidad/fichaunidad";
+    private _urlDeleteImagen    = "api/catunidad/deleteimg";
 
     constructor(private _http: HttpClient) { }
 
@@ -51,7 +52,17 @@ export class CatunidadService {
 
         return this._http.get<ICatFichas[]>(this._urlGetFichas, {params: Params})
         .catch( this.handleError );
-    }
+    };
+
+    DeleteImgs(parameters): Observable<IServerResponse[]>{
+        
+        let Params = new HttpParams();
+        Params = Params.append("ci_IdCatUnidad",    parameters.ci_IdCatUnidad);
+        Params = Params.append("ci_IdImagen",       parameters.ci_IdImagen);
+
+        return this._http.get<IServerResponse[]>(this._urlDeleteImagen, {params: Params})
+        .catch( this.handleError );
+    };
 
     private handleError(err: HttpErrorResponse) {
         console.error(err.message);

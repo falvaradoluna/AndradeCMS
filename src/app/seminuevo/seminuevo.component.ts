@@ -19,90 +19,72 @@ import {
     NgForm,
 } from '@angular/forms';
 import  swal  from "sweetalert2";
-import { CatunidadService } from "./catunidad.service";
-import { ICatImg } from "./catimagenes";
+import { SeminuevoService } from './seminuevo.service';
+import { ISemImg } from "./semimg";
 import { IServerResponse } from "../promociones/ServerResponse";
-import { ICatFichas } from "./catfichas";
 
 @Component({
-  selector: 'app-catunidad',
-  templateUrl: './catunidad.component.html',
-  styleUrls: ['./catunidad.component.scss'],
+  selector: 'app-seminuevo',
+  templateUrl: './seminuevo.component.html',
+  styleUrls: ['./seminuevo.component.scss'],
   animations: [routerTransition()]
 })
-export class CatunidadComponent implements OnInit {
+export class SeminuevoComponent implements OnInit {
 
-    public errorMessage: any;
-    public data :       object;
-    public temp_var:    Object = false;
-    public img_var:     Object = false;
-    ci_IdCatUnidad:     any;
-    showFicha:          number;
-    rutaFicha:          any;
+  public errorMessage: any;
+  public data :       object;
+  public img_var:     Object = false;
+  public temp_var:    Object = false;
+  cis_IdSeminuevo:    any;
 
-    //Formulario de la imagen
-    formImg: FormGroup;
-    RealImg = new FormControl("");
-    imageInput = new FormControl("");
-    IdCatUnidad = new FormControl("");
-    tipoImg = new FormControl("");
-    Idimg = new FormControl("");
+  //Formulario de la imagen
+  formImg: FormGroup;
+  RealImg = new FormControl("");
+  imageInput = new FormControl("");
+  IdSemi = new FormControl("");
+  tipoImg = new FormControl("");
+  Idimg = new FormControl("");
 
-    //Formulario
-    formFicha: FormGroup;
-    RealFicha = new FormControl("");
-    FichaInput = new FormControl("");
-    IdCatFichaUnidad = new FormControl("");
-    tipo = new FormControl("");
+  constructor(private _http: HttpClient, private modalService: NgbModal, public fb: FormBuilder, private _semiService: SeminuevoService) {
+    this.formImg = fb.group({
+        "RealImg": this.RealImg,
+        "imageInput": this.imageInput,
+        "IdSemi": this.IdSemi,
+        "tipoImg": this.tipoImg,
+        "Idimg": this.Idimg
+    });
+   }
 
-    constructor(private _http: HttpClient, private modalService: NgbModal, private _serviceUnidad: CatunidadService, public fb: FormBuilder) { 
-        this.formImg = fb.group({
-            "RealImg": this.RealImg,
-            "imageInput": this.imageInput,
-            "IdCatUnidad": this.IdCatUnidad,
-            "tipoImg": this.tipoImg,
-            "Idimg": this.Idimg
-        });
+   resImganes:     ISemImg[] = [];
+   serverResponse: IServerResponse[] = [];
 
-        this.formFicha = fb.group({
-            "RealFicha": this.RealFicha,
-            "FichaInput": this.FichaInput,
-            "IdCatFichaUnidad": this.IdCatFichaUnidad,
-            "tipo": this.tipo,
-            //"Idimg": this.Idimg
-        })
-    }
+  private _urlSeminuevo = "api/seminuevo/seminuevo";
 
-    private _urlgetUnidades = "api/catunidad/unidadesnuevas";
+  ngOnInit() {
+    this.getSeminuevo();
+  }
 
-    resImganes:     ICatImg[] = [];
-    serverResponse: IServerResponse[] = [];
-    resFichas:      ICatFichas[] = [];
+  getSeminuevo(){
+    this._http.get(this._urlSeminuevo).subscribe((res: Response) => {
+        this.data = res;
+        this.temp_var = true;
+        console.log( this.data );
+      });
+  };
 
-    ngOnInit() {
-        this.getUnidades();
-    }
-
-    getUnidades(){
-        this._http.get(this._urlgetUnidades).subscribe((res: Response) => {
-            this.data = res;
-            this.temp_var = true;
-          });
-    };
-
-    getImages(ci_IdCatUnidad){
-        this._serviceUnidad.GetImgsUnidad( { ci_IdCatUnidad: ci_IdCatUnidad } )
+    getImages(cis_IdSeminuevo){
+        this._semiService.GetImgsSemi( { cis_IdSeminuevo: cis_IdSeminuevo } )
         .subscribe( resImganes => {
             this.img_var = true;
             this.resImganes = resImganes;
             this.resImganes.forEach(function( item, key ){
-                item.ci_RutaImagen = 'http://localhost:3420/images/' + item.ci_RutaImagen;
+                item.cis_RutaImagen = 'http://localhost:3420/imagesSemi/' + item.cis_RutaImagen;
             });
             console.log( this.resImganes );
-            console.log( "ID de la unidad", this.ci_IdCatUnidad );
+            //console.log( "ID de la unidad", this.ci_IdCatUnidad );
         },
         error => this.errorMessage = <any>error);
-    }    
+    };
 
     onFileChange($event) {
         let reader = new FileReader();
@@ -125,16 +107,16 @@ export class CatunidadComponent implements OnInit {
                 });
             };
             this.formImg.controls['imageInput'].setValue(file ? file : '');
-            this.formImg.controls['IdCatUnidad'].setValue(this.ci_IdCatUnidad);
+            this.formImg.controls['IdSemi'].setValue(this.cis_IdSeminuevo);
             if( file.type == "image/jpeg" ){
                 this.formImg.controls['tipoImg'].setValue(1);
             }else{
                 this.formImg.controls['tipoImg'].setValue(2);
             }
-            console.log( "ID de la unidad en el onchange", this.ci_IdCatUnidad );
-            console.log( "ID del form", this.formImg.value.IdCatUnidad );
+            console.log( "ID de la unidad en el onchange", this.cis_IdSeminuevo );
+            console.log( "ID del form", this.formImg.value.IdSemi );
         }   
-    }
+    };
 
     saveImage() {
         console.log( this.formImg );
@@ -152,15 +134,16 @@ export class CatunidadComponent implements OnInit {
         }).then((result) => {
             if (result.value) {
                 console.log( this.formImg );
-                this._serviceUnidad.saveImagen( this.formImg )
+                this._semiService.saveImagenSemi( this.formImg )
                 .subscribe( serverResponse => {
                     swal(
                         'Guardado',
                         'Se guardo la promción con éxito.',
                         'success'
                     );
+                    this.formImg.controls['RealImg'].setValue("");
                     this.serverResponse = serverResponse;
-                    this.getImages(this.ci_IdCatUnidad);
+                    this.getImages(this.cis_IdSeminuevo);
                 },
                 error => this.errorMessage = <any>error );
             } else if (result.dismiss === 'cancel') {
@@ -173,7 +156,7 @@ export class CatunidadComponent implements OnInit {
         });
     };
 
-    onFileChangeUp($event, ci_IdImagen, ci_IdCatUnidad) {
+    onFileChangeUp($event) {
         let reader = new FileReader();
         let file = $event.target.files[0]; 
         console.log( file.type );
@@ -202,24 +185,24 @@ export class CatunidadComponent implements OnInit {
         }   
     };
 
-    updateImage(ci_IdImagen, ci_IdCatUnidad){
-        this.formImg.controls['RealImg'].setValue("");
-        this.formImg.controls['IdCatUnidad'].setValue(ci_IdCatUnidad);
-        this.formImg.controls['Idimg'].setValue(ci_IdImagen);
+    updateImage(cis_idImagenSemi, cis_IdSeminuevo){
+        this.formImg.controls['IdSemi'].setValue(cis_IdSeminuevo);
+        this.formImg.controls['Idimg'].setValue(cis_idImagenSemi);
         swal({
-            title: 'Actualizar la imagen?',
+            title: '¿Actualizar la imagen?',
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Guardar',
+            confirmButtonText: 'Actualizar',
             cancelButtonText: 'Cancelar',
             confirmButtonClass: 'btn btn-success',
             cancelButtonClass: 'btn btn-danger',
             buttonsStyling: false,
         }).then((result) => {
+
             if (result.value) {
-                this._serviceUnidad.updateImagen( this.formImg )
+                this._semiService.updateImagenSemi( this.formImg )
                 .subscribe( serverResponse => {
                     swal(
                         'Guardado',
@@ -227,63 +210,22 @@ export class CatunidadComponent implements OnInit {
                         'success'
                     );
                     this.serverResponse = serverResponse;
-                    this.getImages(ci_IdCatUnidad);
+                    this.getImages(cis_IdSeminuevo);
+                    this.formImg.controls['RealImg'].setValue("");
                 },
                 error => this.errorMessage = <any>error );
             } else if (result.dismiss === 'cancel') {
               swal(
                 'Canelado',
-                'No se azrualizo la imagen.',
+                'No se actualizo la imagen.',
                 'error'
               );
             }
         });
+
     };
 
-    getFichas(caf_IdCatUnidad){
-        this.resFichas = [];
-        this._serviceUnidad.GetFichasUnidad( { caf_IdCatUnidad: caf_IdCatUnidad } )
-        .subscribe( resFichas => {
-            this.resFichas = resFichas
-            this.resFichas.forEach(function( item, key ){
-                item.caf_RutaFicha = 'http://localhost:3420/fichas/' + item.caf_RutaFicha;
-            });
-            if(this.resFichas[0].caf_RutaFicha == ""){
-                this.showFicha = 0;
-            }else{
-                this.showFicha = 1;
-            }
-            this.rutaFicha = this.resFichas[0].caf_RutaFicha;
-        },
-        error => this.errorMessage = <any>error);
-    };
-
-    onFileChangeFicha($event, ci_IdImagen, ci_IdCatUnidad) {
-        let reader = new FileReader();
-        let file = $event.target.files[0]; 
-        console.log( file.type );
-        // if( file.type != "application/pdf" ){
-        //     swal({
-        //         type: 'error',
-        //         title: 'Oops...',
-        //         text: 'Seleccione una imagen JPG/PNG'
-        //       });
-        //     this.formImg.controls['RealFicha'].setValue("");
-        // }else{
-        //     this.formImg.controls['tipo'].setValue(1);
-        //     reader.readAsDataURL(file);
-        //     reader.onload = () => {
-        //         this.formImg.controls['FichaInput'].setValue({
-        //             filename: file.name,
-        //             filetype: file.type,
-        //             value: reader.result.split(',')[1]
-        //         });
-        //     };
-        //     this.formImg.controls['FichaInput'].setValue(file ? file : '');
-        // }   
-    };
-
-    deleteImage( ci_IdImagen, ci_IdCatUnidad ){
+    deleteImage( cis_idImagenSemi, cis_IdSeminuevo ){
         swal({
             title: '¿Desactivar la imagen?',
             type: 'warning',
@@ -297,9 +239,9 @@ export class CatunidadComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
-                console.log( "Id de la imagen", ci_IdImagen );
-                console.log( "Id del seminuevo", ci_IdCatUnidad );
-                this._serviceUnidad.DeleteImgs( {ci_IdCatUnidad:ci_IdCatUnidad, ci_IdImagen:ci_IdImagen} )
+                console.log( "Id de la imagen", cis_idImagenSemi );
+                console.log( "Id del seminuevo", cis_IdSeminuevo );
+                this._semiService.DeleteImgsSemi( {cis_idImagenSemi:cis_idImagenSemi, cis_IdSeminuevo:cis_IdSeminuevo} )
                 .subscribe( serverResponse => {
                     swal(
                         'Desactivada',
@@ -307,7 +249,7 @@ export class CatunidadComponent implements OnInit {
                         'success'
                     );
                     this.serverResponse = serverResponse;
-                    this.getImages(ci_IdCatUnidad);
+                    this.getImages(cis_IdSeminuevo);
                     this.formImg.controls['RealImg'].setValue("");
                 },
                 error => this.errorMessage = <any>error );
@@ -321,35 +263,16 @@ export class CatunidadComponent implements OnInit {
         });
     };
 
-    //================================================================= M O D A L E S =================================================//
 
-    //========= MODAL INSERT ========//
-    openImgModal(ModalImg, ci_IdCatUnidad) {
+  //========= MODAL INSERT ========//
+    openImgModal(ModalImg, cis_IdSeminuevo) {
         this.modalService.open( ModalImg, { size: "lg" } );
-        console.log( "Id de la unidad", ci_IdCatUnidad );
-        this.getImages(ci_IdCatUnidad);
-        this.ci_IdCatUnidad = ci_IdCatUnidad;
+        console.log( "Id de la unidadsemi", cis_IdSeminuevo );
+        this.getImages(cis_IdSeminuevo);
+        this.cis_IdSeminuevo = cis_IdSeminuevo;
     }
 
     private getDismissReason(reason: any): string {
-        if (reason === ModalDismissReasons.ESC) {
-            return 'by pressing ESC';
-        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-            return 'by clicking on a backdrop';
-        } else {
-            return  `with: ${reason}`;
-        }
-    }
-
-    //========= MODAL INSERT ========//
-    openFichaModal(ModalFicha, caf_IdCatUnidad) {
-        this.modalService.open( ModalFicha, { size: "lg" } );
-        console.log( "Id de la unidad", caf_IdCatUnidad );
-        this.getFichas(caf_IdCatUnidad);
-        //this.ci_IdCatUnidad = ci_IdCatUnidad;
-    }
-
-    private getDismissReasonFicha(reason: any): string {
         if (reason === ModalDismissReasons.ESC) {
             return 'by pressing ESC';
         } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {

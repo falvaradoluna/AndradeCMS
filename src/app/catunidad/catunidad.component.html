@@ -76,7 +76,12 @@
                                 <input type="hidden" name="Idimg" formControlName="Idimg"/> 
                             </label>
                             <div class="modal-footer">
-                                <button class="btn btn-outline-success" type="submit">Actualizar</button>
+                                <button class="btn btn-outline-success" type="submit">
+                                    Actualizar
+                                </button>
+                                <button type="button" class="btn btn-danger" (click)="deleteImage(imagen.ci_IdImagen, imagen.ci_IdCatUnidad);">
+                                    <i class="fa fa-trash" aria-hidden="true" ></i>
+                                </button> 
                             </div>
                         </form> 
                     </td>
@@ -121,6 +126,7 @@
             <div class="col space-12">
                 <!-- <pdf-viewer src="{{rutaFicha}}"></pdf-viewer> -->
                 <!-- <iframe src="{{rutaFicha}}"></iframe> -->
+                <a href="{{rutaFicha}}">PDF</a>
             </div>
         </div>
         <div class="row div-space">

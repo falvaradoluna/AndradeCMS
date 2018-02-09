@@ -151,4 +151,25 @@ catunidad.prototype.get_fichaunidad = function( req, res, next ){
     });
 };
 
+//api/catunidad/deleteimg
+catunidad.prototype.get_deleteimg = function( req, res, next ){
+    var self = this;
+    var ci_IdCatUnidad  = req.query.ci_IdCatUnidad;
+    var ci_IdImagen = req.query.ci_IdImagen
+    // console.log("Query", req.query);
+    var params = [
+        { name: 'ci_IdCatUnidad',   value: ci_IdCatUnidad, type: self.model.types.INT },
+        { name: 'ci_IdImagen',      value: ci_IdImagen, type: self.model.types.INT }
+    ];
+
+    this.model.query("catImg_DELETE_SP", params, function( error, result ){
+        // console.log(result);
+        // console.log(error);
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 module.exports = catunidad;
