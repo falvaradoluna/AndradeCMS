@@ -273,4 +273,108 @@ catunidad.prototype.get_deleteficha = function( req, res, next ){
     });
 };
 
+
+//api/catunidad/atributos
+catunidad.prototype.get_atributos = function( req, res, next ){
+    var self = this;
+    var cata_idCatUnidad = req.query.cata_idCatUnidad;
+    // console.log("Query", req.query);
+    var params = [
+        { name: 'cata_idCatUnidad', value: cata_idCatUnidad, type: self.model.types.INT }
+    ];
+
+    this.model.query("CatAtributos_SELECT_SP", params, function( error, result ){
+        // console.log(result);
+        // console.log(error);
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+//api/catunidad/insertatributos
+catunidad.prototype.get_insertatributos = function( req, res, next ){
+    var self = this;
+    var cata_idCatUnidad = req.query.cata_idCatUnidad;
+    var cata_Descripcion = req.query.cata_Descripcion;
+    // console.log("Query", req.query);
+    var params = [
+        { name: 'cata_idCatUnidad', value: cata_idCatUnidad, type: self.model.types.INT },
+        { name: 'cata_Descripcion', value: cata_Descripcion, type: self.model.types.STRING }
+    ];
+
+    this.model.query("CatAtributos_INSERT_SP", params, function( error, result ){
+        // console.log(result);
+        // console.log(error);
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+//api/catunidad/updateatributos
+catunidad.prototype.get_updateatributos = function( req, res, next ){
+    var self = this;
+    var cata_idAtributo = req.query.cata_idAtributo;
+    var cata_idCatUnidad = req.query.cata_idCatUnidad;
+    var cata_Descripcion = req.query.cata_Descripcion;
+    
+    var params = [
+        { name: 'cata_idAtributo',  value: cata_idAtributo, type: self.model.types.INT },
+        { name: 'cata_idCatUnidad', value: cata_idCatUnidad, type: self.model.types.INT },
+        { name: 'cata_Descripcion', value: cata_Descripcion, type: self.model.types.STRING }
+    ];
+
+    this.model.query("CatAtributos_UPDATE_SP", params, function( error, result ){
+        // console.log(result);
+        // console.log(error);
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+//api/catunidad/getatributobyid
+catunidad.prototype.get_getatributobyid = function( req, res, next ){
+    var self = this;
+    var cata_idAtributo = req.query.cata_idAtributo;
+    // console.log("Query", req.query);
+    var params = [
+        { name: 'cata_idAtributo', value: cata_idAtributo, type: self.model.types.INT }
+    ];
+
+    this.model.query("CatAtributos_SELECTbyId_SP", params, function( error, result ){
+        // console.log(result);
+        // console.log(error);
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+//api/catunidad/deleteatributos
+catunidad.prototype.get_deleteatributos = function( req, res, next ){
+    var self = this;
+    var cata_idAtributo = req.query.cata_idAtributo;
+    var cata_idCatUnidad = req.query.cata_idCatUnidad;
+    
+    var params = [
+        { name: 'cata_idAtributo',  value: cata_idAtributo, type: self.model.types.INT },
+        { name: 'cata_idCatUnidad', value: cata_idCatUnidad, type: self.model.types.INT }
+    ];
+
+    this.model.query("CatAtributos_DELETE_SP", params, function( error, result ){
+        // console.log(result);
+        // console.log(error);
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 module.exports = catunidad;

@@ -23,6 +23,7 @@ import { CatunidadService } from "./catunidad.service";
 import { ICatImg } from "./catimagenes";
 import { IServerResponse } from "../promociones/ServerResponse";
 import { ICatFichas } from "./catfichas";
+import { ICatAtributos } from "./atributos";
 
 @Component({
   selector: 'app-catunidad',
@@ -36,28 +37,38 @@ export class CatunidadComponent implements OnInit {
     public data :       object;
     public temp_var:    Object = false;
     public img_var:     Object = false;
+    public atr_var:     Object = false;
     ci_IdCatUnidad:     any;
     showFicha:          number;
     rutaFicha:          any;
     showIcono:          any;
     cafIdCatUnidad:     any;
     fichaId:            any;
+    showAddAtributo:    any;
+    cataIdCatUnidad:    any;
+    cataidAtributo:     any;
+
 
     //Formulario de la imagen
-    formImg: FormGroup;
-    RealImg = new FormControl("");
-    imageInput = new FormControl("");
+    formImg:    FormGroup;
+    RealImg     = new FormControl("");
+    imageInput  = new FormControl("");
     IdCatUnidad = new FormControl("");
-    tipoImg = new FormControl("");
-    Idimg = new FormControl("");
+    tipoImg     = new FormControl("");
+    Idimg       = new FormControl("");
 
     //Formulario
-    formFicha: FormGroup;
-    RealFicha = new FormControl("");
-    FichaInput = new FormControl("");
+    formFicha:      FormGroup;
+    RealFicha       = new FormControl("");
+    FichaInput      = new FormControl("");
     caf_idCatUnidad = new FormControl("");
-    tipo = new FormControl("");
-    idFicha = new FormControl("");
+    tipo            = new FormControl("");
+    idFicha         = new FormControl("");
+
+
+    //Formulario Atributos
+    formAtributo: FormGroup;
+    Atributo      = new FormControl("");
 
     constructor(private _http: HttpClient, private modalService: NgbModal, private _serviceUnidad: CatunidadService, public fb: FormBuilder) { 
         this.formImg = fb.group({
@@ -74,14 +85,20 @@ export class CatunidadComponent implements OnInit {
             "caf_idCatUnidad":  this.caf_idCatUnidad,
             "tipo":             this.tipo,
             "idFicha":          this.idFicha
-        })
+        });
+
+        this.formAtributo = fb.group({
+            "Atributo": this.Atributo
+        });
     }
 
     private _urlgetUnidades = "api/catunidad/unidadesnuevas";
+    private _urlGetAtrById  = "api/catunidad/getatributobyid";
 
     resImganes:     ICatImg[] = [];
     serverResponse: IServerResponse[] = [];
     resFichas:      ICatFichas[] = [];
+    resAtributos:   ICatAtributos[] = [];
 
     ngOnInit() {
         this.getUnidades();
@@ -106,7 +123,7 @@ export class CatunidadComponent implements OnInit {
             console.log( "ID de la unidad", this.ci_IdCatUnidad );
         },
         error => this.errorMessage = <any>error);
-    }    
+    };    
 
     onFileChange($event) {
         let reader = new FileReader();
@@ -453,6 +470,185 @@ export class CatunidadComponent implements OnInit {
         });
     };
 
+    getAtributos(cata_idCatUnidad){
+        this._serviceUnidad.GetAtributos( { cata_idCatUnidad: cata_idCatUnidad } )
+        .subscribe( resAtributos => {
+            this.atr_var = true;
+            this.resAtributos = resAtributos;
+            console.log( this.resAtributos );
+            console.log( "ID de la unidad", cata_idCatUnidad );
+        },
+        error => this.errorMessage = <any>error);
+    };
+
+    addAtributo(showForm){
+        this.showAddAtributo = showForm;
+        this.formAtributo.controls["Atributo"].setValue("");
+    }
+
+    updAtributo(showForm, cata_idAtributo){
+        this.showAddAtributo = showForm;
+        this.cataidAtributo = cata_idAtributo;
+
+        let Params = new HttpParams();
+        Params = Params.append("cata_idAtributo",  cata_idAtributo);
+        this._http.get(this._urlGetAtrById, {params: Params}).subscribe((res: Response) => {
+            this.formAtributo.controls["Atributo"].setValue(res[0].cata_Descripcion);
+        });
+    }
+
+    saveAtributos(){
+        swal({
+            title: '¿Guardar el atributo?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Guardar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false,
+        }).then((result) => {
+            if (result.value) {
+                var desAtributo = this.formAtributo.value.Atributo;
+                this._serviceUnidad.SaveAtributos( { cata_idCatUnidad: this.cataIdCatUnidad , cata_Descripcion: desAtributo } )
+                .subscribe( serverResponse => {
+                    if( serverResponse[0].success == 1 ){
+                        swal(
+                            'Guardado',
+                            serverResponse[0].msg,
+                            'success'
+                        );
+                        this.serverResponse = serverResponse;
+                        this.getAtributos(this.cataIdCatUnidad);
+                        this.formAtributo.controls["Atributo"].setValue("");
+                        this.showAddAtributo = 3;
+                    }else{
+                        swal(
+                            'Ups',
+                            serverResponse[0].msg,
+                            'error'
+                        );
+                    }
+                    
+                },
+                error => this.errorMessage = <any>error );
+            } else if (result.dismiss === 'cancel') {
+              swal(
+                'Canelado',
+                'No se guardo el atributo.',
+                'error'
+              );
+            }
+        });
+    };
+
+    updateAtributos(){
+        swal({
+            title: 'Actualizar el atributo?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Actualizar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false,
+        }).then((result) => {
+            if (result.value) {
+                var desAtributo = this.formAtributo.value.Atributo;
+                this._serviceUnidad.UpdateAtributos( 
+                    { 
+                        cata_idCatUnidad: this.cataIdCatUnidad, 
+                        cata_idAtributo: this.cataidAtributo, 
+                        cata_Descripcion: desAtributo } 
+                    )
+                .subscribe( serverResponse => {
+                    if( serverResponse[0].success == 1 ){
+                        swal(
+                            'Actualizado',
+                            serverResponse[0].msg,
+                            'success'
+                        );
+                        this.serverResponse = serverResponse;
+                        this.getAtributos(this.cataIdCatUnidad);
+                        this.formAtributo.controls["Atributo"].setValue("");
+                        this.showAddAtributo = 3;
+                    }else{
+                        swal(
+                            'Ups',
+                            serverResponse[0].msg,
+                            'error'
+                        );
+                    }
+                    
+                },
+                error => this.errorMessage = <any>error );
+            } else if (result.dismiss === 'cancel') {
+              swal(
+                'Canelado',
+                'No se actualizo el atributo.',
+                'error'
+              );
+            }
+        });
+    };
+
+    deleteAtributo(cataidAtributo){
+        swal({
+            title: 'Eliminar el atributo?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Eliminar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false,
+        }).then((result) => {
+            if (result.value) {
+                console.log( "DELETE" );
+                console.log( "Unidad", this.cataIdCatUnidad );
+                console.log( "Atributo", cataidAtributo );
+                this._serviceUnidad.DeleteAtributos( 
+                    { 
+                        cata_idCatUnidad: this.cataIdCatUnidad, 
+                        cata_idAtributo: cataidAtributo
+                    } )
+                .subscribe( serverResponse => {
+                    if( serverResponse[0].success == 1 ){
+                        swal(
+                            'Eliminado',
+                            serverResponse[0].msg,
+                            'success'
+                        );
+                        this.serverResponse = serverResponse;
+                        this.getAtributos(this.cataIdCatUnidad);
+                        this.formAtributo.controls["Atributo"].setValue("");
+                        this.showAddAtributo = 3;
+                    }else{
+                        swal(
+                            'Ups',
+                            serverResponse[0].msg,
+                            'error'
+                        );
+                    }
+                    
+                },
+                error => this.errorMessage = <any>error );
+            } else if (result.dismiss === 'cancel') {
+              swal(
+                'Canelado',
+                'No se elimino el atributo.',
+                'error'
+              );
+            }
+        });
+    }
+
     //================================================================= M O D A L E S =================================================//
 
     //========= MODAL INSERT ========//
@@ -484,6 +680,25 @@ export class CatunidadComponent implements OnInit {
     }
 
     private getDismissReasonFicha(reason: any): string {
+        if (reason === ModalDismissReasons.ESC) {
+            return 'by pressing ESC';
+        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+            return 'by clicking on a backdrop';
+        } else {
+            return  `with: ${reason}`;
+        }
+    }
+
+    //========= MODAL INSERT FICHA ========//
+    openModalAtributos(ModalAtributos, cata_idCatUnidad) {
+        this.formAtributo.controls["Atributo"].setValue("");
+        this.modalService.open( ModalAtributos);
+        this.showAddAtributo = 3;
+        this.cataIdCatUnidad = cata_idCatUnidad;
+        this.getAtributos(cata_idCatUnidad);
+    }
+
+    private getDismissReasonAtributos(reason: any): string {
         if (reason === ModalDismissReasons.ESC) {
             return 'by pressing ESC';
         } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
