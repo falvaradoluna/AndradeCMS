@@ -258,7 +258,8 @@ promociones.prototype.post_updateimage = function(req, res, next){
     var self = this;
     var po_RutaImagen = prefijoPromo + req.body.promoIdUp + req.body.typeImgUp;
     var po_IdPromocion = req.body.promoIdUp;
-    console.log(po_RutaImagen);
+    console.log( "TipoImagen", req.body.typeImgUp );
+    console.log("RutaImg", po_RutaImagen);
     var params = [
         { name: 'po_RutaImagen',   value: po_RutaImagen, type: self.model.types.STRING },
         { name: 'po_IdPromocion',  value: po_IdPromocion, type: self.model.types.INT }
