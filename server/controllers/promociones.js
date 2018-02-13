@@ -3,6 +3,7 @@ ModelView = require('../models/dataAccess'),
 fs = require("fs");
 
 var pathSave = "C:\\Desarrollo\\AndradeCMSDocumentos\\public\\promociones\\";
+var prefijoPromo = "Promo_";
 
 var promociones = function(conf) {
     this.conf = conf || {};
@@ -211,7 +212,8 @@ promociones.prototype.post_insertpromocion = function(req, res, next) {
     var po_Descripcion      = req.body.TxtDescripcion;
     var po_RutaImagen       = req.body.imageInput.filename;
     var po_IdUsuario        = req.body.idUsuario;
-    // //console.log('QueryString = ' + req.query);
+    var po_tipo             = req.body.typeImg;
+    console.log('QueryString = ' + req.query);
 
     var params = [
         { name: 'po_IdTipoPromocion',   value: po_IdTipoPromocion, type: self.model.types.INT },
@@ -220,15 +222,17 @@ promociones.prototype.post_insertpromocion = function(req, res, next) {
         { name: 'po_IdMarca',           value: po_IdMarca, type: self.model.types.INT },
         { name: 'po_Descripcion',       value: po_Descripcion, type: self.model.types.STRING },
         { name: 'po_RutaImagen',        value: po_RutaImagen, type: self.model.types.STRING },
-        { name: 'po_IdUsuario',         value: po_IdUsuario, type: self.model.types.INT }
+        { name: 'po_IdUsuario',         value: po_IdUsuario, type: self.model.types.INT },
+        { name: 'po_tipo',              value: po_tipo, type: self.model.types.STRING }
     ];
 
     this.model.query('Promo_InsertPromocion_SP', params, function (error, result) {
-        //console.log('Parametros: ' + params);
+        console.log(result);
         if (result.length > 0) {
-            var pathname = this.pathSave + req.body.imageInput.filename;
+            var newName = result.imgName;
+            var pathname = this.pathSave + newName;
             //var pathname = 'src/file/promociones/' + req.body.imageInput.filename;
-            require("fs").writeFile( pathname , req.body.imageInput.value, 'base64', function(err) {
+            require("fs").writeFile( pathname , newName, 'base64', function(err) {
                 console.log(err);
                 if( err ){
                     console.log('Ha ocurrido un error: ' + err);
@@ -259,7 +263,8 @@ promociones.prototype.post_updateimage = function(req, res, next){
     this.model.query('Promo_UpdateImgPromo_SP', params, function (error, result) {
         //console.log('Parametros: ' + params);
         if (result.length > 0) {
-            var pathname = this.pathSave + req.body.imageInputUpdate.filename;
+            var newName = this.prefijoPromo + po_IdPromocion
+            var pathname = this.pathSave + newName;
             //var pathname = 'src/file/promociones/' + req.body.imageInputUpdate.filename;
             require("fs").writeFile( pathname , req.body.imageInputUpdate.value, 'base64', function(err) {
                 if( err ){

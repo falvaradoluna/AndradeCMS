@@ -54,6 +54,7 @@ export class PromocionesComponent implements OnInit {
     imageInput = new FormControl("");
     idUsuario = new FormControl("");
     RealImg = new FormControl("");
+    typeImg = new FormControl("");
 
     //Variables para el formualario de actualizar imagen
     formUpdate: FormGroup;
@@ -93,6 +94,7 @@ export class PromocionesComponent implements OnInit {
             "imageInput": this.imageInput,
             "idUsuario": this.idUsuario,
             "RealImg": this.RealImg,
+            "typeImg": this.typeImg,
         });
 
         this.formUpdate = fb.group({
@@ -184,6 +186,10 @@ export class PromocionesComponent implements OnInit {
               });
             this.form.controls['RealImg'].setValue("");
         }else{
+            var str = file.name;
+            var ext = '.' + str.split('.').pop();
+            console.log(ext)
+            this.form.controls["typeImg"].setValue(ext);
             reader.readAsDataURL(file);
             reader.onload = () => {
                 this.form.controls['imageInput'].setValue({
@@ -235,7 +241,7 @@ export class PromocionesComponent implements OnInit {
     onFileChangeUp($event){
         let reader = new FileReader();
         let file = $event.target.files[0]; 
-        if( file.type != "image/jpeg" && file.type != "image/png" && file.type != "application/pdf" ){
+        if( file.type != "image/jpeg" && file.type != "image/png" ){
             swal({
                 type: 'error',
                 title: 'Oops...',
@@ -243,6 +249,7 @@ export class PromocionesComponent implements OnInit {
             });
             this.formUpdate.controls['RealImgUpdate'].setValue("");
         }else{
+            
             reader.readAsDataURL(file);
             reader.onload = () => {
                 this.formUpdate.controls['imageInputUpdate'].setValue({
