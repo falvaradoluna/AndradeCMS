@@ -81,8 +81,9 @@ export class SeminuevoComponent implements OnInit {
         .subscribe( resImganes => {
             this.img_var = true;
             this.resImganes = resImganes;
+            var pathServerPath = this.serverPathSemi;
             this.resImganes.forEach(function( item, key ){
-                item.cis_RutaImagen = this.serverPathSemi + item.cis_RutaImagen;
+                item.cis_RutaImagen = pathServerPath + item.cis_RutaImagen;
             });
             console.log( this.resImganes );
             //console.log( "ID de la unidad", this.ci_IdCatUnidad );
