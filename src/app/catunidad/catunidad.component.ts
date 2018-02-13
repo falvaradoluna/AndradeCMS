@@ -33,6 +33,10 @@ import { ICatAtributos } from "./atributos";
 })
 export class CatunidadComponent implements OnInit {
 
+    //RUta
+    serverPathImg = 'http://192.168.20.92:3420/imagesUnidades/';
+    serverPathFicha = 'http://192.168.20.92:3420/fichas/';
+
     public errorMessage: any;
     public data :       object;
     public temp_var:    Object = false;
@@ -116,8 +120,9 @@ export class CatunidadComponent implements OnInit {
         .subscribe( resImganes => {
             this.img_var = true;
             this.resImganes = resImganes;
+            var pathServerImg = this.serverPathImg;
             this.resImganes.forEach(function( item, key ){
-                item.ci_RutaImagen = 'http://localhost:3420/images/' + item.ci_RutaImagen;
+                item.ci_RutaImagen = pathServerImg + item.ci_RutaImagen;
             });
             console.log( this.resImganes );
             console.log( "ID de la unidad", this.ci_IdCatUnidad );
@@ -267,8 +272,9 @@ export class CatunidadComponent implements OnInit {
         this._serviceUnidad.GetFichasUnidad( { caf_IdCatUnidad: caf_IdCatUnidad } )
         .subscribe( resFichas => {
             this.resFichas = resFichas
+            var pathServerFicha = this.serverPathFicha;
             this.resFichas.forEach(function( item, key ){
-                item.caf_RutaFicha = 'http://localhost:3420/fichas/' + item.caf_RutaFicha;
+                item.caf_RutaFicha = pathServerFicha + item.caf_RutaFicha;
             });
             
             if(this.resFichas[0] == undefined){
