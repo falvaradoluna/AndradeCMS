@@ -105,21 +105,25 @@ seminuevo.prototype.post_updateimagensemi = function(req, res, next) {
     var cis_TipoImagen      = req.body.tipoImg;
     var cis_RutaImagen      = req.body.imageInput.filename;
     var cis_idImagenSemi    = req.body.Idimg;
+    var tipoImgtxt          = req.body.tipoImgtxt;
     // //console.log('QueryString = ' + req.query);
 
     var params = [
         { name: 'cis_IdSeminuevo',   value: cis_IdSeminuevo, type: self.model.types.INT },
         { name: 'cis_TipoImagen',    value: cis_TipoImagen, type: self.model.types.INT },
         { name: 'cis_RutaImagen',    value: cis_RutaImagen, type: self.model.types.STRING },
-        { name: 'cis_idImagenSemi',  value: cis_idImagenSemi, type: self.model.types.INT }
+        { name: 'cis_idImagenSemi',  value: cis_idImagenSemi, type: self.model.types.INT },
+        { name: 'tipoImgtxt',        value: tipoImgtxt, type: self.model.types.STRING }
     ];
     console.log( "Parametros", params );
 
     this.model.query('catImgSemi_UPDATE_SP', params, function (error, result) {
-        //console.log('Parametros: ' + params);
+        console.log( "error",error );
+        console.log( "result",result );
         if (result.length > 0) {
             //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
-            var pathname = 'C:\\Users\\Laura-PC\\Documents\\NodeJs\\AndradeCMSDocumentos\\public\\imagesSemi\\' + req.body.imageInput.filename;
+            var newName = result[0].semiName
+            var pathname = pathSaveSemi + newName;
             require("fs").writeFile( pathname , req.body.imageInput.value, 'base64', function(err) {
                 //console.log(err);
                 if( err ){
