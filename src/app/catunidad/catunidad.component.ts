@@ -60,6 +60,7 @@ export class CatunidadComponent implements OnInit {
     IdCatUnidad = new FormControl("");
     tipoImg     = new FormControl("");
     Idimg       = new FormControl("");
+    tipoImgtxt  = new FormControl("");
 
     //Formulario
     formFicha:      FormGroup;
@@ -80,7 +81,8 @@ export class CatunidadComponent implements OnInit {
             "imageInput":   this.imageInput,
             "IdCatUnidad":  this.IdCatUnidad,
             "tipoImg":      this.tipoImg,
-            "Idimg":        this.Idimg
+            "Idimg":        this.Idimg,
+            "tipoImgtxt":   this.tipoImgtxt
         });
 
         this.formFicha = fb.group({
@@ -153,9 +155,17 @@ export class CatunidadComponent implements OnInit {
             this.formImg.controls['imageInput'].setValue(file ? file : '');
             this.formImg.controls['IdCatUnidad'].setValue(this.ci_IdCatUnidad);
             if( file.type == "image/jpeg" ){
+                var str = file.name;
+                var ext = '.' + str.split('.').pop();
+                console.log(ext)
                 this.formImg.controls['tipoImg'].setValue(1);
+                this.formImg.controls["tipoImgtxt"].setValue(ext);
             }else{
+                var str = file.name;
+                var ext = '.' + str.split('.').pop();
+                console.log(ext)
                 this.formImg.controls['tipoImg'].setValue(2);
+                this.formImg.controls["tipoImgtxt"].setValue(ext);
             }
             console.log( "ID de la unidad en el onchange", this.ci_IdCatUnidad );
             console.log( "ID del form", this.formImg.value.IdCatUnidad );

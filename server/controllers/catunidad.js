@@ -2,6 +2,9 @@ var CatUnView = require('../views/reference'),
     ModelView = require('../models/dataAccess'),
     fs = require("fs");
 
+    var pathSaveUni = "C:\\Desarrollo\\AndradeCMSDocumentos\\public\\imagesUnidades\\";
+    var prefijoPromo = "Unidad_";
+
 var catunidad = function(conf) {
     this.conf = conf || {};
     this.view = new CatUnView();
@@ -58,20 +61,25 @@ catunidad.prototype.post_insertimagen = function(req, res, next) {
     var ci_IdCatUnidad      = req.body.IdCatUnidad;
     var ci_RutaImagen       = req.body.imageInput.filename;
     var ci_IdTipoImagen     = req.body.tipoImg;
+    var ci_tipo             = req.body.tipoImgtxt;
     // //console.log('QueryString = ' + req.query);
-
+    console.log("TipoImagen", ci_tipo);
     var params = [
         { name: 'ci_IdCatUnidad',   value: ci_IdCatUnidad, type: self.model.types.INT },
         { name: 'ci_RutaImagen',    value: ci_RutaImagen, type: self.model.types.STRING },
-        { name: 'ci_IdTipoImagen',  value: ci_IdTipoImagen, type: self.model.types.INT }
+        { name: 'ci_IdTipoImagen',  value: ci_IdTipoImagen, type: self.model.types.INT },
+        { name: 'ci_tipo',          value: ci_tipo, type: self.model.types.STRING }
     ];
     //console.log( "Parametros", params );
 
     this.model.query('catImg_INSERT_SP', params, function (error, result) {
-        //console.log('Parametros: ' + params);
+       console.log("Error", error);
+       console.log("result", result);
         if (result.length > 0) {
             //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
-            var pathname = 'C:\\Users\\Laura-PC\\Documents\\NodeJs\\AndradeCMSDocumentos\\public\\images\\' + req.body.imageInput.filename;
+            var newName = result[0].imgName;
+            var pathname = pathSaveUni + newName;
+            //var pathname = pathSaveUni + req.body.imageInput.filename;
             require("fs").writeFile( pathname , req.body.imageInput.value, 'base64', function(err) {
                 //console.log(err);
                 if( err ){
@@ -99,6 +107,7 @@ catunidad.prototype.post_updateimagen = function(req, res, next) {
     var ci_RutaImagen       = req.body.imageInput.filename;
     var ci_IdTipoImagen     = req.body.tipoImg;
     var ci_IdImagen         = req.body.Idimg;
+    var ci_tipo             = req.body.tipoImgtxt;
     // //console.log('QueryString = ' + req.query);
 
     var params = [
@@ -106,6 +115,7 @@ catunidad.prototype.post_updateimagen = function(req, res, next) {
         { name: 'ci_RutaImagen',    value: ci_RutaImagen, type: self.model.types.STRING },
         { name: 'ci_IdTipoImagen',  value: ci_IdTipoImagen, type: self.model.types.INT },
         { name: 'ci_IdImagen',      value: ci_IdImagen, type: self.model.types.INT }
+        //{ name: 'ci_tipo',          value: ci_tipo, type: self.model.types.STRING }
     ];
     //console.log( "Parametros", params );
 
@@ -113,7 +123,7 @@ catunidad.prototype.post_updateimagen = function(req, res, next) {
         //console.log('Parametros: ' + params);
         if (result.length > 0) {
             //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
-            var pathname = 'C:\\Users\\Laura-PC\\Documents\\NodeJs\\AndradeCMSDocumentos\\public\\images\\' + req.body.imageInput.filename;
+            var pathname = pathSaveUni + req.body.imageInput.filename;
             require("fs").writeFile( pathname , req.body.imageInput.value, 'base64', function(err) {
                 //console.log(err);
                 if( err ){
