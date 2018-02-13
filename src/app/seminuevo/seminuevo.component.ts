@@ -39,19 +39,23 @@ export class SeminuevoComponent implements OnInit {
 
   //Formulario de la imagen
   formImg: FormGroup;
-  RealImg = new FormControl("");
-  imageInput = new FormControl("");
-  IdSemi = new FormControl("");
-  tipoImg = new FormControl("");
-  Idimg = new FormControl("");
+  RealImg       = new FormControl("");
+  imageInput    = new FormControl("");
+  IdSemi        = new FormControl("");
+  tipoImg       = new FormControl("");
+  Idimg         = new FormControl("");
+  tipoImgtxt    = new FormControl("");
+
+  serverPathSemi = 'http://192.168.20.92:3420/imagesSemi/';
 
   constructor(private _http: HttpClient, private modalService: NgbModal, public fb: FormBuilder, private _semiService: SeminuevoService) {
     this.formImg = fb.group({
-        "RealImg": this.RealImg,
-        "imageInput": this.imageInput,
-        "IdSemi": this.IdSemi,
-        "tipoImg": this.tipoImg,
-        "Idimg": this.Idimg
+        "RealImg":      this.RealImg,
+        "imageInput":   this.imageInput,
+        "IdSemi":       this.IdSemi,
+        "tipoImg":      this.tipoImg,
+        "Idimg":        this.Idimg,
+        "tipoImgtxt":   this.tipoImgtxt
     });
    }
 
@@ -78,7 +82,7 @@ export class SeminuevoComponent implements OnInit {
             this.img_var = true;
             this.resImganes = resImganes;
             this.resImganes.forEach(function( item, key ){
-                item.cis_RutaImagen = 'http://localhost:3420/imagesSemi/' + item.cis_RutaImagen;
+                item.cis_RutaImagen = this.serverPathSemi + item.cis_RutaImagen;
             });
             console.log( this.resImganes );
             //console.log( "ID de la unidad", this.ci_IdCatUnidad );
