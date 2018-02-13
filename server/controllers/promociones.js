@@ -2,6 +2,8 @@ var PromoView = require('../views/reference'),
 ModelView = require('../models/dataAccess'),
 fs = require("fs");
 
+var pathSave = "C:\\Desarrollo\\AndradeCMSDocumentos\\public\\promociones\\";
+
 var promociones = function(conf) {
     this.conf = conf || {};
     this.view = new PromoView();
@@ -224,7 +226,8 @@ promociones.prototype.post_insertpromocion = function(req, res, next) {
     this.model.query('Promo_InsertPromocion_SP', params, function (error, result) {
         //console.log('Parametros: ' + params);
         if (result.length > 0) {
-            var pathname = 'src/file/promociones/' + req.body.imageInput.filename;
+            var pathname = this.pathSave + req.body.imageInput.filename;
+            //var pathname = 'src/file/promociones/' + req.body.imageInput.filename;
             require("fs").writeFile( pathname , req.body.imageInput.value, 'base64', function(err) {
                 console.log(err);
                 if( err ){
@@ -256,7 +259,8 @@ promociones.prototype.post_updateimage = function(req, res, next){
     this.model.query('Promo_UpdateImgPromo_SP', params, function (error, result) {
         //console.log('Parametros: ' + params);
         if (result.length > 0) {
-            var pathname = 'src/file/promociones/' + req.body.imageInputUpdate.filename;
+            var pathname = this.pathSave + req.body.imageInputUpdate.filename;
+            //var pathname = 'src/file/promociones/' + req.body.imageInputUpdate.filename;
             require("fs").writeFile( pathname , req.body.imageInputUpdate.value, 'base64', function(err) {
                 if( err ){
                     console.log('Ha ocurrido un error: ' + err);
@@ -265,6 +269,8 @@ promociones.prototype.post_updateimage = function(req, res, next){
                     console.log('Se ha guardado');
                 }
             }); 
+        }else{
+            console.log(error)
         }
         self.view.expositor(res, {
             error: error,

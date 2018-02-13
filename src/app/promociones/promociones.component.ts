@@ -40,6 +40,10 @@ import  swal  from "sweetalert2";
     animations: [routerTransition()]
 })
 export class PromocionesComponent implements OnInit {
+
+    //ruta
+    public serverPath: any = "http://192.168.20.92:3420/promociones/";
+
     //Variables para el formulario de guardar una nueva promocion
     form: FormGroup;
     SelectTipoPromocion = new FormControl("", Validators.required);
@@ -107,6 +111,7 @@ export class PromocionesComponent implements OnInit {
     resultadoMarca:             IMarca[] = [];
     resultadoSucursal:          ISucursal[] = [];
 
+
     ngOnInit() {
         this.getTablaPromociones();
         this.getEmpresas();
@@ -116,10 +121,13 @@ export class PromocionesComponent implements OnInit {
     getTablaPromociones(): void{
         this._Promoservice.getPromoColumn()
         .subscribe( resultadoPromociones => {
+            var pathServer = this.serverPath;
             this.temp_var = true;
             this.resultadoPromociones = resultadoPromociones;
+            console.log("pathserver", pathServer );
             this.resultadoPromociones.forEach(function( item, key ){
-                item.pathImagen = 'file/promociones/' + item.po_RutaImagen;
+                item.pathImagen = pathServer + item.po_RutaImagen;
+                //item.pathImagen = 'file/promociones/' + item.po_RutaImagen;
             });
         },
         error => this.errorMessage = <any>error);
@@ -257,7 +265,9 @@ export class PromocionesComponent implements OnInit {
                 'success'
                 );
             this.serverResponse = serverResponse;
-            this.ModalImg = 'file/promociones/' + this.formUpdate.value.imageInputUpdate.filename;
+
+	        this.ModalImg = this.serverPath + this.formUpdate.value.imageInputUpdate.filename;
+            //this.ModalImg = 'file/promociones/' + this.formUpdate.value.imageInputUpdate.filename;
         },
         error => this.errorMessage = <any>error );
     }
@@ -369,6 +379,7 @@ export class PromocionesComponent implements OnInit {
             this.descripcion            = this.resultadoPromocionesById[0].po_Descripcion;
             this.ModalImg               = img;
             this.idPromocion            = this.resultadoPromocionesById[0].po_IdPromocion;
+            console.log(this.ModalImg);
         },
         error => this.errorMessage = <any>error );
     }
