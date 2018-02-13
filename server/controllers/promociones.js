@@ -233,7 +233,6 @@ promociones.prototype.post_insertpromocion = function(req, res, next) {
         if (result.length > 0) {
             var newName = result[0].imgName;
             var pathname = pathSave + newName;
-            console.log("PatName", pathname);
             //var pathname = 'src/file/promociones/' + req.body.imageInput.filename;
             require("fs").writeFile( pathname , req.body.imageInput.value, 'base64', function(err) {
                 console.log(err);
@@ -255,10 +254,11 @@ promociones.prototype.post_insertpromocion = function(req, res, next) {
 
 //api/promociones/updateimage
 promociones.prototype.post_updateimage = function(req, res, next){
-    console.log( req.body.imageInputUpdate.filename );
+    //console.log( req.body.imageInputUpdate.filename );
     var self = this;
-    var po_RutaImagen = req.body.imageInputUpdate.filename;
+    var po_RutaImagen = prefijoPromo + req.body.promoIdUp + req.body.typeImgUp;
     var po_IdPromocion = req.body.promoIdUp;
+    console.log(po_RutaImagen);
     var params = [
         { name: 'po_RutaImagen',   value: po_RutaImagen, type: self.model.types.STRING },
         { name: 'po_IdPromocion',  value: po_IdPromocion, type: self.model.types.INT }
@@ -266,8 +266,8 @@ promociones.prototype.post_updateimage = function(req, res, next){
     this.model.query('Promo_UpdateImgPromo_SP', params, function (error, result) {
         //console.log('Parametros: ' + params);
         if (result.length > 0) {
-            var newName = this.prefijoPromo + po_IdPromocion
-            var pathname = this.pathSave + newName;
+            var newName = prefijoPromo + po_IdPromocion
+            var pathname = pathSave + newName;
             //var pathname = 'src/file/promociones/' + req.body.imageInputUpdate.filename;
             require("fs").writeFile( pathname , req.body.imageInputUpdate.value, 'base64', function(err) {
                 if( err ){

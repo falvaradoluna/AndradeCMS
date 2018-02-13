@@ -55,6 +55,7 @@ export class PromocionesComponent implements OnInit {
     idUsuario = new FormControl("");
     RealImg = new FormControl("");
     typeImg = new FormControl("");
+    typeImgUp = new FormControl("");
 
     //Variables para el formualario de actualizar imagen
     formUpdate: FormGroup;
@@ -101,6 +102,7 @@ export class PromocionesComponent implements OnInit {
             "RealImgUpdate": this.RealImgUpdate,
             "imageInputUpdate": this.imageInputUpdate,
             "promoIdUp": this.promoIdUp,
+            "typeImgUp": this.typeImgUp,
         });
 
     }
@@ -249,7 +251,10 @@ export class PromocionesComponent implements OnInit {
             });
             this.formUpdate.controls['RealImgUpdate'].setValue("");
         }else{
-            
+            var str = file.name;
+            var ext = '.' + str.split('.').pop();
+            console.log(ext)
+            this.formUpdate.controls["typeImgUp"].setValue(ext);
             reader.readAsDataURL(file);
             reader.onload = () => {
                 this.formUpdate.controls['imageInputUpdate'].setValue({
