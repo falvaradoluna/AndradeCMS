@@ -203,7 +203,7 @@ promociones.prototype.get_deletepromociones = function(req, res, next) {
 
 // "api/promociones/insertpromocion"
 promociones.prototype.post_insertpromocion = function(req, res, next) {
-    //console.log( req.body );
+    // console.log( req.body.imageInput.value );
     var self = this;
     var po_IdTipoPromocion  = req.body.SelectTipoPromocion;
     var po_idEmpresa        = req.body.SelectEmpresa;
@@ -213,7 +213,7 @@ promociones.prototype.post_insertpromocion = function(req, res, next) {
     var po_RutaImagen       = req.body.imageInput.filename;
     var po_IdUsuario        = req.body.idUsuario;
     var po_tipo             = req.body.typeImg;
-    console.log('QueryString = ' + req.query);
+    //console.log('QueryString = ' + req.query);
 
     var params = [
         { name: 'po_IdTipoPromocion',   value: po_IdTipoPromocion, type: self.model.types.INT },
@@ -227,12 +227,15 @@ promociones.prototype.post_insertpromocion = function(req, res, next) {
     ];
 
     this.model.query('Promo_InsertPromocion_SP', params, function (error, result) {
-        console.log(result);
+        console.log("Result",result);
+        console.log("Error",error);
+        console.log("ResultImg",result[0].imgName);
         if (result.length > 0) {
-            var newName = result.imgName;
-            var pathname = this.pathSave + newName;
+            var newName = result[0].imgName;
+            var pathname = pathSave + newName;
+            console.log("PatName", pathname);
             //var pathname = 'src/file/promociones/' + req.body.imageInput.filename;
-            require("fs").writeFile( pathname , newName, 'base64', function(err) {
+            require("fs").writeFile( pathname , req.body.imageInput.value, 'base64', function(err) {
                 console.log(err);
                 if( err ){
                     console.log('Ha ocurrido un error: ' + err);
