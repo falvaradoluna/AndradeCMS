@@ -230,9 +230,17 @@ export class CatunidadComponent implements OnInit {
             };
             this.formImg.controls['imageInput'].setValue(file ? file : '');
             if( file.type == "image/jpeg" ){
+                var str = file.name;
+                var ext = '.' + str.split('.').pop();
+                console.log(ext)
                 this.formImg.controls['tipoImg'].setValue(1);
+                this.formImg.controls["tipoImgtxt"].setValue(ext);
             }else{
+                var str = file.name;
+                var ext = '.' + str.split('.').pop();
+                console.log(ext)
                 this.formImg.controls['tipoImg'].setValue(2);
+                this.formImg.controls["tipoImgtxt"].setValue(ext);
             }
         }   
     };

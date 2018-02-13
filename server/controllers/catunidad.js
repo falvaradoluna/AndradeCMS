@@ -3,7 +3,7 @@ var CatUnView = require('../views/reference'),
     fs = require("fs");
 
     var pathSaveUni = "C:\\Desarrollo\\AndradeCMSDocumentos\\public\\imagesUnidades\\";
-    var prefijoPromo = "Unidad_";
+    var prefijoUnidad = "Unidad_";
 
 var catunidad = function(conf) {
     this.conf = conf || {};
@@ -114,8 +114,8 @@ catunidad.prototype.post_updateimagen = function(req, res, next) {
         { name: 'ci_IdCatUnidad',   value: ci_IdCatUnidad, type: self.model.types.INT },
         { name: 'ci_RutaImagen',    value: ci_RutaImagen, type: self.model.types.STRING },
         { name: 'ci_IdTipoImagen',  value: ci_IdTipoImagen, type: self.model.types.INT },
-        { name: 'ci_IdImagen',      value: ci_IdImagen, type: self.model.types.INT }
-        //{ name: 'ci_tipo',          value: ci_tipo, type: self.model.types.STRING }
+        { name: 'ci_IdImagen',      value: ci_IdImagen, type: self.model.types.INT },
+        { name: 'ci_tipo',          value: ci_tipo, type: self.model.types.STRING }
     ];
     //console.log( "Parametros", params );
 
@@ -123,7 +123,8 @@ catunidad.prototype.post_updateimagen = function(req, res, next) {
         //console.log('Parametros: ' + params);
         if (result.length > 0) {
             //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
-            var pathname = pathSaveUni + req.body.imageInput.filename;
+            var newName = result[0].imgName
+            var pathname = pathSaveUni + newName;
             require("fs").writeFile( pathname , req.body.imageInput.value, 'base64', function(err) {
                 //console.log(err);
                 if( err ){
