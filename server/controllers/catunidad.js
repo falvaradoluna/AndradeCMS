@@ -120,7 +120,8 @@ catunidad.prototype.post_updateimagen = function(req, res, next) {
     //console.log( "Parametros", params );
 
     this.model.query('catImg_UPDATE_SP', params, function (error, result) {
-        //console.log('Parametros: ' + params);
+        console.log("error",error );
+        console.log("result",result );
         if (result.length > 0) {
             //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
             var newName = result[0].imgName
