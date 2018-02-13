@@ -114,8 +114,16 @@ export class SeminuevoComponent implements OnInit {
             this.formImg.controls['imageInput'].setValue(file ? file : '');
             this.formImg.controls['IdSemi'].setValue(this.cis_IdSeminuevo);
             if( file.type == "image/jpeg" ){
+                var str = file.name;
+                var ext = '.' + str.split('.').pop();
+                console.log(ext);
+                this.formImg.controls["tipoImgtxt"].setValue(ext);
                 this.formImg.controls['tipoImg'].setValue(1);
             }else{
+                var str = file.name;
+                var ext = '.' + str.split('.').pop();
+                console.log(ext);
+                this.formImg.controls["tipoImgtxt"].setValue(ext);
                 this.formImg.controls['tipoImg'].setValue(2);
             }
             console.log( "ID de la unidad en el onchange", this.cis_IdSeminuevo );
@@ -183,8 +191,16 @@ export class SeminuevoComponent implements OnInit {
             };
             this.formImg.controls['imageInput'].setValue(file ? file : '');
             if( file.type == "image/jpeg" ){
+                var str = file.name;
+                var ext = '.' + str.split('.').pop();
+                console.log(ext);
+                this.formImg.controls["tipoImgtxt"].setValue(ext);
                 this.formImg.controls['tipoImg'].setValue(1);
             }else{
+                var str = file.name;
+                var ext = '.' + str.split('.').pop();
+                console.log(ext);
+                this.formImg.controls["tipoImgtxt"].setValue(ext);
                 this.formImg.controls['tipoImg'].setValue(2);
             }
         }   
