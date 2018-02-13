@@ -69,6 +69,7 @@ export class CatunidadComponent implements OnInit {
     caf_idCatUnidad = new FormControl("");
     tipo            = new FormControl("");
     idFicha         = new FormControl("");
+    tipoFicha       = new FormControl("");
 
 
     //Formulario Atributos
@@ -90,7 +91,8 @@ export class CatunidadComponent implements OnInit {
             "FichaInput":       this.FichaInput,
             "caf_idCatUnidad":  this.caf_idCatUnidad,
             "tipo":             this.tipo,
-            "idFicha":          this.idFicha
+            "idFicha":          this.idFicha,
+            "tipoFicha":         this.tipoFicha
         });
 
         this.formAtributo = fb.group({
@@ -319,6 +321,10 @@ export class CatunidadComponent implements OnInit {
               });
             this.formFicha.controls['RealFicha'].setValue("");
         }else{
+            var str = file.name;
+            var ext = '.' + str.split('.').pop();
+            console.log(ext)
+            this.formFicha.controls["tipoFicha"].setValue(ext);
             this.formFicha.controls['tipo'].setValue(3);
             this.formFicha.controls["caf_idCatUnidad"].setValue(this.cafIdCatUnidad);
             reader.readAsDataURL(file);

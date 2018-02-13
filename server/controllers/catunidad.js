@@ -3,7 +3,7 @@ var CatUnView = require('../views/reference'),
     fs = require("fs");
 
     var pathSaveUni = "C:\\Desarrollo\\AndradeCMSDocumentos\\public\\imagesUnidades\\";
-    var prefijoUnidad = "Unidad_";
+    var pathSaveFic = "C:\\Desarrollo\\AndradeCMSDocumentos\\public\\fichas\\";
 
 var catunidad = function(conf) {
     this.conf = conf || {};
@@ -192,19 +192,24 @@ catunidad.prototype.post_insertficha = function(req, res, next) {
     var caf_idCatUnidad   = req.body.caf_idCatUnidad;
     var caf_RutaFicha     = req.body.FichaInput.filename;
     var caf_IdTipoImages  = req.body.tipo;
+    var tipoFicha         = req.body.tipoFicha;
     // //console.log('QueryString = ' + req.query);
 
     var params = [
         { name: 'caf_idCatUnidad',   value: caf_idCatUnidad, type: self.model.types.INT },
         { name: 'caf_RutaFicha',     value: caf_RutaFicha, type: self.model.types.STRING },
-        { name: 'caf_IdTipoImages',  value: caf_IdTipoImages, type: self.model.types.INT }
+        { name: 'caf_IdTipoImages',  value: caf_IdTipoImages, type: self.model.types.INT },
+        { name: 'tipoFicha',         value: tipoFicha, type: self.model.types.STRING }
     ];
     // console.log( "Parametros", params );
 
     this.model.query('CatFic_INSERT_SP', params, function (error, result) {
+        console.log("error", error);
+        console.log("result", result);
         if (result.length > 0) {
             //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
-            var pathname = 'C:\\Users\\Laura-PC\\Documents\\NodeJs\\AndradeCMSDocumentos\\public\\fichas\\' + req.body.FichaInput.filename;
+            var newName = result[0].ficName;
+            var pathname = pathSaveFic + newName;
             require("fs").writeFile( pathname , req.body.FichaInput.value, 'base64', function(err) {
                 //console.log(err);
                 if( err ){

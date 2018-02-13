@@ -134,6 +134,24 @@
                     <h3 class="text-muted">Aun no se carga un PDF</h3>
             </div>
         </div>
+        <div class="row div-space" *ngIf="showFicha == 0">
+            <div class="col">
+                <h6 class="text-muted"> </h6>
+                <form [formGroup]="formFicha" (ngSubmit)="saveFicha()">
+                    <label class="btn btn-secondary btn-file">Browse
+                        <input name="file" type="file" (change)="onFileChangeFicha($event)" formControlName="RealFicha">
+                        <input type="hidden" name="fileHidden" formControlName="FichaInput"/> 
+                        <input type="hidden" name="caf_idCatUnidad" formControlName="caf_idCatUnidad"/> 
+                        <input type="hidden" name="tipo" formControlName="tipo"/> 
+                        <input type="hidden" name="tipoFicha" formControlName="tipoFicha"/>
+                    </label>
+                    <div class="modal-footer">
+                        <button class="btn btn-outline-success" type="submit">Guardar</button>
+                        <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
         <div class="row div-space" *ngIf="showFicha == 1">
             <div class="col">
                 <h6 class="text-muted"> </h6>
@@ -143,7 +161,8 @@
                         <input type="hidden" name="fileHidden" formControlName="FichaInput"/> 
                         <input type="hidden" name="caf_idCatUnidad" formControlName="caf_idCatUnidad"/> 
                         <input type="hidden" name="tipo" formControlName="tipo"/>
-                        <input type="hidden" name="idFicha" formControlName="idFicha"/> 
+                        <input type="hidden" name="idFicha" formControlName="idFicha"/>
+                        <input type="hidden" name="tipoFicha" formControlName="tipoFicha"/>
                     </label>
                     <button type="button" class="btn btn-danger pull-right" (click)="deleteFicha();">
                         <i class="fa fa-trash" aria-hidden="true" ></i>
@@ -155,23 +174,6 @@
                 </form>
             </div>
         </div> 
-        <div class="row div-space" *ngIf="showFicha == 0">
-            <div class="col">
-                <h6 class="text-muted"> </h6>
-                <form [formGroup]="formFicha" (ngSubmit)="saveFicha()">
-                    <label class="btn btn-secondary btn-file">Browse
-                        <input name="file" type="file" (change)="onFileChangeFicha($event)" formControlName="RealFicha">
-                        <input type="hidden" name="fileHidden" formControlName="FichaInput"/> 
-                        <input type="hidden" name="caf_idCatUnidad" formControlName="caf_idCatUnidad"/> 
-                        <input type="hidden" name="tipo" formControlName="tipo"/> 
-                    </label>
-                    <div class="modal-footer">
-                        <button class="btn btn-outline-success" type="submit">Guardar</button>
-                        <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>
 </ng-template>
 
