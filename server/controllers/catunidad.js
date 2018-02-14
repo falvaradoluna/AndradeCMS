@@ -63,8 +63,8 @@ catunidad.prototype.get_imgunidad = function( req, res, next ){
     ];
 
     this.model.query("CatUni_SELECTImgById_SP", params, function( error, result ){
-        // console.log(result);
-        // console.log(error);
+        console.log(result);
+        onsole.log(error);
         self.view.expositor(res, {
             error: error,
             result: result

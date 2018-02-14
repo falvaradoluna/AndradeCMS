@@ -113,7 +113,7 @@ export class CatunidadComponent implements OnInit {
     resFichas:      ICatFichas[] = [];
     resAtributos:   ICatAtributos[] = [];
     resParametros:  IParametros[] = [];
-    imagesUnidad: any = []
+    imagesUnidad:   any = []
 
     ngOnInit() {
         this.getUnidades();
