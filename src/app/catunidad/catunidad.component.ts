@@ -157,9 +157,10 @@ export class CatunidadComponent implements OnInit {
             var pathServerImg = this.serverPathImg;
             var getRuta = this.rutaGet;
             var prefijillo = this.prefijo;
+            var imagenesUnidad = this.imagesUnidad;
             this.resImganes.forEach(function( item, key ){
                // item.ci_RutaImagen = pathServerImg + item.ci_RutaImagen;
-               this.imagesUnidad.push(getRuta + prefijillo + item.ci_IdCatUnidad + item.ci_ConsImg + ".jpg"); 
+               imagenesUnidad.push(getRuta + prefijillo + item.ci_IdCatUnidad + item.ci_ConsImg + ".jpg"); 
             });
             console.log( this.resImganes );
             console.log("Images", this.imagesUnidad);
