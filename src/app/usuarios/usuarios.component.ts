@@ -127,19 +127,19 @@ export class UsuariosComponent implements OnInit {
     }
 
     saveUsuario(){
-        if(!this.validar_email(this.formInsUsu.value.TxtCorreo)){   
-            swal(
-                'Alto',
-                'Ingresa una cuenta de correo valida.',
-                'warning'
-            );
-        }else if(!this.validar_pass(this.formInsUsu.value.TxtPass)){
-            swal(
-                'Alto',
-                'La contraseña debe contener minimo 8 caracteres, minúsculas, mayúsculas y 1 caracter "$ _ -" ',
-                'warning'
-            );
-        }else{
+        // if(!this.validar_email(this.formInsUsu.value.TxtCorreo)){   
+        //     swal(
+        //         'Alto',
+        //         'Ingresa una cuenta de correo valida.',
+        //         'warning'
+        //     );
+        // }else if(!this.validar_pass(this.formInsUsu.value.TxtPass)){
+        //     swal(
+        //         'Alto',
+        //         'La contraseña debe contener minimo 8 caracteres, minúsculas, mayúsculas y 1 caracter "$ _ -" ',
+        //         'warning'
+        //     );
+        // }else{
             let Params = new HttpParams();
             Params = Params.append("usu_nombre",    this.formInsUsu.value.TxtNombre);
             Params = Params.append("usu_apellidoP", this.formInsUsu.value.TxtApellidoP);
@@ -149,6 +149,8 @@ export class UsuariosComponent implements OnInit {
             Params = Params.append("usu_sucursal",  this.formInsUsu.value.SelectSucursal);
             Params = Params.append("usu_correo",    this.formInsUsu.value.TxtCorreo);
             Params = Params.append("usu_Pass",      this.formInsUsu.value.TxtPass);
+            console.log("Parametros", Params)
+            console.log("Formulario", this.formInsUsu);
             this._http.get(this._urlInsertUsu, {params: Params}).subscribe((res: Response) => {
                 if( res[0].success == 1 ){
                     swal(
@@ -164,17 +166,17 @@ export class UsuariosComponent implements OnInit {
                     );
                 }
             });
-        }
+        //}
     }
 
     updateUsuario(){
-        if(!this.validar_email(this.formUpUsu.value.TxtCorreo)){   
-            swal(
-                'Alto',
-                'Ingresa una cuenta de correo valida.',
-                'warning'
-            );
-        }else{
+        // if(!this.validar_email(this.formUpUsu.value.TxtCorreo)){   
+        //     swal(
+        //         'Alto',
+        //         'Ingresa una cuenta de correo valida.',
+        //         'warning'
+        //     );
+        // }else{
             let Params = new HttpParams();
             Params = Params.append("usu_nombre",    this.formUpUsu.value.TxtNombre);
             Params = Params.append("usu_apellidoP", this.formUpUsu.value.TxtApellidoP);
@@ -202,7 +204,7 @@ export class UsuariosComponent implements OnInit {
                     );
                 }
             });
-        }
+        //}
     };
 
     validar_email( email ){

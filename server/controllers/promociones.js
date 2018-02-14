@@ -2,6 +2,9 @@ var PromoView = require('../views/reference'),
 ModelView = require('../models/dataAccess'),
 fs = require("fs");
 
+var pathSave = "C:\\Desarrollo\\AndradeCMSDocumentos\\public\\promociones\\";
+var prefijoPromo = "Promo_";
+
 var promociones = function(conf) {
     this.conf = conf || {};
     this.view = new PromoView();
@@ -200,7 +203,7 @@ promociones.prototype.get_deletepromociones = function(req, res, next) {
 
 // "api/promociones/insertpromocion"
 promociones.prototype.post_insertpromocion = function(req, res, next) {
-    //console.log( req.body );
+    // console.log( req.body.imageInput.value );
     var self = this;
     var po_IdTipoPromocion  = req.body.SelectTipoPromocion;
     var po_idEmpresa        = req.body.SelectEmpresa;
@@ -209,7 +212,8 @@ promociones.prototype.post_insertpromocion = function(req, res, next) {
     var po_Descripcion      = req.body.TxtDescripcion;
     var po_RutaImagen       = req.body.imageInput.filename;
     var po_IdUsuario        = req.body.idUsuario;
-    // //console.log('QueryString = ' + req.query);
+    var po_tipo             = req.body.typeImg;
+    //console.log('QueryString = ' + req.query);
 
     var params = [
         { name: 'po_IdTipoPromocion',   value: po_IdTipoPromocion, type: self.model.types.INT },
@@ -218,13 +222,18 @@ promociones.prototype.post_insertpromocion = function(req, res, next) {
         { name: 'po_IdMarca',           value: po_IdMarca, type: self.model.types.INT },
         { name: 'po_Descripcion',       value: po_Descripcion, type: self.model.types.STRING },
         { name: 'po_RutaImagen',        value: po_RutaImagen, type: self.model.types.STRING },
-        { name: 'po_IdUsuario',         value: po_IdUsuario, type: self.model.types.INT }
+        { name: 'po_IdUsuario',         value: po_IdUsuario, type: self.model.types.INT },
+        { name: 'po_tipo',              value: po_tipo, type: self.model.types.STRING }
     ];
 
     this.model.query('Promo_InsertPromocion_SP', params, function (error, result) {
-        //console.log('Parametros: ' + params);
+        console.log("Result",result);
+        console.log("Error",error);
+        console.log("ResultImg",result[0].imgName);
         if (result.length > 0) {
-            var pathname = 'src/file/promociones/' + req.body.imageInput.filename;
+            var newName = result[0].imgName;
+            var pathname = pathSave + newName;
+            //var pathname = 'src/file/promociones/' + req.body.imageInput.filename;
             require("fs").writeFile( pathname , req.body.imageInput.value, 'base64', function(err) {
                 console.log(err);
                 if( err ){
@@ -245,10 +254,12 @@ promociones.prototype.post_insertpromocion = function(req, res, next) {
 
 //api/promociones/updateimage
 promociones.prototype.post_updateimage = function(req, res, next){
-    console.log( req.body.imageInputUpdate.filename );
+    //console.log( req.body.imageInputUpdate.filename );
     var self = this;
-    var po_RutaImagen = req.body.imageInputUpdate.filename;
+    var po_RutaImagen = prefijoPromo + req.body.promoIdUp + req.body.typeImgUp;
     var po_IdPromocion = req.body.promoIdUp;
+    console.log( "TipoImagen", req.body.typeImgUp );
+    console.log("RutaImg", po_RutaImagen);
     var params = [
         { name: 'po_RutaImagen',   value: po_RutaImagen, type: self.model.types.STRING },
         { name: 'po_IdPromocion',  value: po_IdPromocion, type: self.model.types.INT }
@@ -256,7 +267,9 @@ promociones.prototype.post_updateimage = function(req, res, next){
     this.model.query('Promo_UpdateImgPromo_SP', params, function (error, result) {
         //console.log('Parametros: ' + params);
         if (result.length > 0) {
-            var pathname = 'src/file/promociones/' + req.body.imageInputUpdate.filename;
+            var newName = prefijoPromo + po_IdPromocion
+            var pathname = pathSave + newName;
+            //var pathname = 'src/file/promociones/' + req.body.imageInputUpdate.filename;
             require("fs").writeFile( pathname , req.body.imageInputUpdate.value, 'base64', function(err) {
                 if( err ){
                     console.log('Ha ocurrido un error: ' + err);
@@ -265,6 +278,8 @@ promociones.prototype.post_updateimage = function(req, res, next){
                     console.log('Se ha guardado');
                 }
             }); 
+        }else{
+            console.log(error)
         }
         self.view.expositor(res, {
             error: error,

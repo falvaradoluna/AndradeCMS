@@ -10,6 +10,7 @@ import { SharedPipesModule,
          SortableTableModule }      from '../shared';
 import {ReactiveFormsModule}        from "@angular/forms";
 import { DataTablesModule }         from 'angular-datatables';
+import { PdfViewerModule }          from 'ng2-pdf-viewer';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { DataTablesModule }         from 'angular-datatables';
     SharedPipesModule,
     SortableTableModule,
     ReactiveFormsModule,
-    DataTablesModule.forRoot()
+    DataTablesModule.forRoot(),
+    PdfViewerModule
   ],
   declarations: [
     CatunidadComponent
