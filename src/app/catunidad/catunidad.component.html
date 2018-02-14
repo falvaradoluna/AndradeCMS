@@ -4,11 +4,6 @@
             <div class="col-6">
                 <h1 class="text-muted">Catalogo Unidades </h1>
             </div>
-            <!-- <div class="col-6">
-                <button type="button" class="btn btn-success pull-right" (click)="open(content)" style="margin-top:3%;"> 
-                <i class="fa fa-plus" aria-hidden="true"></i> Agregar promocion 
-                </button>
-            </div> -->
         </div>
         <div class="card">
             <table datatable class="table row-border hover" *ngIf="this.temp_var">
@@ -18,8 +13,10 @@
                         <th>Catalogo</th>
                         <th>Modelo</th>
                         <th>Descripcion</th>
+                        <th>Imagenes</th>
+                        <th>Fichas</th>
+                        <th>Atributos</th>
                         <!-- <th></th> -->
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,17 +25,20 @@
                         <td>{{ unidad.cu_Catalogo }}</td>
                         <td>{{ unidad.cu_Modelo }}</td>
                         <td>{{ unidad.cu_Descripcion }}</td>
-                        <!-- <td> <button type="button" class="btn btn-info btn-circle" (click)="openImg(contentImg, Dpromo.pathImagen, Dpromo.po_Descripcion, Dpromo.po_IdPromocion);"> 
-                            <i class="fa fa-file-image-o" aria-hidden="true"></i>
-                            </button> 
-                            </td> -->
                         <td> 
                             <button type="button" class="btn btn-success btn-circle" (click)="openImgModal(ModalImg, unidad.cu_IdCatUnidad);">
                                 <i class="fa fa-plus" aria-hidden="true" ></i>
                             </button> 
-                            <!-- <button type="button" class="btn btn-danger btn-circle" (click)="deletePromocion(Dpromo.po_IdPromocion);">
-                            <i class="fa fa-trash" aria-hidden="true"></i>
-                            </button> -->
+                        </td>
+                        <td> 
+                            <button type="button" class="btn btn-success btn-circle" (click)="openFichaModal(ModalFicha, unidad.cu_IdCatUnidad);">
+                                <i class="fa fa-plus" aria-hidden="true" ></i>
+                            </button> 
+                        </td>
+                        <td> 
+                            <button type="button" class="btn btn-success btn-circle" (click)="openModalAtributos(ModalAtributos, unidad.cu_IdCatUnidad);">
+                                <i class="fa fa-plus" aria-hidden="true" ></i>
+                            </button> 
                         </td>
                     </tr>
                 </tbody>
@@ -59,16 +59,32 @@
                 <tr>
                     <th>#</th>
                     <th>Imagen</th>
+                    <th>Editar imagen</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let imagen of resImganes; let i = index;">
                     <td> {{ i + 1 }} </td>
-                    <td><img src="{{imagen.ci_RutaImagen}}" width="50%"></td>
-                    <!-- <td> <button type="button" class="btn btn-info btn-circle" (click)="openImg(contentImg, Dpromo.pathImagen, Dpromo.po_Descripcion, Dpromo.po_IdPromocion);"> 
-                        <i class="fa fa-file-image-o" aria-hidden="true"></i>
-                        </button> 
-                        </td> -->
+                    <td><img src="{{imagen.ci_RutaImagen}}" width="230"></td>
+                    <td> 
+                        <form [formGroup]="formImg" (ngSubmit)="updateImage(imagen.ci_IdImagen, imagen.ci_IdCatUnidad)">
+                            <label class="btn btn-secondary btn-file">
+                                <input name="file" type="file" (change)="onFileChangeUp($event)" formControlName="RealImg">
+                                <input type="hidden" name="fileHidden" formControlName="imageInput"/> 
+                                <input type="hidden" name="IdCatUnidad" formControlName="IdCatUnidad"/> 
+                                <input type="hidden" name="tipoImg" formControlName="tipoImg"/>
+                                <input type="hidden" name="Idimg" formControlName="Idimg"/> 
+                            </label>
+                            <div class="modal-footer">
+                                <button class="btn btn-outline-success" type="submit">
+                                    Actualizar
+                                </button>
+                                <button type="button" class="btn btn-danger" (click)="deleteImage(imagen.ci_IdImagen, imagen.ci_IdCatUnidad);">
+                                    <i class="fa fa-trash" aria-hidden="true" ></i>
+                                </button> 
+                            </div>
+                        </form> 
+                    </td>
                     <!-- <td> 
                         <button type="button" class="btn btn-success btn-circle" (click)="openImgModal(ModalImg);">
                         <i class="fa fa-pencil" aria-hidden="true" ></i>
@@ -90,6 +106,7 @@
                         <input type="hidden" name="fileHidden" formControlName="imageInput"/> 
                         <input type="hidden" name="IdCatUnidad" formControlName="IdCatUnidad"/> 
                         <input type="hidden" name="tipoImg" formControlName="tipoImg"/> 
+                        <input type="hidden" name="tipoImgtxt" formControlName="tipoImgtxt"/> 
                     </label>
                     <div class="modal-footer">
                         <button class="btn btn-outline-success" type="submit">Guardar</button>
@@ -98,5 +115,170 @@
                 </form>
             </div>
         </div> 
+    </div>
+</ng-template>
+
+<ng-template #ModalFicha let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 *ngIf="showFicha == 1" class="modal-title text-muted">Actualizar Ficha</h4>
+        <h4 *ngIf="showFicha == 0" class="modal-title text-muted">Agregar Ficha</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row div-space text-center">
+            <div *ngIf="showFicha == 1" class="col space-12">
+                <!-- <pdf-viewer src="{{rutaFicha}}"></pdf-viewer> -->
+                <!-- <iframe src="{{rutaFicha}}"></iframe> -->
+                <a href="{{rutaFicha}}" target="_blank"><img src="assets/images/PDF.ico" width="20%"> </a>
+            </div>
+            <div *ngIf="showFicha == 0" class="col space-12">
+                    <h3 class="text-muted">Aun no se carga un PDF</h3>
+            </div>
+        </div>
+        <div class="row div-space" *ngIf="showFicha == 0">
+            <div class="col">
+                <h6 class="text-muted"> </h6>
+                <form [formGroup]="formFicha" (ngSubmit)="saveFicha()">
+                    <label class="btn btn-secondary btn-file">Browse
+                        <input name="file" type="file" (change)="onFileChangeFicha($event)" formControlName="RealFicha">
+                        <input type="hidden" name="fileHidden" formControlName="FichaInput"/> 
+                        <input type="hidden" name="caf_idCatUnidad" formControlName="caf_idCatUnidad"/> 
+                        <input type="hidden" name="tipo" formControlName="tipo"/> 
+                        <input type="hidden" name="tipoFicha" formControlName="tipoFicha"/>
+                    </label>
+                    <div class="modal-footer">
+                        <button class="btn btn-outline-success" type="submit">Guardar</button>
+                        <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row div-space" *ngIf="showFicha == 1">
+            <div class="col">
+                <h6 class="text-muted"> </h6>
+                <form [formGroup]="formFicha" (ngSubmit)="updateFicha()">
+                    <label class="btn btn-secondary btn-file">
+                        <input name="file" type="file" (change)="onFileChangeFicha($event)" formControlName="RealFicha">
+                        <input type="hidden" name="fileHidden" formControlName="FichaInput"/> 
+                        <input type="hidden" name="caf_idCatUnidad" formControlName="caf_idCatUnidad"/> 
+                        <input type="hidden" name="tipo" formControlName="tipo"/>
+                        <input type="hidden" name="idFicha" formControlName="idFicha"/>
+                        <input type="hidden" name="tipoFicha" formControlName="tipoFicha"/>
+                    </label>
+                    <button type="button" class="btn btn-danger pull-right" (click)="deleteFicha();">
+                        <i class="fa fa-trash" aria-hidden="true" ></i>
+                    </button> 
+                    <div class="modal-footer">
+                        <button class="btn btn-outline-success" type="submit">Actualizar</button>
+                        <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div> 
+    </div>
+</ng-template>
+
+<!-- M O D A L E S __ A T R I B U T O S -->
+
+<ng-template #ModalAtributos let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <div class="col-6">
+            <h4 class="modal-title text-muted">Atributos</h4>
+        </div>
+        <div class="col-6">
+            <button type="button" class="btn btn-success pull-right" (click)="addAtributo(1)" style="margin-top:3%;"> 
+                <i class="fa fa-plus" aria-hidden="true"></i> Agregar atributo 
+            </button>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="row div-space">
+            <div class="col space-12">
+                <table datatable class="table row-border hover" *ngIf="this.atr_var">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Atributo</th>
+                            <th>Actualizar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let atributo of resAtributos; let i = index;">
+                            <td> {{ atributo.cata_idAtributo }} </td>
+                            <td> {{ atributo.cata_Descripcion }} </td>
+                            <td>  
+                                <button type="button" class="btn btn-success btn-sm" (click)="updAtributo(2, atributo.cata_idAtributo);">
+                                    Actualizar
+                                </button> 
+                                <button type="button" class="btn btn-danger pull-right" (click)="deleteAtributo(atributo.cata_idAtributo);">
+                                    <i class="fa fa-trash" aria-hidden="true" ></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <hr>
+        <div *ngIf="showAddAtributo == 1">
+            <div class = "row">
+                <div class="col-6">
+                    <h4 class="modal-title text-muted">Agregar Atributo </h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h6 class="text-muted"> </h6>
+                    <form [formGroup]="formAtributo" (ngSubmit)="saveAtributos()">
+                        <div class="row">
+                            <div class="col">
+                                <h6 class="text-muted">Atributo</h6>
+                                <input class="form-control form-control-sm" formControlName="Atributo">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-outline-success" type="submit">
+                                Guardar
+                            </button>
+                            <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">
+                                Close
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="showAddAtributo == 2">
+            <div class = "row">
+                <div class="col-6">
+                    <h4 class="modal-title text-muted">Actualizar Atributo </h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h6 class="text-muted"> </h6>
+                    <form [formGroup]="formAtributo" (ngSubmit)="updateAtributos()">
+                        <div class="row">
+                            <div class="col">
+                                <h6 class="text-muted">Atributo</h6>
+                                <input class="form-control form-control-sm" formControlName="Atributo">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-outline-success" type="submit">
+                                Actualizar
+                            </button>
+                            <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">
+                                Close
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" *ngIf="showAddAtributo == 3">
+            <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">
+                Close
+            </button>
+        </div>
     </div>
 </ng-template>

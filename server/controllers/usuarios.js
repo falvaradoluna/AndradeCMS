@@ -54,6 +54,7 @@ usuarios.prototype.get_puestos = function( req, res, next ){
 
 //api/usuarios/insertusuario
 usuarios.prototype.get_insertusuario = function( req, res, next ){
+    console.log("Hola");
     var self = this;
     var usu_nombre      = req.query.usu_nombre;
     var usu_apellidoP   = req.query.usu_apellidoP;
@@ -75,16 +76,16 @@ usuarios.prototype.get_insertusuario = function( req, res, next ){
         { name: 'usu_Pass',         value: usu_Pass, type: self.model.types.STRING }
     ];
 
-    this.model.query("Usu_InsUsuario_SP", params, function( error, result ){
-        // console.log( result );
-        if( result.length > 0){
-            //console.log( "Resultado: " + result );
-        }
-        self.view.expositor(res, {
-            error: error,
-            result: result
-        });
-    });
+    // this.model.query("Usu_InsUsuario_SP", params, function( error, result ){
+    //     // console.log( result );
+    //     if( result.length > 0){
+    //         //console.log( "Resultado: " + result );
+    //     }
+    //     self.view.expositor(res, {
+    //         error: error,
+    //         result: result
+    //     });
+    // });
 };
 
 //api/usuario/delete

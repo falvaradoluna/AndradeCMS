@@ -9,5 +9,6 @@ module.exports = {
     tipo:           require("./controllers/tipo"),
     usuarios:       require("./controllers/usuarios"),
     tipos:          require("./controllers/tipos"),
-    catunidad:      require("./controllers/catunidad")
+    catunidad:      require("./controllers/catunidad"),
+    seminuevo:      require("./controllers/seminuevo"), 
 }

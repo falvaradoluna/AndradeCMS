@@ -4,6 +4,7 @@ import { MarcasemiRoutingModule } from './marcasemi-routing.module';
 import { MarcasemiComponent } from './marcasemi.component';
 import { MarcasemiService } from './marcasemi.service';
 import { FormsModule } from '@angular/forms';
+import {ReactiveFormsModule}        from "@angular/forms";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedPipesModule,
          SortableTableModule } from '../shared';
@@ -14,6 +15,7 @@ import { DataTablesModule } from 'angular-datatables';
         CommonModule,
         MarcasemiRoutingModule,
         FormsModule,
+        ReactiveFormsModule,
         NgbModule.forRoot(),
         SharedPipesModule,
         SortableTableModule,

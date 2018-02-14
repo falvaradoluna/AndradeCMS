@@ -1,0 +1,103 @@
+<div [@routerTransition]>
+    <div>
+        <div class="row  card-header">
+            <div class="col-6">
+                <h1 class="text-muted">Seminuevos</h1>
+            </div>
+        </div>
+        <div class="card">
+            <table datatable class="table row-border hover" *ngIf="this.temp_var">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Modelo</th>
+                        <th>Numero de serie</th>
+                        <th>Modelo</th>
+                        <th>Imagenes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let seminuevo of data; let i = index;">
+                        <td>{{ seminuevo.is_IdSeminuevo }}</td>
+                        <td>{{ seminuevo.is_Descripcion }}</td>
+                        <td>{{ seminuevo.is_NoSerie }}</td>
+                        <td>{{ seminuevo.is_Modelo }}</td>
+                        <td> 
+                            <button type="button" class="btn btn-success btn-circle" (click)="openImgModal(ModalImg, seminuevo.is_IdSeminuevo);">
+                                <i class="fa fa-plus" aria-hidden="true" ></i>
+                            </button> 
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+                                                    <!-- M O D A L E S -->
+
+<ng-template #ModalImg let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title text-muted">Imagenes Unidades</h4>
+    </div>
+    <div class="modal-body">
+        <table datatable class="table row-border hover" *ngIf="this.img_var">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Imagen</th>
+                    <th>Editar imagen</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let imagen of resImganes; let i = index;">
+                    <td> {{ i + 1 }} </td>
+                    <td><img src="{{imagen.cis_RutaImagen}}" width="120"></td>
+                    <td> 
+                        <form [formGroup]="formImg" (ngSubmit)="updateImage(imagen.cis_idImagenSemi, imagen.cis_IdSeminuevo)">
+                            <label class="btn btn-secondary btn-file">Actualizar
+                                <input name="file" type="file" (change)="onFileChangeUp($event)" formControlName="RealImg">
+                                <input type="hidden" name="fileHidden" formControlName="imageInput"/> 
+                                <input type="hidden" name="IdSemi" formControlName="IdSemi"/> 
+                                <input type="hidden" name="tipoImg" formControlName="tipoImg"/>
+                                <input type="hidden" name="Idimg" formControlName="Idimg"/> 
+                                <input type="hidden" name="tipoImgtxt" formControlName="tipoImgtxt"/>
+                            </label>
+                            <div class="modal-footer">
+                                <button class="btn btn-outline-success" type="submit">
+                                    Actualizar
+                                </button>
+
+                                <button type="button" class="btn btn-danger" (click)="deleteImage(imagen.cis_idImagenSemi, imagen.cis_IdSeminuevo);">
+                                    <i class="fa fa-trash" aria-hidden="true" ></i>
+                                </button> 
+                            </div>
+                        </form> 
+                        <div class="modal-footer">
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <hr>
+        <h3 class="text-muted">Agregar imagen</h3>
+        <div class="row div-space">
+            <div class="col">
+                <h6 class="text-muted">Imagen </h6>
+                <form [formGroup]="formImg" (ngSubmit)="saveImage()">
+                    <label class="btn btn-secondary btn-file">Browse
+                        <input name="file" type="file" (change)="onFileChange($event)" formControlName="RealImg">
+                        <input type="hidden" name="fileHidden" formControlName="imageInput"/> 
+                        <input type="hidden" name="IdSemi" formControlName="IdSemi"/> 
+                        <input type="hidden" name="tipoImg" formControlName="tipoImg"/> 
+                        <input type="hidden" name="tipoImgtxt" formControlName="tipoImgtxt"/> 
+                    </label>
+                    <div class="modal-footer">
+                        <button class="btn btn-outline-success" type="submit">Guardar</button>
+                        <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div> 
+    </div>
+</ng-template>
