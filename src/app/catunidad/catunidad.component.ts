@@ -113,6 +113,7 @@ export class CatunidadComponent implements OnInit {
     resFichas:      ICatFichas[] = [];
     resAtributos:   ICatAtributos[] = [];
     resParametros:  IParametros[] = [];
+    imagesUnidad: any = []
 
     ngOnInit() {
         this.getUnidades();
@@ -131,7 +132,7 @@ export class CatunidadComponent implements OnInit {
                 this.rutaSave = this.resParametros[1].pr_ValorString1;
             }
             if(this.resParametros[2].pr_TipoParametro == "RUTAGET"){
-                this.rutaGet = this.resParametros[1].pr_ValorString1;
+                this.rutaGet = this.resParametros[2].pr_ValorString1;
             }
             console.log("Prefijo", this.prefijo);
             console.log("RUTASAVE", this.rutaSave);
@@ -154,10 +155,11 @@ export class CatunidadComponent implements OnInit {
             this.resImganes = resImganes;
             var pathServerImg = this.serverPathImg;
             this.resImganes.forEach(function( item, key ){
-                item.ci_RutaImagen = pathServerImg + item.ci_RutaImagen;
+               // item.ci_RutaImagen = pathServerImg + item.ci_RutaImagen;
+               this.imagesUnidad = this.rutaGet + this.prefijo + item.ci_IdCatUnidad + item.ci_ConsImg + ".jpg"
             });
             console.log( this.resImganes );
-            console.log( "ID de la unidad", this.ci_IdCatUnidad );
+            console.log("Images", this.imagesUnidad);
         },
         error => this.errorMessage = <any>error);
     };    
