@@ -54,9 +54,9 @@ export class CatunidadComponent implements OnInit {
     cataidAtributo:      any;
 
     //Variables de parametros;
-    pr_TipoParametro:   any;
-    pr_Identificador:   any;
-    pr_ValorString1:    any;
+    prefijo:  any;
+    rutaSave: any;
+    rutaGet:  any;
 
     //Formulario de la imagen
     formImg:    FormGroup;
@@ -123,7 +123,19 @@ export class CatunidadComponent implements OnInit {
         this._serviceUnidad.GetParametros( { recurso: recurso } )
         .subscribe( resParametros => {
             this.resParametros = resParametros;
-            console.log("Parametros",this.resParametros)
+            console.log("Parametros",this.resParametros);
+            if( this.resParametros[0].pr_TipoParametro == "PREFIJO" ){
+                this.prefijo = this.resParametros[0].pr_ValorString1;
+            }
+            if(this.resParametros[1].pr_TipoParametro == "RUTASAVE"){
+                this.rutaSave = this.resParametros[1].pr_ValorString1;
+            }
+            if(this.resParametros[2].pr_TipoParametro == "RUTAGET"){
+                this.rutaGet = this.resParametros[1].pr_ValorString1;
+            }
+            console.log("Prefijo", this.prefijo);
+            console.log("RUTASAVE", this.rutaSave);
+            console.log("RUTAGET", this.rutaGet);
         },
         error => this.errorMessage = <any>error);
     }
