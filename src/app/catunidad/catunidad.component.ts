@@ -124,7 +124,7 @@ export class CatunidadComponent implements OnInit {
         this._serviceUnidad.GetParametros( { recurso: recurso } )
         .subscribe( resParametros => {
             this.resParametros = resParametros;
-            console.log("Parametros",this.resParametros);
+            // console.log("Parametros",this.resParametros);
             if( this.resParametros[0].pr_TipoParametro == "PREFIJO" ){
                 this.prefijo = this.resParametros[0].pr_ValorString1;
             }
@@ -134,9 +134,9 @@ export class CatunidadComponent implements OnInit {
             if(this.resParametros[2].pr_TipoParametro == "RUTAGET"){
                 this.rutaGet = this.resParametros[2].pr_ValorString1;
             }
-            console.log("Prefijo", this.prefijo);
-            console.log("RUTASAVE", this.rutaSave);
-            console.log("RUTAGET", this.rutaGet);
+            // console.log("Prefijo", this.prefijo);
+            // console.log("RUTASAVE", this.rutaSave);
+            // console.log("RUTAGET", this.rutaGet);
         },
         error => this.errorMessage = <any>error);
     }
@@ -149,14 +149,17 @@ export class CatunidadComponent implements OnInit {
     };
 
     getImages(ci_IdCatUnidad){
+        console.log("GetImages")
         this._serviceUnidad.GetImgsUnidad( { ci_IdCatUnidad: ci_IdCatUnidad } )
         .subscribe( resImganes => {
             this.img_var = true;
             this.resImganes = resImganes;
             var pathServerImg = this.serverPathImg;
+            var getRuta = this.rutaGet;
+            var prefijillo = this.prefijo;
             this.resImganes.forEach(function( item, key ){
                // item.ci_RutaImagen = pathServerImg + item.ci_RutaImagen;
-               this.imagesUnidad = this.rutaGet + this.prefijo + item.ci_IdCatUnidad + item.ci_ConsImg + ".jpg"
+               this.imagesUnidad.push(getRuta + prefijillo + item.ci_IdCatUnidad + item.ci_ConsImg + ".jpg"); 
             });
             console.log( this.resImganes );
             console.log("Images", this.imagesUnidad);
