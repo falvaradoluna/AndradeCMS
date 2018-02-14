@@ -24,6 +24,7 @@ import { ICatImg } from "./catimagenes";
 import { IServerResponse } from "../promociones/ServerResponse";
 import { ICatFichas } from "./catfichas";
 import { ICatAtributos } from "./atributos";
+import { IParametros } from "./parametros";
 
 @Component({
   selector: 'app-catunidad',
@@ -38,20 +39,24 @@ export class CatunidadComponent implements OnInit {
     serverPathFicha = 'http://192.168.20.92:3420/fichas/';
 
     public errorMessage: any;
-    public data :       object;
-    public temp_var:    Object = false;
-    public img_var:     Object = false;
-    public atr_var:     Object = false;
-    ci_IdCatUnidad:     any;
-    showFicha:          number;
-    rutaFicha:          any;
-    showIcono:          any;
-    cafIdCatUnidad:     any;
-    fichaId:            any;
-    showAddAtributo:    any;
-    cataIdCatUnidad:    any;
-    cataidAtributo:     any;
+    public data :        object;
+    public temp_var:     Object = false;
+    public img_var:      Object = false;
+    public atr_var:      Object = false;
+    ci_IdCatUnidad:      any;
+    showFicha:           number;
+    rutaFicha:           any;
+    showIcono:           any;
+    cafIdCatUnidad:      any;
+    fichaId:             any;
+    showAddAtributo:     any;
+    cataIdCatUnidad:     any;
+    cataidAtributo:      any;
 
+    //Variables de parametros;
+    pr_TipoParametro:   any;
+    pr_Identificador:   any;
+    pr_ValorString1:    any;
 
     //Formulario de la imagen
     formImg:    FormGroup;
@@ -107,9 +112,20 @@ export class CatunidadComponent implements OnInit {
     serverResponse: IServerResponse[] = [];
     resFichas:      ICatFichas[] = [];
     resAtributos:   ICatAtributos[] = [];
+    resParametros:  IParametros[] = [];
 
     ngOnInit() {
         this.getUnidades();
+        this.getParametros("UNIDAD");
+    }
+
+    getParametros(recurso){
+        this._serviceUnidad.GetParametros( { recurso: recurso } )
+        .subscribe( resParametros => {
+            this.resParametros = resParametros;
+            console.log("Parametros",this.resParametros)
+        },
+        error => this.errorMessage = <any>error);
     }
 
     getUnidades(){

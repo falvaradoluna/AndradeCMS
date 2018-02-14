@@ -17,6 +17,25 @@ var catunidad = function(conf) {
     };
 };
 
+//api/catunidad/getparametros
+catunidad.prototype.get_getparametros = function( req, res, next ){
+    var self = this;
+    var recurso = req.query.recurso;
+    // console.log("Query", req.query);
+    var params = [
+        { name: 'recurso', value: recurso, type: self.model.types.STRING }
+    ];
+
+    this.model.query("Parametros_GetParams_SP", params, function( error, result ){
+        console.log(result);
+        console.log(error);
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 //api/catunidad/unidadesnuevas
 catunidad.prototype.get_unidadesnuevas = function( req, res, next ){
     var self = this;

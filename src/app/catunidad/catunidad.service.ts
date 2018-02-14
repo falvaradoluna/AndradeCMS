@@ -10,11 +10,13 @@ import { ICatImg } from "./catimagenes"
 import { IServerResponse } from "../promociones/ServerResponse";
 import { ICatFichas } from "./catfichas";
 import { ICatAtributos } from "./atributos";
+import { IParametros } from "./parametros";
 
 @Injectable()
 export class CatunidadService {
 
     //Rutas para las peticiones a la api
+    private _urlParametros      = "api/catunidad/getparametros";
     private _urlgetImg          = "api/catunidad/imgunidad";
     private _urlInsertImagen    = "api/catunidad/insertimagen";
     private _urlUpdateImagen    = "api/catunidad/updateimagen";
@@ -29,6 +31,15 @@ export class CatunidadService {
     private _urlDeleteAtributos = "api/catunidad/deleteatributos";
 
     constructor(private _http: HttpClient) { }
+
+    GetParametros(parameters): Observable<IParametros[]>{
+        
+        let Params = new HttpParams();
+        Params = Params.append("recurso", parameters.recurso);
+
+        return this._http.get<IParametros[]>(this._urlParametros, {params: Params})
+        .catch( this.handleError );
+    }
 
     GetImgsUnidad(parameters): Observable<ICatImg[]>{
         
