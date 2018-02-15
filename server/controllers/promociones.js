@@ -3,7 +3,6 @@ ModelView = require('../models/dataAccess'),
 fs = require("fs");
 
 var pathSave = "C:\\Desarrollo\\AndradeCMSDocumentos\\public\\promociones\\";
-var prefijoPromo = "Promo_";
 
 var promociones = function(conf) {
     this.conf = conf || {};
@@ -207,34 +206,39 @@ promociones.prototype.post_insertpromocion = function(req, res, next) {
     // console.log( req.body.imageInput.value );
     var self = this;
     var po_IdTipoPromocion  = req.body.SelectTipoPromocion;
+    var po_idTipoImagen     = req.body.typeImg;
     var po_idEmpresa        = req.body.SelectEmpresa;
     var po_IdSucursal       = req.body.SelectSucursal;
     var po_IdMarca          = req.body.SelectMarca;
     var po_Descripcion      = req.body.TxtDescripcion;
-    var po_RutaImagen       = req.body.imageInput.filename;
     var po_IdUsuario        = req.body.idUsuario;
-    var po_tipo             = req.body.typeImg;
-    //console.log('QueryString = ' + req.query);
+    var po_vigencia         = req.body.vigencia;
+    //Variables guardar
+    var ruta                = req.body.rutaSavetxt;
+    var TipoImagen          = req.body.tipoImgtxt;
+    var prefijoPromo        = req.body.prefijotxt;
+   
 
     var params = [
         { name: 'po_IdTipoPromocion',   value: po_IdTipoPromocion, type: self.model.types.INT },
+        { name: 'po_idTipoImagen',      value: po_idTipoImagen, type: self.model.types.INT },
         { name: 'po_idEmpresa',         value: po_idEmpresa, type: self.model.types.INT },
         { name: 'po_IdSucursal',        value: po_IdSucursal, type: self.model.types.INT },
         { name: 'po_IdMarca',           value: po_IdMarca, type: self.model.types.INT },
         { name: 'po_Descripcion',       value: po_Descripcion, type: self.model.types.STRING },
-        { name: 'po_RutaImagen',        value: po_RutaImagen, type: self.model.types.STRING },
         { name: 'po_IdUsuario',         value: po_IdUsuario, type: self.model.types.INT },
-        { name: 'po_tipo',              value: po_tipo, type: self.model.types.STRING }
+        { name: 'po_vigencia',          value: po_vigencia, type: self.model.types.STRING }
     ];
-
+    console.log('Parametros', params);
     this.model.query('Promo_InsertPromocion_SP', params, function (error, result) {
         console.log("Result",result);
         console.log("Error",error);
-        console.log("ResultImg",result[0].imgName);
+        console.log("LastId",result[0].lastId);
         if (result.length > 0) {
-            var newName = result[0].imgName;
-            var pathname = pathSave + newName;
-            //var pathname = 'src/file/promociones/' + req.body.imageInput.filename;
+            var LastId = result[0].lastId;
+            var newName = prefijoPromo + LastId + TipoImagen;
+            var pathname = ruta + newName;
+            //var pathname = 'src/file/promociones/' + newName;
             require("fs").writeFile( pathname , req.body.imageInput.value, 'base64', function(err) {
                 console.log(err);
                 if( err ){

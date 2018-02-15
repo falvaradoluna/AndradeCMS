@@ -45,25 +45,34 @@ export class PromocionesComponent implements OnInit {
 
     //ruta
     public serverPath: any = "http://192.168.20.92:3420/promociones/";
+    
+    //Variables de parametros;
+    public prefijo:  any;
+    public rutaSave: any;
+    public rutaGet:  any;
 
     //Variables para el formulario de guardar una nueva promocion
     form: FormGroup;
     SelectTipoPromocion = new FormControl("", Validators.required);
-    SelectEmpresa = new FormControl("", Validators.required);
-    SelectSucursal = new FormControl("", Validators.required);
-    SelectMarca = new FormControl("", Validators.required);
-    TxtDescripcion = new FormControl("", Validators.required);
-    imageInput = new FormControl("");
-    idUsuario = new FormControl("");
-    RealImg = new FormControl("");
-    typeImg = new FormControl("");
-    typeImgUp = new FormControl("");
+    SelectEmpresa       = new FormControl("", Validators.required);
+    SelectSucursal      = new FormControl("", Validators.required);
+    SelectMarca         = new FormControl("", Validators.required);
+    TxtDescripcion      = new FormControl("", Validators.required);
+    imageInput          = new FormControl("");
+    idUsuario           = new FormControl("");
+    RealImg             = new FormControl("");
+    typeImg             = new FormControl("");
+    tipoImgtxt          = new FormControl("");
+    prefijotxt          = new FormControl("");
+    rutaSavetxt         = new FormControl("");
+    typeImgUp           = new FormControl("");
+    vigencia            = new FormControl("");
 
     //Variables para el formualario de actualizar imagen
     formUpdate: FormGroup;
-    RealImgUpdate = new FormControl("");
-    imageInputUpdate = new FormControl("");
-    promoIdUp = new FormControl("");
+    RealImgUpdate       = new FormControl("");
+    imageInputUpdate    = new FormControl("");
+    promoIdUp           = new FormControl("");
     
     //Variables a utilizar en la clase
     errorMessage: any;
@@ -84,32 +93,31 @@ export class PromocionesComponent implements OnInit {
     public data : object;
     public temp_var: Object=false;
 
-    //Variables de parametros;
-     prefijo:  any;
-     rutaSave: any;
-     rutaGet:  any;
-
     constructor(private _serviceUnidad: CatunidadService, private _Promoservice: PromocionesService, 
                 private modalService: NgbModal,     
                 public fb: FormBuilder, 
                 private _http: HttpClient) { 
         this.form = fb.group({
-            "SelectTipoPromocion": this.SelectTipoPromocion,
-            "SelectEmpresa": this.SelectEmpresa,
-            "SelectSucursal": this.SelectSucursal,
-            "SelectMarca": this.SelectMarca,
-            "TxtDescripcion": this.TxtDescripcion,
-            "imageInput": this.imageInput,
-            "idUsuario": this.idUsuario,
-            "RealImg": this.RealImg,
-            "typeImg": this.typeImg,
+            "SelectTipoPromocion":  this.SelectTipoPromocion,
+            "SelectEmpresa":        this.SelectEmpresa,
+            "SelectSucursal":       this.SelectSucursal,
+            "SelectMarca":          this.SelectMarca,
+            "TxtDescripcion":       this.TxtDescripcion,
+            "imageInput":           this.imageInput,
+            "idUsuario":            this.idUsuario,
+            "RealImg":              this.RealImg,
+            "typeImg":              this.typeImg,
+            "tipoImgtxt":           this.tipoImgtxt,
+            "prefijotxt":           this.prefijotxt,
+            "rutaSavetxt":          this.rutaSavetxt,
+            "vigencia":             this.vigencia
         });
 
         this.formUpdate = fb.group({
-            "RealImgUpdate": this.RealImgUpdate,
+            "RealImgUpdate":    this.RealImgUpdate,
             "imageInputUpdate": this.imageInputUpdate,
-            "promoIdUp": this.promoIdUp,
-            "typeImgUp": this.typeImgUp,
+            "promoIdUp":        this.promoIdUp,
+            "typeImgUp":        this.typeImgUp,
         });
 
     }
@@ -163,11 +171,7 @@ export class PromocionesComponent implements OnInit {
             var prefijillo = this.prefijo;
             this.resultadoPromociones.forEach(function( item, key ){
                 item.pathImagen = getRuta + prefijillo + item.po_IdPromocion + item.ti_Nombre;
-                //item.pathImagen = 'file/promociones/' + item.po_RutaImagen;
             });
-            console.log("Res", this.resultadoPromociones);
-            console.log( "Prefijo", prefijillo );
-            console.log( "RUTA", getRuta );
         },
         error => this.errorMessage = <any>error);
     }
@@ -223,10 +227,7 @@ export class PromocionesComponent implements OnInit {
               });
             this.form.controls['RealImg'].setValue("");
         }else{
-            var str = file.name;
-            var ext = '.' + str.split('.').pop();
-            console.log(ext)
-            this.form.controls["typeImg"].setValue(ext);
+            
             reader.readAsDataURL(file);
             reader.onload = () => {
                 this.form.controls['imageInput'].setValue({
@@ -237,6 +238,17 @@ export class PromocionesComponent implements OnInit {
             };
             this.form.controls['imageInput'].setValue(file ? file : '');
             this.form.controls['idUsuario'].setValue(JSON.parse(localStorage.getItem("UserData")).usu_id);
+            if( file.type == "image/jpeg" ){
+                var str = file.name;
+                var ext = '.' + str.split('.').pop();
+                this.form.controls['typeImg'].setValue(1);
+                this.form.controls["tipoImgtxt"].setValue(ext);
+            }else{
+                var str = file.name;
+                var ext = '.' + str.split('.').pop();
+                this.form.controls['typeImg'].setValue(2);
+                this.form.controls["tipoImgtxt"].setValue(ext);
+            }
         }   
     }
 
@@ -254,6 +266,9 @@ export class PromocionesComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
+                this.form.controls["rutaSavetxt"].setValue(this.rutaSave);
+                this.form.controls["prefijotxt"].setValue(this.prefijo);
+                console.log(this.form)
                 this._Promoservice.savePromocion( this.form )
                 .subscribe( serverResponse => {
                     swal(
