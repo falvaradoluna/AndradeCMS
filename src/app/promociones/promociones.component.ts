@@ -31,6 +31,8 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import { HttpClient, HttpErrorResponse, HttpParams, HttpHeaders } from '@angular/common/http';
 import  swal  from "sweetalert2";
+import { CatunidadService } from "../catunidad/catunidad.service";
+import { IParametros } from "../catunidad/parametros";
 
 
 @Component({
@@ -82,10 +84,15 @@ export class PromocionesComponent implements OnInit {
     public data : object;
     public temp_var: Object=false;
 
-    constructor(private _Promoservice: PromocionesService, 
+    //Variables de parametros;
+     prefijo:  any;
+     rutaSave: any;
+     rutaGet:  any;
+
+    constructor(private _serviceUnidad: CatunidadService, private _Promoservice: PromocionesService, 
                 private modalService: NgbModal,     
                 public fb: FormBuilder, 
-                private _http: HttpClient ) { 
+                private _http: HttpClient) { 
         this.form = fb.group({
             "SelectTipoPromocion": this.SelectTipoPromocion,
             "SelectEmpresa": this.SelectEmpresa,
@@ -114,13 +121,37 @@ export class PromocionesComponent implements OnInit {
     resultadoTPromocion:        ITipoPromocion[] = [];
     resultadoMarca:             IMarca[] = [];
     resultadoSucursal:          ISucursal[] = [];
+    resParametros:              IParametros[] = [];
 
 
     ngOnInit() {
+        this.getParametros("PROMOCION");
         this.getTablaPromociones();
         this.getEmpresas();
         this.getTipoPromocion();
     }
+
+    getParametros(recurso){
+        //console.log(recurso);
+        this._serviceUnidad.GetParametros( { recurso: recurso } )
+        .subscribe( resParametros => {
+            this.resParametros = resParametros;
+            // console.log("Parametros",this.resParametros);
+            if( this.resParametros[0].pr_TipoParametro == "PREFIJO" ){
+                this.prefijo = this.resParametros[0].pr_ValorString1;
+            }
+            if(this.resParametros[1].pr_TipoParametro == "RUTASAVE"){
+                this.rutaSave = this.resParametros[1].pr_ValorString1;
+            }
+            if(this.resParametros[2].pr_TipoParametro == "RUTAGET"){
+                this.rutaGet = this.resParametros[2].pr_ValorString1;
+            }
+            // console.log("PrefijoPA", this.prefijo);
+            // console.log("RUTASAVEPA", this.rutaSave);
+            // console.log("RUTAGETPA", this.rutaGet);
+        },
+        error => this.errorMessage = <any>error);
+    };
 
     getTablaPromociones(): void{
         this._Promoservice.getPromoColumn()
@@ -128,11 +159,15 @@ export class PromocionesComponent implements OnInit {
             var pathServer = this.serverPath;
             this.temp_var = true;
             this.resultadoPromociones = resultadoPromociones;
-            console.log("pathserver", pathServer );
+            var getRuta = this.rutaGet;
+            var prefijillo = this.prefijo;
             this.resultadoPromociones.forEach(function( item, key ){
-                item.pathImagen = pathServer + item.po_RutaImagen;
+                item.pathImagen = getRuta + prefijillo + item.po_IdPromocion + item.ti_Nombre;
                 //item.pathImagen = 'file/promociones/' + item.po_RutaImagen;
             });
+            console.log("Res", this.resultadoPromociones);
+            console.log( "Prefijo", prefijillo );
+            console.log( "RUTA", getRuta );
         },
         error => this.errorMessage = <any>error);
     }
@@ -180,7 +215,7 @@ export class PromocionesComponent implements OnInit {
         let reader = new FileReader();
         let file = $event.target.files[0]; 
         console.log( file.type );
-        if( file.type != "image/jpeg" && file.type != "image/png" && file.type != "application/pdf" ){
+        if( file.type != "image/jpeg" && file.type != "image/png" ){
             swal({
                 type: 'error',
                 title: 'Oops...',
@@ -391,7 +426,8 @@ export class PromocionesComponent implements OnInit {
             this.descripcion            = this.resultadoPromocionesById[0].po_Descripcion;
             this.ModalImg               = img;
             this.idPromocion            = this.resultadoPromocionesById[0].po_IdPromocion;
-            console.log(this.ModalImg);
+            console.log("ModalImg", this.ModalImg);
+            console.log("img",img)
         },
         error => this.errorMessage = <any>error );
     }

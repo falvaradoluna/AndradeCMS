@@ -184,36 +184,5 @@
             <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
         </div>
     </ng-template>
-
-    <!-- Inicia el modal VerImagen-->
-    <!-- <ng-template #contentImg let-c="close" let-d="dismiss">
-        <div class="modal-header">
-            <h4 class="modal-title text-muted">{{ModalDesc}}</h4>
-        </div>
-        <div class="modal-body">
-            <div class="row div-space text-center">
-                <div class="col space-12">
-                    <img src="{{ModalImg}}" width="100%">
-                    {{ModalImg}}
-                </div>
-            </div>    
-        </div>
-        <div class="row div-space">
-            <form [formGroup]="formUpdate">
-                <div class="col">
-                    <h6 class="text-muted">Imagen</h6>
-                    <label class="btn btn-secondary btn-file">Browse
-                        <input name="file" type="file" (change)="onFileChangeUp($event)" formControlName="RealImgUpdate">
-                        <input type="hidden" name="fileHidden" formControlName="imageInputUpdate"/>
-                        <input type="hidden" name="fileHidden" formControlName="promoIdUp"/>
-                    </label>
-                </div>
-            </form>    
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-outline-success" type="button" (click)="updateImage(ModalIdPromo)">Actualizar</button>
-            <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
-        </div>
-    </ng-template> -->
 </div>
 

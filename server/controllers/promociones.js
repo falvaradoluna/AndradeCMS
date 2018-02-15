@@ -24,7 +24,8 @@ promociones.prototype.get_promociones = function( req, res, next ){
     var params = [];
 
     this.model.query("Promo_GetPromociones_SP", params, function( error, result ){
-        // console.log( result );
+        console.log( result );
+        console.log(error);
         if( result.length > 0){
             //console.log( "Resultado: " + result );
         }

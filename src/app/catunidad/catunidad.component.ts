@@ -113,11 +113,11 @@ export class CatunidadComponent implements OnInit {
     resFichas:      ICatFichas[] = [];
     resAtributos:   ICatAtributos[] = [];
     resParametros:  IParametros[] = [];
-    imagesUnidad:   any = []
+    imagesUnidad:   any = [];
+    fichasUnidad:   any = [];
 
     ngOnInit() {
         this.getUnidades();
-        this.getParametros("UNIDAD");
     }
 
     getParametros(recurso){
@@ -134,12 +134,12 @@ export class CatunidadComponent implements OnInit {
             if(this.resParametros[2].pr_TipoParametro == "RUTAGET"){
                 this.rutaGet = this.resParametros[2].pr_ValorString1;
             }
-            // console.log("Prefijo", this.prefijo);
-            // console.log("RUTASAVE", this.rutaSave);
-            // console.log("RUTAGET", this.rutaGet);
+            console.log("PrefijoPA", this.prefijo);
+            console.log("RUTASAVEPA", this.rutaSave);
+            console.log("RUTAGETPA", this.rutaGet);
         },
         error => this.errorMessage = <any>error);
-    }
+    };
 
     getUnidades(){
         this._http.get(this._urlgetUnidades).subscribe((res: Response) => {
@@ -149,20 +149,18 @@ export class CatunidadComponent implements OnInit {
     };
 
     getImages(ci_IdCatUnidad){
-        console.log("GetImages")
         this._serviceUnidad.GetImgsUnidad( { ci_IdCatUnidad: ci_IdCatUnidad } )
         .subscribe( resImganes => {
+            this.imagesUnidad = [];
             this.img_var = true;
             this.resImganes = resImganes;
-            var pathServerImg = this.serverPathImg;
             var getRuta = this.rutaGet;
             var prefijillo = this.prefijo;
             var imagenesUnidad = this.imagesUnidad;
             this.resImganes.forEach(function( item, key ){
                imagenesUnidad.push(getRuta + prefijillo + item.ci_IdCatUnidad + "_" + item.ci_ConsImg + item.ti_Nombre); 
             });
-            console.log( this.resImganes );
-            console.log("Images", imagenesUnidad);
+            this.imagesUnidad = imagenesUnidad;
         },
         error => this.errorMessage = <any>error);
     };    
@@ -170,7 +168,6 @@ export class CatunidadComponent implements OnInit {
     onFileChange($event) {
         let reader = new FileReader();
         let file = $event.target.files[0]; 
-        console.log( file.type );
         if( file.type != "image/jpeg" && file.type != "image/png" ){
             swal({
                 type: 'error',
@@ -192,18 +189,14 @@ export class CatunidadComponent implements OnInit {
             if( file.type == "image/jpeg" ){
                 var str = file.name;
                 var ext = '.' + str.split('.').pop();
-                console.log(ext)
                 this.formImg.controls['tipoImg'].setValue(1);
                 this.formImg.controls["tipoImgtxt"].setValue(ext);
             }else{
                 var str = file.name;
                 var ext = '.' + str.split('.').pop();
-                console.log(ext)
                 this.formImg.controls['tipoImg'].setValue(2);
                 this.formImg.controls["tipoImgtxt"].setValue(ext);
             }
-            console.log( "ID de la unidad en el onchange", this.ci_IdCatUnidad );
-            console.log( "ID del form", this.formImg.value.IdCatUnidad );
         }   
     }
 
@@ -321,21 +314,25 @@ export class CatunidadComponent implements OnInit {
     getFichas(caf_IdCatUnidad){
         this.resFichas = [];
         this.rutaFicha = "";
-
+        console.log("Fichas unidad");
         this._serviceUnidad.GetFichasUnidad( { caf_IdCatUnidad: caf_IdCatUnidad } )
         .subscribe( resFichas => {
             this.resFichas = resFichas
-            var pathServerFicha = this.serverPathFicha;
+            this.fichasUnidad = [];
+            var getRuta = this.rutaGet;
+            var prefijillo = this.prefijo;
+            var respuestaFichas = [];
             this.resFichas.forEach(function( item, key ){
-                item.caf_RutaFicha = pathServerFicha + item.caf_RutaFicha;
+                respuestaFichas.push(getRuta + prefijillo + item.caf_idCatUnidad + "_" + item.caf_ConsImg + item.ti_Nombre);
             });
-            
+            this.fichasUnidad = respuestaFichas;
+            console.log("fichasUnidad", this.fichasUnidad);
             if(this.resFichas[0] == undefined){
                 this.showFicha = 0;
             }else{
                 this.showFicha = 1;
-                this.rutaFicha = this.resFichas[0].caf_RutaFicha;
-                console.log(this.resFichas[0]);
+                this.rutaFicha = respuestaFichas;
+                console.log("rutaFicha", this.rutaFicha);
                 this.fichaId = this.resFichas[0].caf_idFicha;
             }
         },
@@ -673,9 +670,6 @@ export class CatunidadComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
-                console.log( "DELETE" );
-                console.log( "Unidad", this.cataIdCatUnidad );
-                console.log( "Atributo", cataidAtributo );
                 this._serviceUnidad.DeleteAtributos( 
                     { 
                         cata_idCatUnidad: this.cataIdCatUnidad, 
@@ -716,6 +710,7 @@ export class CatunidadComponent implements OnInit {
 
     //========= MODAL INSERT ========//
     openImgModal(ModalImg, ci_IdCatUnidad) {
+        this.getParametros("UNIDAD");
         this.modalService.open( ModalImg, { size: "lg" } );
         console.log( "Id de la unidad", ci_IdCatUnidad );
         this.getImages(ci_IdCatUnidad);
@@ -734,6 +729,7 @@ export class CatunidadComponent implements OnInit {
 
     //========= MODAL INSERT FICHA ========//
     openFichaModal(ModalFicha, caf_IdCatUnidad) {
+        this.getParametros("FICHA");
         this.cafIdCatUnidad = 0;
         this.modalService.open( ModalFicha);
         console.log( "Id de la unidad", caf_IdCatUnidad );

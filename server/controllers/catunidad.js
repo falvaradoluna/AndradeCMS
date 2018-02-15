@@ -27,8 +27,8 @@ catunidad.prototype.get_getparametros = function( req, res, next ){
     ];
 
     this.model.query("Parametros_GetParams_SP", params, function( error, result ){
-        console.log(result);
-        console.log(error);
+        // console.log(result);
+        // console.log(error);
         self.view.expositor(res, {
             error: error,
             result: result
@@ -63,8 +63,8 @@ catunidad.prototype.get_imgunidad = function( req, res, next ){
     ];
 
     this.model.query("CatUni_SELECTImgById_SP", params, function( error, result ){
-        console.log(result);
-        onsole.log(error);
+        // console.log(result);
+        // console.log(error);
         self.view.expositor(res, {
             error: error,
             result: result
@@ -92,8 +92,8 @@ catunidad.prototype.post_insertimagen = function(req, res, next) {
     //console.log( "Parametros", params );
 
     this.model.query('catImg_INSERT_SP', params, function (error, result) {
-       console.log("Error", error);
-       console.log("result", result);
+    //    console.log("Error", error);
+    //    console.log("result", result);
         if (result.length > 0) {
             //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
             var newName = result[0].imgName;
@@ -139,8 +139,8 @@ catunidad.prototype.post_updateimagen = function(req, res, next) {
     //console.log( "Parametros", params );
 
     this.model.query('catImg_UPDATE_SP', params, function (error, result) {
-        console.log("error",error );
-        console.log("result",result );
+        // console.log("error",error );
+        // console.log("result",result );
         if (result.length > 0) {
             //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
             var newName = result[0].imgName
@@ -223,8 +223,8 @@ catunidad.prototype.post_insertficha = function(req, res, next) {
     // console.log( "Parametros", params );
 
     this.model.query('CatFic_INSERT_SP', params, function (error, result) {
-        console.log("error", error);
-        console.log("result", result);
+        // console.log("error", error);
+        // console.log("result", result);
         if (result.length > 0) {
             //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
             var newName = result[0].ficName;

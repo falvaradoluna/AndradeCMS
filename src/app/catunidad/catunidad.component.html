@@ -54,8 +54,6 @@
         <h4 class="modal-title text-muted">Imagenes Unidades</h4>
     </div>
     <div class="modal-body">
-        <pre>{{ imagenesUnidad }}</pre>
-
         <table datatable class="table row-border hover" *ngIf="this.img_var">
             <thead>
                 <tr>
@@ -65,7 +63,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let imagen of imagenesUnidad; let i = index;">
+                <tr *ngFor="let imagen of imagesUnidad; let i = index;">
                     <td> {{ i + 1 }} </td>
                     <td><img src="{{imagen}}" width="230"></td>
                     <td> 
