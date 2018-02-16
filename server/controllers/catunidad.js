@@ -74,31 +74,28 @@ catunidad.prototype.get_imgunidad = function( req, res, next ){
 
 // "api/catunidad/insertimagen"
 catunidad.prototype.post_insertimagen = function(req, res, next) {
-    //console.log( "Hola" );
-    //console.log( req.body );
+    
     var self = this;
     var ci_IdCatUnidad      = req.body.IdCatUnidad;
-    var ci_RutaImagen       = req.body.imageInput.filename;
     var ci_IdTipoImagen     = req.body.tipoImg;
-    var ci_tipo             = req.body.tipoImgtxt;
-    // //console.log('QueryString = ' + req.query);
-    console.log("TipoImagen", ci_tipo);
+
+    //Variables SaveImage
+    var ruta                = req.body.rutaSavetxt;
+    var TipoImagen          = req.body.tipoImgtxt;
+    var prefijoUnidad        = req.body.prefijotxt;
+
     var params = [
         { name: 'ci_IdCatUnidad',   value: ci_IdCatUnidad, type: self.model.types.INT },
-        { name: 'ci_RutaImagen',    value: ci_RutaImagen, type: self.model.types.STRING },
-        { name: 'ci_IdTipoImagen',  value: ci_IdTipoImagen, type: self.model.types.INT },
-        { name: 'ci_tipo',          value: ci_tipo, type: self.model.types.STRING }
+        { name: 'ci_IdTipoImagen',  value: ci_IdTipoImagen, type: self.model.types.INT }
     ];
-    //console.log( "Parametros", params );
 
     this.model.query('catImg_INSERT_SP', params, function (error, result) {
     //    console.log("Error", error);
     //    console.log("result", result);
         if (result.length > 0) {
-            //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
-            var newName = result[0].imgName;
-            var pathname = pathSaveUni + newName;
-            //var pathname = pathSaveUni + req.body.imageInput.filename;
+            var newName = prefijoUnidad + ci_IdCatUnidad + "_" + result[0].consImg + TipoImagen;
+            var pathname = ruta + newName;
+            console.log(pathname)
             require("fs").writeFile( pathname , req.body.imageInput.value, 'base64', function(err) {
                 //console.log(err);
                 if( err ){
@@ -108,7 +105,6 @@ catunidad.prototype.post_insertimagen = function(req, res, next) {
                     console.log('Se ha guardado');
                 }
             });
-         //console.log("resultaaaaaaa " + result[0]);
         }
         self.view.expositor(res, {
             error: error,

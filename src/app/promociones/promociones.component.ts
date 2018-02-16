@@ -303,7 +303,7 @@ export class PromocionesComponent implements OnInit {
                     this.getTablaPromociones();
                     swal(
                         'Guardado',
-                        'No se actualizo la promoción.',
+                        'Se actualizo la promoción.',
                         'success'
                     );
                 },

@@ -85,14 +85,6 @@
                             </div>
                         </form> 
                     </td>
-                    <!-- <td> 
-                        <button type="button" class="btn btn-success btn-circle" (click)="openImgModal(ModalImg);">
-                        <i class="fa fa-pencil" aria-hidden="true" ></i>
-                        </button> 
-                        <button type="button" class="btn btn-danger btn-circle" (click)="deletePromocion(Dpromo.po_IdPromocion);">
-                        <i class="fa fa-trash" aria-hidden="true"></i>
-                        </button>
-                    </td> -->
                 </tr>
             </tbody>
         </table>
@@ -107,6 +99,8 @@
                         <input type="hidden" name="IdCatUnidad" formControlName="IdCatUnidad"/> 
                         <input type="hidden" name="tipoImg" formControlName="tipoImg"/> 
                         <input type="hidden" name="tipoImgtxt" formControlName="tipoImgtxt"/> 
+                        <input type="hidden" name="prefijotxt" formControlName="prefijotxt"/>
+                        <input type="hidden" name="rutaSavetxt" formControlName="rutaSavetxt"/>
                     </label>
                     <div class="modal-footer">
                         <button class="btn btn-outline-success" type="submit">Guardar</button>

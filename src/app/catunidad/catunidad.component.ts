@@ -66,6 +66,8 @@ export class CatunidadComponent implements OnInit {
     tipoImg     = new FormControl("");
     Idimg       = new FormControl("");
     tipoImgtxt  = new FormControl("");
+    prefijotxt  = new FormControl("");
+    rutaSavetxt = new FormControl("");
 
     //Formulario
     formFicha:      FormGroup;
@@ -88,7 +90,9 @@ export class CatunidadComponent implements OnInit {
             "IdCatUnidad":  this.IdCatUnidad,
             "tipoImg":      this.tipoImg,
             "Idimg":        this.Idimg,
-            "tipoImgtxt":   this.tipoImgtxt
+            "tipoImgtxt":   this.tipoImgtxt,
+            "prefijotxt":   this.prefijotxt,
+            "rutaSavetxt":  this.rutaSavetxt
         });
 
         this.formFicha = fb.group({
@@ -97,7 +101,7 @@ export class CatunidadComponent implements OnInit {
             "caf_idCatUnidad":  this.caf_idCatUnidad,
             "tipo":             this.tipo,
             "idFicha":          this.idFicha,
-            "tipoFicha":         this.tipoFicha
+            "tipoFicha":        this.tipoFicha
         });
 
         this.formAtributo = fb.group({
@@ -214,12 +218,14 @@ export class CatunidadComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
-                console.log( this.formImg );
+                this.formImg.controls["rutaSavetxt"].setValue(this.rutaSave);
+                this.formImg.controls["prefijotxt"].setValue(this.prefijo);
+                console.log( "FormImg", this.formImg );
                 this._serviceUnidad.saveImagen( this.formImg )
                 .subscribe( serverResponse => {
                     swal(
                         'Guardado',
-                        'Se guardo la promción con éxito.',
+                        'Se guardo la imagen con éxito.',
                         'success'
                     );
                     this.serverResponse = serverResponse;
