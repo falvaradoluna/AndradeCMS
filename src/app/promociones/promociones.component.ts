@@ -112,15 +112,7 @@ export class PromocionesComponent implements OnInit {
             "promoId":              this.promoId
 
         });
-
-        // this.formUpdate = fb.group({
-        //     "RealImgUpdate":    this.RealImgUpdate,
-        //     "imageInputUpdate": this.imageInputUpdate,
-        //     "promoIdUp":        this.promoIdUp,
-        //     "typeImgUp":        this.typeImgUp,
-        // });
-
-    }
+    };
 
     resultadoPromociones:       IPromociones[] = [];
     resultadoPromocionesById:   IPromocionesById[] = [];
@@ -137,7 +129,7 @@ export class PromocionesComponent implements OnInit {
         this.getTablaPromociones();
         this.getEmpresas();
         this.getTipoPromocion();
-    }
+    };
 
     getParametros(recurso){
         this._serviceUnidad.GetParametros( { recurso: recurso } )
@@ -286,50 +278,7 @@ export class PromocionesComponent implements OnInit {
               );
             }
         });
-    } 
-
-    // onFileChangeUp($event){
-    //     let reader = new FileReader();
-    //     let file = $event.target.files[0]; 
-    //     if( file.type != "image/jpeg" && file.type != "image/png" ){
-    //         swal({
-    //             type: 'error',
-    //             title: 'Oops...',
-    //             text: 'Seleccione una imagen JPG/PNG'
-    //         });
-    //         this.formUpdate.controls['RealImgUpdate'].setValue("");
-    //     }else{
-    //         var str = file.name;
-    //         var ext = '.' + str.split('.').pop();
-    //         console.log(ext)
-    //         this.formUpdate.controls["typeImgUp"].setValue(ext);
-    //         reader.readAsDataURL(file);
-    //         reader.onload = () => {
-    //             this.formUpdate.controls['imageInputUpdate'].setValue({
-    //                 filename: file.name,
-    //                 filetype: file.type,
-    //                 value: reader.result.split(',')[1]
-    //             });
-    //         }; 
-    //         this.formUpdate.controls['imageInputUpdate'].setValue(file ? file : '');
-    //     }   
-    // };
-
-    // updateImage(promoId){
-    //     this.formUpdate.controls["promoIdUp"].setValue(promoId);
-    //     this._Promoservice.UpdateImage( this.formUpdate )
-    //     .subscribe( serverResponse => {
-    //         swal(
-    //             'Actualizado',
-    //             'Se actualizo la promoción con éxito',
-    //             'success'
-    //             );
-    //         this.serverResponse = serverResponse;
-
-	//         this.ModalImg = this.serverPath + this.formUpdate.value.imageInputUpdate.filename;
-    //     },
-    //     error => this.errorMessage = <any>error );
-    // };
+    };
 
     updatePromocion(promoid){
         swal({
@@ -349,7 +298,8 @@ export class PromocionesComponent implements OnInit {
                 this.form.controls["prefijotxt"].setValue(this.prefijo);
                 this._Promoservice.UpdatePromocion(this.form)
                 .subscribe( serverResponse => {
-                    this.serverResponse = serverResponse;
+                    this.ModalImg = this.rutaGet + this.prefijo + this.form.value.promoId + this.form.value.tipoImgtxt;
+                    console.log(this.ModalImg);
                     this.getTablaPromociones();
                     swal(
                         'Guardado',
