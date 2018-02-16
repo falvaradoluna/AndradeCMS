@@ -350,12 +350,12 @@ export class PromocionesComponent implements OnInit {
                 this._Promoservice.UpdatePromocion(this.form)
                 .subscribe( serverResponse => {
                     this.serverResponse = serverResponse;
+                    this.getTablaPromociones();
                     swal(
                         'Guardado',
                         'No se actualizo la promoción.',
                         'success'
-                      )
-                    this.getTablaPromociones();
+                    );
                 },
                 error => this.errorMessage = <any>error );
             } else if (result.dismiss === 'cancel') {
