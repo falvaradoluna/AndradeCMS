@@ -5,4 +5,5 @@ export interface ICatImg {
     ci_IdTipoImagen:    number,
     ci_idEstatus:       number,
     ti_Nombre:          string,
+    pathImagen:         string,
 }

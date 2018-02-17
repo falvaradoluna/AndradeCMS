@@ -2,9 +2,6 @@ var CatUnView = require('../views/reference'),
     ModelView = require('../models/dataAccess'),
     fs = require("fs");
 
-    var pathSaveUni = "C:\\Desarrollo\\AndradeCMSDocumentos\\public\\imagesUnidades\\";
-    var pathSaveFic = "C:\\Desarrollo\\AndradeCMSDocumentos\\public\\fichas\\";
-
 var catunidad = function(conf) {
     this.conf = conf || {};
     this.view = new CatUnView();
@@ -405,6 +402,25 @@ catunidad.prototype.get_deleteatributos = function( req, res, next ){
     ];
 
     this.model.query("CatAtributos_DELETE_SP", params, function( error, result ){
+        // console.log(result);
+        // console.log(error);
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+//api/catunidad/countimg
+catunidad.prototype.get_countimg = function( req, res, next ){
+    var self = this;
+    var ci_IdCatUnidad = req.query.ci_IdCatUnidad;
+    // console.log("Query", req.query);
+    var params = [
+        { name: 'ci_IdCatUnidad', value: ci_IdCatUnidad, type: self.model.types.INT }
+    ];
+
+    this.model.query("catImg_CountTotalImagenes_SP", params, function( error, result ){
         // console.log(result);
         // console.log(error);
         self.view.expositor(res, {

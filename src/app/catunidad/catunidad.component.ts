@@ -34,10 +34,6 @@ import { IParametros } from "./parametros";
 })
 export class CatunidadComponent implements OnInit {
 
-    //RUta
-    serverPathImg = 'http://192.168.20.92:3420/imagesUnidades/';
-    serverPathFicha = 'http://192.168.20.92:3420/fichas/';
-
     public errorMessage: any;
     public data :        object;
     public temp_var:     Object = false;
@@ -52,11 +48,13 @@ export class CatunidadComponent implements OnInit {
     showAddAtributo:     any;
     cataIdCatUnidad:     any;
     cataidAtributo:      any;
+    countImagenes:       any;
 
     //Variables de parametros;
-    prefijo:  any;
-    rutaSave: any;
-    rutaGet:  any;
+    prefijo:    any;
+    rutaSave:   any;
+    rutaGet:    any;
+    limitImg:   any;
 
     //Formulario de la imagen
     formImg:    FormGroup;
@@ -69,7 +67,7 @@ export class CatunidadComponent implements OnInit {
     prefijotxt  = new FormControl("");
     rutaSavetxt = new FormControl("");
 
-    //Formulario
+    //Formulario Ficha
     formFicha:      FormGroup;
     RealFicha       = new FormControl("");
     FichaInput      = new FormControl("");
@@ -111,6 +109,7 @@ export class CatunidadComponent implements OnInit {
 
     private _urlgetUnidades = "api/catunidad/unidadesnuevas";
     private _urlGetAtrById  = "api/catunidad/getatributobyid";
+    private _urlCountImagen = "api/catunidad/countimg";
 
     resImganes:     ICatImg[] = [];
     serverResponse: IServerResponse[] = [];
@@ -128,7 +127,7 @@ export class CatunidadComponent implements OnInit {
         this._serviceUnidad.GetParametros( { recurso: recurso } )
         .subscribe( resParametros => {
             this.resParametros = resParametros;
-            // console.log("Parametros",this.resParametros);
+            console.log("Parametros",this.resParametros);
             if( this.resParametros[0].pr_TipoParametro == "PREFIJO" ){
                 this.prefijo = this.resParametros[0].pr_ValorString1;
             }
@@ -138,6 +137,10 @@ export class CatunidadComponent implements OnInit {
             if(this.resParametros[2].pr_TipoParametro == "RUTAGET"){
                 this.rutaGet = this.resParametros[2].pr_ValorString1;
             }
+            if(this.resParametros[3].pr_TipoParametro == "LIMIT"){
+                this.limitImg = this.resParametros[3].pr_ValorString1
+            }
+            console.log("LIMITPA", this.limitImg);
             console.log("PrefijoPA", this.prefijo);
             console.log("RUTASAVEPA", this.rutaSave);
             console.log("RUTAGETPA", this.rutaGet);
@@ -162,12 +165,22 @@ export class CatunidadComponent implements OnInit {
             var prefijillo = this.prefijo;
             var imagenesUnidad = this.imagesUnidad;
             this.resImganes.forEach(function( item, key ){
-               imagenesUnidad.push(getRuta + prefijillo + item.ci_IdCatUnidad + "_" + item.ci_ConsImg + item.ti_Nombre); 
+               item.pathImagen = getRuta + prefijillo + item.ci_IdCatUnidad + "_" + item.ci_ConsImg + item.ti_Nombre; 
             });
             this.imagesUnidad = imagenesUnidad;
         },
         error => this.errorMessage = <any>error);
     };    
+
+    countImag(ci_IdCatUnidad){
+        let Params = new HttpParams();
+        Params = Params.append("ci_IdCatUnidad", ci_IdCatUnidad);
+        this._http.get(this._urlCountImagen, {params: Params}).subscribe((res: Response) => {
+           this.countImagenes = res[0].TotalImages;
+           console.log("Res", res)
+           console.log("CountImg", this.countImagenes);
+          });
+    };
 
     onFileChange($event) {
         let reader = new FileReader();
@@ -205,6 +218,8 @@ export class CatunidadComponent implements OnInit {
     }
 
     saveImage() {
+        this.formImg.controls["rutaSavetxt"].setValue(this.rutaSave);
+        this.formImg.controls["prefijotxt"].setValue(this.prefijo);
         swal({
             title: '¿Guardar la imagen?',
             type: 'warning',
@@ -218,20 +233,27 @@ export class CatunidadComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
-                this.formImg.controls["rutaSavetxt"].setValue(this.rutaSave);
-                this.formImg.controls["prefijotxt"].setValue(this.prefijo);
-                console.log( "FormImg", this.formImg );
-                this._serviceUnidad.saveImagen( this.formImg )
-                .subscribe( serverResponse => {
+                if( this.countImagenes == this.limitImg ){
                     swal(
-                        'Guardado',
-                        'Se guardo la imagen con éxito.',
-                        'success'
-                    );
-                    this.serverResponse = serverResponse;
-                    this.getImages(this.ci_IdCatUnidad);
-                },
-                error => this.errorMessage = <any>error );
+                        'ALTO',
+                        'Solo puedes cargar 5 imagenes por unidad',
+                        'error'
+                      );
+                }else{
+                    this.formImg.controls["rutaSavetxt"].setValue(this.rutaSave);
+                    this.formImg.controls["prefijotxt"].setValue(this.prefijo);
+                    this._serviceUnidad.saveImagen( this.formImg )
+                    .subscribe( serverResponse => {
+                        swal(
+                            'Guardado',
+                            'Se guardo la imagen con éxito.',
+                            'success'
+                        );
+                        this.serverResponse = serverResponse;
+                        this.getImages(this.ci_IdCatUnidad);
+                    },
+                    error => this.errorMessage = <any>error );
+                }
             } else if (result.dismiss === 'cancel') {
               swal(
                 'Canelado',
@@ -311,6 +333,45 @@ export class CatunidadComponent implements OnInit {
               swal(
                 'Canelado',
                 'No se azrualizo la imagen.',
+                'error'
+              );
+            }
+        });
+    };
+
+    deleteImage( ci_IdImagen, ci_IdCatUnidad ){
+        swal({
+            title: '¿Desactivar la imagen?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Desactivar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false,
+        }).then((result) => {
+            if (result.value) {
+                console.log( "Id de la imagen", ci_IdImagen );
+                console.log( "Id de la imagen", ci_IdCatUnidad );
+                this._serviceUnidad.DeleteImgs( {ci_IdCatUnidad:ci_IdCatUnidad, ci_IdImagen:ci_IdImagen} )
+                .subscribe( serverResponse => {
+                    swal(
+                        'Desactivada',
+                        'Se desactivo la imagen con éxito.',
+                        'success'
+                    );
+                    this.countImag(ci_IdCatUnidad);
+                    this.serverResponse = serverResponse;
+                    this.getImages(ci_IdCatUnidad);
+                    this.formImg.controls['RealImg'].setValue("");;
+                },
+                error => this.errorMessage = <any>error );
+            } else if (result.dismiss === 'cancel') {
+              swal(
+                'Canelado',
+                'No se desactivo la imagen.',
                 'error'
               );
             }
@@ -454,44 +515,6 @@ export class CatunidadComponent implements OnInit {
               swal(
                 'Canelado',
                 "No se actualizo la ficha.",
-                'error'
-              );
-            }
-        });
-    };
-
-    deleteImage( ci_IdImagen, ci_IdCatUnidad ){
-        swal({
-            title: '¿Desactivar la imagen?',
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Desactivar',
-            cancelButtonText: 'Cancelar',
-            confirmButtonClass: 'btn btn-success',
-            cancelButtonClass: 'btn btn-danger',
-            buttonsStyling: false,
-        }).then((result) => {
-            if (result.value) {
-                console.log( "Id de la imagen", ci_IdImagen );
-                console.log( "Id del seminuevo", ci_IdCatUnidad );
-                this._serviceUnidad.DeleteImgs( {ci_IdCatUnidad:ci_IdCatUnidad, ci_IdImagen:ci_IdImagen} )
-                .subscribe( serverResponse => {
-                    swal(
-                        'Desactivada',
-                        'Se desactivo la imagen con éxito.',
-                        'success'
-                    );
-                    this.serverResponse = serverResponse;
-                    this.getImages(ci_IdCatUnidad);
-                    this.formImg.controls['RealImg'].setValue("");
-                },
-                error => this.errorMessage = <any>error );
-            } else if (result.dismiss === 'cancel') {
-              swal(
-                'Canelado',
-                'No se desactivo la imagen.',
                 'error'
               );
             }
@@ -721,6 +744,7 @@ export class CatunidadComponent implements OnInit {
         console.log( "Id de la unidad", ci_IdCatUnidad );
         this.getImages(ci_IdCatUnidad);
         this.ci_IdCatUnidad = ci_IdCatUnidad;
+        this.countImag(ci_IdCatUnidad);
     }
 
     private getDismissReason(reason: any): string {

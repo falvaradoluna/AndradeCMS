@@ -63,9 +63,9 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let imagen of imagesUnidad; let i = index;">
+                <tr *ngFor="let imagen of resImganes; let i = index;">
                     <td> {{ i + 1 }} </td>
-                    <td><img src="{{imagen}}" width="230"></td>
+                    <td><img src="{{imagen.pathImagen}}" width="230"></td>
                     <td> 
                         <form [formGroup]="formImg" (ngSubmit)="updateImage(imagen.ci_IdImagen, imagen.ci_IdCatUnidad)">
                             <label class="btn btn-secondary btn-file">

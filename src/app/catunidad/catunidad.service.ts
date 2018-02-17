@@ -39,7 +39,7 @@ export class CatunidadService {
 
         return this._http.get<IParametros[]>(this._urlParametros, {params: Params})
         .catch( this.handleError );
-    }
+    };
 
     GetImgsUnidad(parameters): Observable<ICatImg[]>{
         
@@ -48,7 +48,7 @@ export class CatunidadService {
 
         return this._http.get<ICatImg[]>(this._urlgetImg, {params: Params})
         .catch( this.handleError );
-    }
+    };
 
     saveImagen(cuerpo): Observable<IServerResponse[]>{
         var headers = new HttpHeaders();
