@@ -251,6 +251,7 @@ export class CatunidadComponent implements OnInit {
                         );
                         this.serverResponse = serverResponse;
                         this.getImages(this.ci_IdCatUnidad);
+                        this.countImag(this.ci_IdCatUnidad);
                     },
                     error => this.errorMessage = <any>error );
                 }
