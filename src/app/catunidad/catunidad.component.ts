@@ -61,14 +61,15 @@ export class CatunidadComponent implements OnInit {
 
     //Formulario de la imagen
     formImg:    FormGroup;
-    RealImg     = new FormControl("");
-    imageInput  = new FormControl("");
-    IdCatUnidad = new FormControl("");
-    tipoImg     = new FormControl("");
-    Idimg       = new FormControl("");
-    tipoImgtxt  = new FormControl("");
-    prefijotxt  = new FormControl("");
-    rutaSavetxt = new FormControl("");
+    RealImg             = new FormControl("");
+    imageInput          = new FormControl("");
+    IdCatUnidad         = new FormControl("");
+    tipoImg             = new FormControl("");
+    Idimg               = new FormControl("");
+    rutaSavetxtImg      = new FormControl("");
+    prefijotxtImg       = new FormControl("");
+    tipoImgtxtImg       = new FormControl("");
+    
 
     //Formulario Ficha
     formFicha:      FormGroup;
@@ -78,6 +79,9 @@ export class CatunidadComponent implements OnInit {
     tipo            = new FormControl("");
     idFicha         = new FormControl("");
     tipoFicha       = new FormControl("");
+    prefijotxt      = new FormControl("");
+    rutaSavetxt     = new FormControl("");
+    tipoImgtxt      = new FormControl("");
 
 
     //Formulario Atributos
@@ -88,14 +92,14 @@ export class CatunidadComponent implements OnInit {
         this._compiler.clearCache();
         
         this.formImg = fb.group({
-            "RealImg":      this.RealImg,
-            "imageInput":   this.imageInput,
-            "IdCatUnidad":  this.IdCatUnidad,
-            "tipoImg":      this.tipoImg,
-            "Idimg":        this.Idimg,
-            "tipoImgtxt":   this.tipoImgtxt,
-            "prefijotxt":   this.prefijotxt,
-            "rutaSavetxt":  this.rutaSavetxt
+            "RealImg":          this.RealImg,
+            "imageInput":       this.imageInput,
+            "IdCatUnidad":      this.IdCatUnidad,
+            "tipoImg":          this.tipoImg,
+            "Idimg":            this.Idimg,
+            "tipoImgtxtImg":    this.tipoImgtxtImg,
+            "prefijotxtImg":    this.prefijotxtImg,
+            "rutaSavetxtImg":   this.rutaSavetxtImg
         });
 
         this.formFicha = fb.group({
@@ -221,19 +225,19 @@ export class CatunidadComponent implements OnInit {
                 var str = file.name;
                 var ext = '.' + str.split('.').pop();
                 this.formImg.controls['tipoImg'].setValue(1);
-                this.formImg.controls["tipoImgtxt"].setValue(ext);
+                this.formImg.controls["tipoImgtxtImg"].setValue(ext);
             }else{
                 var str = file.name;
                 var ext = '.' + str.split('.').pop();
                 this.formImg.controls['tipoImg'].setValue(2);
-                this.formImg.controls["tipoImgtxt"].setValue(ext);
+                this.formImg.controls["tipoImgtxtImg"].setValue(ext);
             }
         }   
     }
 
     saveImage() {
-        this.formImg.controls["rutaSavetxt"].setValue(this.rutaSave);
-        this.formImg.controls["prefijotxt"].setValue(this.prefijo);
+        this.formImg.controls["rutaSavetxtImg"].setValue(this.rutaSave);
+        this.formImg.controls["prefijotxtImg"].setValue(this.prefijo);
         swal({
             title: '¿Guardar la imagen?',
             type: 'warning',
@@ -254,8 +258,9 @@ export class CatunidadComponent implements OnInit {
                         'error'
                       );
                 }else{
-                    this.formImg.controls["rutaSavetxt"].setValue(this.rutaSave);
-                    this.formImg.controls["prefijotxt"].setValue(this.prefijo);
+                    this.formImg.controls["rutaSavetxtImg"].setValue(this.rutaSave);
+                    this.formImg.controls["prefijotxtImg"].setValue(this.prefijo);
+                    console.log( "Imagen", this.formImg );
                     this._serviceUnidad.saveImagen( this.formImg )
                     .subscribe( serverResponse => {
                         swal(
@@ -422,8 +427,8 @@ export class CatunidadComponent implements OnInit {
     };
 
     saveFicha(){
-        this.formImg.controls["rutaSavetxt"].setValue(this.rutaSave);
-        this.formImg.controls["prefijotxt"].setValue(this.prefijo);
+        this.formFicha.controls["rutaSavetxt"].setValue(this.rutaSave);
+        this.formFicha.controls["prefijotxt"].setValue(this.prefijo);
         if(this.showFicha == 0){
             var txtTitle    = "¿Guardar la ficha?";
             var txtButton   = "Guardar";
@@ -448,9 +453,9 @@ export class CatunidadComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
-                this.formImg.controls["rutaSavetxt"].setValue(this.rutaSave);
-                this.formImg.controls["prefijotxt"].setValue(this.prefijo);
-                console.log( this.formFicha );
+                this.formFicha.controls["rutaSavetxt"].setValue(this.rutaSave);
+                this.formFicha.controls["prefijotxt"].setValue(this.prefijo);
+                console.log( "Ficha", this.formFicha );
                 this._serviceUnidad.saveFicha( this.formFicha )
                 .subscribe( serverResponse => {
                     swal(
@@ -474,8 +479,8 @@ export class CatunidadComponent implements OnInit {
 
     updateFicha(){
         this.formFicha.controls["idFicha"].setValue(this.fichaId);
-        this.formImg.controls["rutaSavetxt"].setValue(this.rutaSave);
-        this.formImg.controls["prefijotxt"].setValue(this.prefijo);
+        this.formFicha.controls["rutaSavetxt"].setValue(this.rutaSave);
+        this.formFicha.controls["prefijotxt"].setValue(this.prefijo);
         swal({
             title: "¿Actualizar la ficha?",
             type: 'warning',
@@ -489,8 +494,8 @@ export class CatunidadComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
-                this.formImg.controls["rutaSavetxt"].setValue(this.rutaSave);
-                this.formImg.controls["prefijotxt"].setValue(this.prefijo);
+                this.formFicha.controls["rutaSavetxt"].setValue(this.rutaSave);
+                this.formFicha.controls["prefijotxt"].setValue(this.prefijo);
                 console.log( "FormUpdate", this.formFicha );
                 this._serviceUnidad.updateFicha( this.formFicha )
                 .subscribe( serverResponse => {

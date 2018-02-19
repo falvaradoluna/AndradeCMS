@@ -77,9 +77,9 @@ catunidad.prototype.post_insertimagen = function(req, res, next) {
     var ci_IdTipoImagen     = req.body.tipoImg;
 
     //Variables SaveImage
-    var ruta          = req.body.rutaSavetxt;
+    var ruta          = req.body.rutaSavetxtImg;
     var TipoImagen    = req.body.tipoImgtxt;
-    var prefijoUnidad = req.body.prefijotxt;
+    var prefijoUnidad = req.body.tipoImgtxtImg;
 
     var params = [
         { name: 'ci_IdCatUnidad',   value: ci_IdCatUnidad, type: self.model.types.INT },
@@ -222,6 +222,7 @@ catunidad.prototype.post_insertficha = function(req, res, next) {
         if (result.length > 0) {
             //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
             var newName = prefijoFicha + caf_idCatUnidad + "_" + result[0].consFicha + tipoFicha;
+            console.log("newName", newName);
             var pathname = ruta + newName;
             console.log("pathname", pathname);
             require("fs").writeFile( pathname , req.body.FichaInput.value, 'base64', function(err) {
