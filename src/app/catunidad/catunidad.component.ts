@@ -285,8 +285,8 @@ export class CatunidadComponent implements OnInit {
     };
 
     updateImage(ci_IdImagen, ci_IdCatUnidad){
-        this.formImg.controls["rutaSavetxt"].setValue(this.rutaSave);
-        this.formImg.controls["prefijotxt"].setValue(this.prefijo);
+        this.formImg.controls["rutaSavetxtImg"].setValue(this.rutaSave);
+        this.formImg.controls["prefijotxtImg"].setValue(this.prefijo);
         this.formImg.controls['RealImg'].setValue("");
         this.formImg.controls['IdCatUnidad'].setValue(ci_IdCatUnidad);
         this.formImg.controls['Idimg'].setValue(ci_IdImagen);
@@ -303,8 +303,8 @@ export class CatunidadComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
-                this.formImg.controls["rutaSavetxt"].setValue(this.rutaSave);
-                this.formImg.controls["prefijotxt"].setValue(this.prefijo);
+                this.formImg.controls["rutaSavetxtImg"].setValue(this.rutaSave);
+                this.formImg.controls["prefijotxtImg"].setValue(this.prefijo);
                 console.log( "UpdateFormImg", this.formImg );
                 this._serviceUnidad.updateImagen( this.formImg )
                 .subscribe( serverResponse => {

@@ -123,9 +123,9 @@ catunidad.prototype.post_updateimagen = function(req, res, next) {
     console.log('QueryString = ' + req.body);
 
     //Variables para armar el nombres
-    var ruta          = req.body.rutaSavetxt;
-    var TipoImagen    = req.body.tipoImgtxt;
-    var prefijoUnidad = req.body.prefijotxt;
+    var ruta          = req.body.rutaSavetxtImg;
+    var TipoImagen    = req.body.tipoImgtxtImg;
+    var prefijoUnidad = req.body.prefijotxtImg;
 
     var params = [
         { name: 'ci_IdCatUnidad',   value: ci_IdCatUnidad, type: self.model.types.INT },
