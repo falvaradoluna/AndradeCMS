@@ -102,7 +102,9 @@ export class CatunidadComponent implements OnInit {
             "caf_idCatUnidad":  this.caf_idCatUnidad,
             "tipo":             this.tipo,
             "idFicha":          this.idFicha,
-            "tipoFicha":        this.tipoFicha
+            "tipoFicha":        this.tipoFicha,
+            "prefijotxt":       this.prefijotxt,
+            "rutaSavetxt":      this.rutaSavetxt
         });
 
         this.formAtributo = fb.group({
@@ -130,6 +132,7 @@ export class CatunidadComponent implements OnInit {
         this._serviceUnidad.GetParametros( { recurso: recurso } )
         .subscribe( resParametros => {
             this.resParametros = resParametros;
+            console.log(this.resParametros[0].pr_TipoParametro);
             if( this.resParametros[0].pr_TipoParametro == "PREFIJO" ){
                 this.prefijo = this.resParametros[0].pr_ValorString1;
             }
@@ -297,6 +300,7 @@ export class CatunidadComponent implements OnInit {
                         'success'
                     );
                     this.serverResponse = serverResponse;
+                    this.getUnidades();
                     this.getImages(ci_IdCatUnidad);
                 },
                 error => this.errorMessage = <any>error );
@@ -409,7 +413,8 @@ export class CatunidadComponent implements OnInit {
     };
 
     saveFicha(){
-        // console.log( this.formFicha );
+        this.formImg.controls["rutaSavetxt"].setValue(this.rutaSave);
+        this.formImg.controls["prefijotxt"].setValue(this.prefijo);
         if(this.showFicha == 0){
             var txtTitle    = "¿Guardar la ficha?";
             var txtButton   = "Guardar";
@@ -434,7 +439,9 @@ export class CatunidadComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
-                // console.log( this.formFicha );
+                this.formImg.controls["rutaSavetxt"].setValue(this.rutaSave);
+                this.formImg.controls["prefijotxt"].setValue(this.prefijo);
+                console.log( this.formFicha );
                 this._serviceUnidad.saveFicha( this.formFicha )
                 .subscribe( serverResponse => {
                     swal(
