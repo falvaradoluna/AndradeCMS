@@ -220,7 +220,7 @@ catunidad.prototype.post_insertficha = function(req, res, next) {
         console.log("result", result);
         if (result.length > 0) {
             //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
-            var newName = prefijoFicha + caf_idCatUnidad + "_" + result[0].consFicha;
+            var newName = prefijoFicha + caf_idCatUnidad + "_" + result[0].consFicha + tipoFicha;
             var pathname = ruta + newName;
             console.log("pathname", pathname);
             require("fs").writeFile( pathname , req.body.FichaInput.value, 'base64', function(err) {
