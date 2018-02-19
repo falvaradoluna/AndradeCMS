@@ -69,11 +69,13 @@
                     <td> 
                         <form [formGroup]="formImg" (ngSubmit)="updateImage(imagen.ci_IdImagen, imagen.ci_IdCatUnidad)">
                             <label class="btn btn-secondary btn-file">
-                                <input name="file" type="file" (change)="onFileChangeUp($event)" formControlName="RealImg">
+                                <input name="file" type="file" (change)="onFileChange($event)" formControlName="RealImg">
                                 <input type="hidden" name="fileHidden" formControlName="imageInput"/> 
                                 <input type="hidden" name="IdCatUnidad" formControlName="IdCatUnidad"/> 
-                                <input type="hidden" name="tipoImg" formControlName="tipoImg"/>
-                                <input type="hidden" name="Idimg" formControlName="Idimg"/> 
+                                <input type="hidden" name="tipoImg" formControlName="tipoImg"/> 
+                                <input type="hidden" name="tipoImgtxt" formControlName="tipoImgtxt"/> 
+                                <input type="hidden" name="prefijotxt" formControlName="prefijotxt"/>
+                                <input type="hidden" name="rutaSavetxt" formControlName="rutaSavetxt"/>
                             </label>
                             <div class="modal-footer">
                                 <button class="btn btn-outline-success" type="submit">

@@ -25,6 +25,7 @@ import { IServerResponse } from "../promociones/ServerResponse";
 import { ICatFichas } from "./catfichas";
 import { ICatAtributos } from "./atributos";
 import { IParametros } from "./parametros";
+import {  Compiler } from '@angular/core';
 
 @Component({
   selector: 'app-catunidad',
@@ -81,7 +82,9 @@ export class CatunidadComponent implements OnInit {
     formAtributo: FormGroup;
     Atributo      = new FormControl("");
 
-    constructor(private _http: HttpClient, private modalService: NgbModal, private _serviceUnidad: CatunidadService, public fb: FormBuilder) { 
+    constructor(private _http: HttpClient, private modalService: NgbModal, private _serviceUnidad: CatunidadService, public fb: FormBuilder, private _compiler: Compiler) {
+        this._compiler.clearCache();
+        
         this.formImg = fb.group({
             "RealImg":      this.RealImg,
             "imageInput":   this.imageInput,
@@ -127,7 +130,6 @@ export class CatunidadComponent implements OnInit {
         this._serviceUnidad.GetParametros( { recurso: recurso } )
         .subscribe( resParametros => {
             this.resParametros = resParametros;
-            console.log("Parametros",this.resParametros);
             if( this.resParametros[0].pr_TipoParametro == "PREFIJO" ){
                 this.prefijo = this.resParametros[0].pr_ValorString1;
             }
@@ -140,10 +142,10 @@ export class CatunidadComponent implements OnInit {
             if(this.resParametros[3].pr_TipoParametro == "LIMIT"){
                 this.limitImg = this.resParametros[3].pr_ValorString1
             }
-            console.log("LIMITPA", this.limitImg);
-            console.log("PrefijoPA", this.prefijo);
-            console.log("RUTASAVEPA", this.rutaSave);
-            console.log("RUTAGETPA", this.rutaGet);
+            // console.log("LIMITPA", this.limitImg);
+            // console.log("PrefijoPA", this.prefijo);
+            // console.log("RUTASAVEPA", this.rutaSave);
+            // console.log("RUTAGETPA", this.rutaGet);
         },
         error => this.errorMessage = <any>error);
     };
@@ -265,44 +267,9 @@ export class CatunidadComponent implements OnInit {
         });
     };
 
-    onFileChangeUp($event, ci_IdImagen, ci_IdCatUnidad) {
-        let reader = new FileReader();
-        let file = $event.target.files[0]; 
-        console.log( file.type );
-        if( file.type != "image/jpeg" && file.type != "image/png" ){
-            swal({
-                type: 'error',
-                title: 'Oops...',
-                text: 'Seleccione una imagen JPG/PNG'
-              });
-            this.formImg.controls['RealImg'].setValue("");
-        }else{
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                this.formImg.controls['imageInput'].setValue({
-                    filename: file.name,
-                    filetype: file.type,
-                    value: reader.result.split(',')[1]
-                });
-            };
-            this.formImg.controls['imageInput'].setValue(file ? file : '');
-            if( file.type == "image/jpeg" ){
-                var str = file.name;
-                var ext = '.' + str.split('.').pop();
-                console.log(ext)
-                this.formImg.controls['tipoImg'].setValue(1);
-                this.formImg.controls["tipoImgtxt"].setValue(ext);
-            }else{
-                var str = file.name;
-                var ext = '.' + str.split('.').pop();
-                console.log(ext)
-                this.formImg.controls['tipoImg'].setValue(2);
-                this.formImg.controls["tipoImgtxt"].setValue(ext);
-            }
-        }   
-    };
-
     updateImage(ci_IdImagen, ci_IdCatUnidad){
+        this.formImg.controls["rutaSavetxt"].setValue(this.rutaSave);
+        this.formImg.controls["prefijotxt"].setValue(this.prefijo);
         this.formImg.controls['RealImg'].setValue("");
         this.formImg.controls['IdCatUnidad'].setValue(ci_IdCatUnidad);
         this.formImg.controls['Idimg'].setValue(ci_IdImagen);
@@ -319,6 +286,9 @@ export class CatunidadComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
+                this.formImg.controls["rutaSavetxt"].setValue(this.rutaSave);
+                this.formImg.controls["prefijotxt"].setValue(this.prefijo);
+                console.log( "UpdateFormImg", this.formImg );
                 this._serviceUnidad.updateImagen( this.formImg )
                 .subscribe( serverResponse => {
                     swal(
@@ -354,10 +324,11 @@ export class CatunidadComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
-                console.log( "Id de la imagen", ci_IdImagen );
-                console.log( "Id de la imagen", ci_IdCatUnidad );
+                // console.log( "Id de la imagen", ci_IdImagen );
+                // console.log( "Id de la imagen", ci_IdCatUnidad );
                 this._serviceUnidad.DeleteImgs( {ci_IdCatUnidad:ci_IdCatUnidad, ci_IdImagen:ci_IdImagen} )
                 .subscribe( serverResponse => {
+                    this._compiler.clearCache();
                     swal(
                         'Desactivada',
                         'Se desactivo la imagen con éxito.',
@@ -382,7 +353,7 @@ export class CatunidadComponent implements OnInit {
     getFichas(caf_IdCatUnidad){
         this.resFichas = [];
         this.rutaFicha = "";
-        console.log("Fichas unidad");
+        // console.log("Fichas unidad");
         this._serviceUnidad.GetFichasUnidad( { caf_IdCatUnidad: caf_IdCatUnidad } )
         .subscribe( resFichas => {
             this.resFichas = resFichas
@@ -394,7 +365,7 @@ export class CatunidadComponent implements OnInit {
                 respuestaFichas.push(getRuta + prefijillo + item.caf_idCatUnidad + "_" + item.caf_ConsImg + item.ti_Nombre);
             });
             this.fichasUnidad = respuestaFichas;
-            console.log("fichasUnidad", this.fichasUnidad);
+            // console.log("fichasUnidad", this.fichasUnidad);
             if(this.resFichas[0] == undefined){
                 this.showFicha = 0;
             }else{
@@ -410,7 +381,7 @@ export class CatunidadComponent implements OnInit {
     onFileChangeFicha($event) {
         let reader = new FileReader();
         let file = $event.target.files[0];
-        console.log( file );
+        // console.log( file );
         if( file.type != "application/pdf" ){
             swal({
                 type: 'error',
@@ -421,7 +392,7 @@ export class CatunidadComponent implements OnInit {
         }else{
             var str = file.name;
             var ext = '.' + str.split('.').pop();
-            console.log(ext)
+            // console.log(ext)
             this.formFicha.controls["tipoFicha"].setValue(ext);
             this.formFicha.controls['tipo'].setValue(3);
             this.formFicha.controls["caf_idCatUnidad"].setValue(this.cafIdCatUnidad);
@@ -438,7 +409,7 @@ export class CatunidadComponent implements OnInit {
     };
 
     saveFicha(){
-        console.log( this.formFicha );
+        // console.log( this.formFicha );
         if(this.showFicha == 0){
             var txtTitle    = "¿Guardar la ficha?";
             var txtButton   = "Guardar";
@@ -463,7 +434,7 @@ export class CatunidadComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
-                console.log( this.formFicha );
+                // console.log( this.formFicha );
                 this._serviceUnidad.saveFicha( this.formFicha )
                 .subscribe( serverResponse => {
                     swal(
@@ -536,8 +507,8 @@ export class CatunidadComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
-                console.log( "Id de la ficha", this.fichaId );
-                console.log( "Id del unidad", this.cafIdCatUnidad );
+                // console.log( "Id de la ficha", this.fichaId );
+                // console.log( "Id del unidad", this.cafIdCatUnidad );
                 this._serviceUnidad.deleteFicha( {caf_idFicha: this.fichaId, caf_idCatUnidad: this.cafIdCatUnidad} )
                 .subscribe( serverResponse => {
                     swal(
@@ -565,8 +536,8 @@ export class CatunidadComponent implements OnInit {
         .subscribe( resAtributos => {
             this.atr_var = true;
             this.resAtributos = resAtributos;
-            console.log( this.resAtributos );
-            console.log( "ID de la unidad", cata_idCatUnidad );
+            // console.log( this.resAtributos );
+            // console.log( "ID de la unidad", cata_idCatUnidad );
         },
         error => this.errorMessage = <any>error);
     };
@@ -742,7 +713,7 @@ export class CatunidadComponent implements OnInit {
     openImgModal(ModalImg, ci_IdCatUnidad) {
         this.getParametros("UNIDAD");
         this.modalService.open( ModalImg, { size: "lg" } );
-        console.log( "Id de la unidad", ci_IdCatUnidad );
+        // console.log( "Id de la unidad", ci_IdCatUnidad );
         this.getImages(ci_IdCatUnidad);
         this.ci_IdCatUnidad = ci_IdCatUnidad;
         this.countImag(ci_IdCatUnidad);
@@ -763,7 +734,7 @@ export class CatunidadComponent implements OnInit {
         this.getParametros("FICHA");
         this.cafIdCatUnidad = 0;
         this.modalService.open( ModalFicha);
-        console.log( "Id de la unidad", caf_IdCatUnidad );
+        // console.log( "Id de la unidad", caf_IdCatUnidad );
         this.getFichas(caf_IdCatUnidad);
         this.cafIdCatUnidad = caf_IdCatUnidad;
         //this.ci_IdCatUnidad = ci_IdCatUnidad;

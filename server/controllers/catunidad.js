@@ -116,28 +116,29 @@ catunidad.prototype.post_updateimagen = function(req, res, next) {
     //console.log( req.body );
     var self = this;
     var ci_IdCatUnidad      = req.body.IdCatUnidad;
-    var ci_RutaImagen       = req.body.imageInput.filename;
     var ci_IdTipoImagen     = req.body.tipoImg;
     var ci_IdImagen         = req.body.Idimg;
-    var ci_tipo             = req.body.tipoImgtxt;
-    // //console.log('QueryString = ' + req.query);
+    console.log('QueryString = ' + req.body);
+
+    //Variables para armar el nombres
+    var ruta          = req.body.rutaSavetxt;
+    var TipoImagen    = req.body.tipoImgtxt;
+    var prefijoUnidad = req.body.prefijotxt;
 
     var params = [
         { name: 'ci_IdCatUnidad',   value: ci_IdCatUnidad, type: self.model.types.INT },
-        { name: 'ci_RutaImagen',    value: ci_RutaImagen, type: self.model.types.STRING },
         { name: 'ci_IdTipoImagen',  value: ci_IdTipoImagen, type: self.model.types.INT },
-        { name: 'ci_IdImagen',      value: ci_IdImagen, type: self.model.types.INT },
-        { name: 'ci_tipo',          value: ci_tipo, type: self.model.types.STRING }
+        { name: 'ci_IdImagen',      value: ci_IdImagen, type: self.model.types.INT }
     ];
-    //console.log( "Parametros", params );
+    console.log( "Parametros", params );
 
     this.model.query('catImg_UPDATE_SP', params, function (error, result) {
-        // console.log("error",error );
-        // console.log("result",result );
+        console.log("error",error );
+        console.log("result",result );
         if (result.length > 0) {
             //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
-            var newName = result[0].imgName
-            var pathname = pathSaveUni + newName;
+            var newName = prefijoUnidad + ci_IdCatUnidad + "_" + result[0].consImg + TipoImagen;
+            var pathname = ruta + newName;
             require("fs").writeFile( pathname , req.body.imageInput.value, 'base64', function(err) {
                 //console.log(err);
                 if( err ){
