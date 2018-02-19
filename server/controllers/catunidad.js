@@ -79,7 +79,7 @@ catunidad.prototype.post_insertimagen = function(req, res, next) {
     //Variables SaveImage
     var ruta          = req.body.rutaSavetxtImg;
     var TipoImagen    = req.body.tipoImgtxt;
-    var prefijoUnidad = req.body.tipoImgtxtImg;
+    var prefijoUnidad = req.body.prefijotxtImg;
 
     var params = [
         { name: 'ci_IdCatUnidad',   value: ci_IdCatUnidad, type: self.model.types.INT },
@@ -87,8 +87,9 @@ catunidad.prototype.post_insertimagen = function(req, res, next) {
     ];
 
     this.model.query('catImg_INSERT_SP', params, function (error, result) {
-       console.log("Error", error);
-       console.log("result", result);
+       console.log("ruta", ruta);
+       console.log("TipoImagen", TipoImagen);
+       console.log("prefijoUnidad", prefijoUnidad);
         if (result.length > 0) {
             var newName = prefijoUnidad + ci_IdCatUnidad + "_" + result[0].consImg + TipoImagen;
             console.log("Name", newName);
