@@ -91,8 +91,9 @@ catunidad.prototype.post_insertimagen = function(req, res, next) {
        console.log("result", result);
         if (result.length > 0) {
             var newName = prefijoUnidad + ci_IdCatUnidad + "_" + result[0].consImg + TipoImagen;
+            console.log("Name", newName);
             var pathname = ruta + newName;
-            console.log(pathname)
+            console.log("Path", pathname)
             require("fs").writeFile( pathname , req.body.imageInput.value, 'base64', function(err) {
                 //console.log(err);
                 if( err ){

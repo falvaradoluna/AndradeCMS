@@ -53,6 +53,7 @@ export class CatunidadService {
     saveImagen(cuerpo): Observable<IServerResponse[]>{
         var headers = new HttpHeaders();
         headers.append('Content-Type', 'application/form-data');
+        console.log( "cuerpo", cuerpo.value );
         return this._http.post<IServerResponse[]>(this._urlInsertImagen, cuerpo.value, { headers: headers});
     };
 

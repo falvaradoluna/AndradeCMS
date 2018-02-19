@@ -152,11 +152,12 @@ export class CatunidadComponent implements OnInit {
                     this.limitImg = this.resParametros[3].pr_ValorString1
                 }
             }
-            //console.log( "Atributo", this.limitAtr );
-            // console.log("LIMITPA", this.limitImg);
-            // console.log("PrefijoPA", this.prefijo);
-            // console.log("RUTASAVEPA", this.rutaSave);
-            // console.log("RUTAGETPA", this.rutaGet);
+
+            console.log( "Atributo", this.limitAtr );
+            console.log("LIMITPA", this.limitImg);
+            console.log("PrefijoPA", this.prefijo);
+            console.log("RUTASAVEPA", this.rutaSave);
+            console.log("RUTAGETPA", this.rutaGet);
         },
         error => this.errorMessage = <any>error);
     };
