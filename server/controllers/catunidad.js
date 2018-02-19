@@ -78,7 +78,7 @@ catunidad.prototype.post_insertimagen = function(req, res, next) {
 
     //Variables SaveImage
     var ruta          = req.body.rutaSavetxtImg;
-    var TipoImagen    = req.body.tipoImgtxt;
+    var TipoImagen    = req.body.tipoImgtxtImg;
     var prefijoUnidad = req.body.prefijotxtImg;
 
     var params = [
