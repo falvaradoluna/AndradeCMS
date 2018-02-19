@@ -465,6 +465,8 @@ export class CatunidadComponent implements OnInit {
 
     updateFicha(){
         this.formFicha.controls["idFicha"].setValue(this.fichaId);
+        this.formImg.controls["rutaSavetxt"].setValue(this.rutaSave);
+        this.formImg.controls["prefijotxt"].setValue(this.prefijo);
         swal({
             title: "¿Actualizar la ficha?",
             type: 'warning',
@@ -478,7 +480,9 @@ export class CatunidadComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
-                // console.log( "FormUpdate", this.formFicha );
+                this.formImg.controls["rutaSavetxt"].setValue(this.rutaSave);
+                this.formImg.controls["prefijotxt"].setValue(this.prefijo);
+                console.log( "FormUpdate", this.formFicha );
                 this._serviceUnidad.updateFicha( this.formFicha )
                 .subscribe( serverResponse => {
                     swal(

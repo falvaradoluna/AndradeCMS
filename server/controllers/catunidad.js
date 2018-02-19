@@ -248,29 +248,29 @@ catunidad.prototype.post_updateficha = function(req, res, next) {
     var self = this;
     var caf_idFicha         = req.body.idFicha;
     var caf_idCatUnidad     = req.body.caf_idCatUnidad
-    var caf_RutaFicha       = req.body.FichaInput.filename;
     var caf_IdTipoImages    = req.body.tipo;
-    var tipoFicha           = req.body.tipoFicha;
     // //console.log('QueryString = ' + req.query);
+
+    //Variables save Ficha
+    var ruta            = req.body.rutaSavetxt;
+    var tipoFicha       = req.body.tipoFicha;
+    var prefijoFicha   = req.body.prefijotxt;
 
     var params = [
         { name: 'caf_idFicha',          value: caf_idFicha, type: self.model.types.INT },
         { name: 'caf_idCatUnidad',      value: caf_idCatUnidad, type: self.model.types.INT },
-        { name: 'caf_RutaFicha',        value: caf_RutaFicha, type: self.model.types.STRING },
-        { name: 'caf_IdTipoImages',     value: caf_IdTipoImages, type: self.model.types.INT },
-        { name: 'tipoFicha',            value: tipoFicha, type: self.model.types.STRING }
+        { name: 'caf_IdTipoImages',     value: caf_IdTipoImages, type: self.model.types.INT }
     ];
-    console.log( "Parametros", params );
 
     this.model.query('CatFic_UPDATE_SP', params, function (error, result) {
         console.log("error", error);
         console.log("result",result );
         if (result.length > 0) {
-            //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
-            var newName = result[0].ficName;
-            var pathname = pathSaveFic + newName;
+            
+            var newName = prefijoFicha + caf_idCatUnidad + "_" + consFicha + tipoFicha;
+            var pathname = ruta + newName;
             require("fs").writeFile( pathname , req.body.FichaInput.value, 'base64', function(err) {
-                //console.log(err);
+                
                 if( err ){
                     console.log('Ha ocurrido un error: ' + err);
                 }
@@ -278,7 +278,7 @@ catunidad.prototype.post_updateficha = function(req, res, next) {
                     console.log('Se ha guardado');
                 }
             });
-         //console.log("resultaaaaaaa " + result[0]);
+            
         }
         self.view.expositor(res, {
             error: error,
