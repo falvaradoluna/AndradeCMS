@@ -267,7 +267,7 @@ catunidad.prototype.post_updateficha = function(req, res, next) {
         console.log("result",result );
         if (result.length > 0) {
             
-            var newName = prefijoFicha + caf_idCatUnidad + "_" + resulto[0].consFicha + tipoFicha;
+            var newName = prefijoFicha + caf_idCatUnidad + "_" + result[0].consFicha + tipoFicha;
             var pathname = ruta + newName;
             require("fs").writeFile( pathname , req.body.FichaInput.value, 'base64', function(err) {
                 
