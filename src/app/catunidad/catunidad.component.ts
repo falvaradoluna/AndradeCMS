@@ -56,6 +56,8 @@ export class CatunidadComponent implements OnInit {
     rutaSave:   any;
     rutaGet:    any;
     limitImg:   any;
+    limitAtr:   any;
+    atrLength:  any;
 
     //Formulario de la imagen
     formImg:    FormGroup;
@@ -132,19 +134,25 @@ export class CatunidadComponent implements OnInit {
         this._serviceUnidad.GetParametros( { recurso: recurso } )
         .subscribe( resParametros => {
             this.resParametros = resParametros;
-            console.log(this.resParametros[0].pr_TipoParametro);
-            if( this.resParametros[0].pr_TipoParametro == "PREFIJO" ){
-                this.prefijo = this.resParametros[0].pr_ValorString1;
+            if( recurso == "ATRIBUTO" ){
+                if( this.resParametros[0].pr_TipoParametro == "LIMIT" ){
+                    this.limitAtr = this.resParametros[0].pr_ValorString1;
+                }
+            }else{
+                if( this.resParametros[0].pr_TipoParametro == "PREFIJO" ){
+                    this.prefijo = this.resParametros[0].pr_ValorString1;
+                }
+                if(this.resParametros[1].pr_TipoParametro == "RUTASAVE"){
+                    this.rutaSave = this.resParametros[1].pr_ValorString1;
+                }
+                if(this.resParametros[2].pr_TipoParametro == "RUTAGET"){
+                    this.rutaGet = this.resParametros[2].pr_ValorString1;
+                }
+                if(this.resParametros[3].pr_TipoParametro == "LIMIT"){
+                    this.limitImg = this.resParametros[3].pr_ValorString1
+                }
             }
-            if(this.resParametros[1].pr_TipoParametro == "RUTASAVE"){
-                this.rutaSave = this.resParametros[1].pr_ValorString1;
-            }
-            if(this.resParametros[2].pr_TipoParametro == "RUTAGET"){
-                this.rutaGet = this.resParametros[2].pr_ValorString1;
-            }
-            if(this.resParametros[3].pr_TipoParametro == "LIMIT"){
-                this.limitImg = this.resParametros[3].pr_ValorString1
-            }
+            //console.log( "Atributo", this.limitAtr );
             // console.log("LIMITPA", this.limitImg);
             // console.log("PrefijoPA", this.prefijo);
             // console.log("RUTASAVEPA", this.rutaSave);
@@ -547,8 +555,8 @@ export class CatunidadComponent implements OnInit {
         .subscribe( resAtributos => {
             this.atr_var = true;
             this.resAtributos = resAtributos;
-            // console.log( this.resAtributos );
-            // console.log( "ID de la unidad", cata_idCatUnidad );
+            this.atrLength = this.resAtributos.length;
+            console.log("Arreglo", this.atrLength);
         },
         error => this.errorMessage = <any>error);
     };
@@ -583,29 +591,39 @@ export class CatunidadComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
-                var desAtributo = this.formAtributo.value.Atributo;
-                this._serviceUnidad.SaveAtributos( { cata_idCatUnidad: this.cataIdCatUnidad , cata_Descripcion: desAtributo } )
-                .subscribe( serverResponse => {
-                    if( serverResponse[0].success == 1 ){
-                        swal(
-                            'Guardado',
-                            serverResponse[0].msg,
-                            'success'
-                        );
-                        this.serverResponse = serverResponse;
-                        this.getAtributos(this.cataIdCatUnidad);
-                        this.formAtributo.controls["Atributo"].setValue("");
-                        this.showAddAtributo = 3;
-                    }else{
-                        swal(
-                            'Ups',
-                            serverResponse[0].msg,
-                            'error'
-                        );
-                    }
-                    
-                },
-                error => this.errorMessage = <any>error );
+                console.log("atrLength", this.atrLength);
+                console.log("limitAtr", this.limitAtr);
+                if(this.atrLength >= this.limitAtr){
+                    swal(
+                        'Alto',
+                        'Solo puedes agregar 5 atributos a la unidad.',
+                        'error'
+                      );
+                }else{
+                    var desAtributo = this.formAtributo.value.Atributo;
+                    this._serviceUnidad.SaveAtributos( { cata_idCatUnidad: this.cataIdCatUnidad , cata_Descripcion: desAtributo } )
+                    .subscribe( serverResponse => {
+                        if( serverResponse[0].success == 1 ){
+                            swal(
+                                'Guardado',
+                                serverResponse[0].msg,
+                                'success'
+                            );
+                            this.serverResponse = serverResponse;
+                            this.getAtributos(this.cataIdCatUnidad);
+                            this.formAtributo.controls["Atributo"].setValue("");
+                            this.showAddAtributo = 3;
+                        }else{
+                            swal(
+                                'Ups',
+                                serverResponse[0].msg,
+                                'error'
+                            );
+                        }
+                        
+                    },
+                    error => this.errorMessage = <any>error );
+                }
             } else if (result.dismiss === 'cancel') {
               swal(
                 'Canelado',
@@ -763,6 +781,7 @@ export class CatunidadComponent implements OnInit {
 
     //========= MODAL INSERT FICHA ========//
     openModalAtributos(ModalAtributos, cata_idCatUnidad) {
+        this.getParametros("ATRIBUTO");
         this.formAtributo.controls["Atributo"].setValue("");
         this.modalService.open( ModalAtributos);
         this.showAddAtributo = 3;

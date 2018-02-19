@@ -203,7 +203,7 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let atributo of resAtributos; let i = index;">
-                            <td> {{ atributo.cata_idAtributo }} </td>
+                            <td> {{ i + 1 }} </td>
                             <td> {{ atributo.cata_Descripcion }} </td>
                             <td>  
                                 <button type="button" class="btn btn-success btn-sm" (click)="updAtributo(2, atributo.cata_idAtributo);">
