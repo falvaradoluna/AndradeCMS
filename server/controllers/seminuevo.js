@@ -71,14 +71,14 @@ seminuevo.prototype.post_insertimagensemi = function(req, res, next) {
     //console.log( "Parametros", params );
 
     this.model.query('catImgSemi_INSERT_SP', params, function (error, result) {
-        console.log("error",error);
-        console.log("result",result);
+        // console.log("error",error);
+        // console.log("result",result);
         if (result.length > 0) {
             //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
             var newName = prefijo + cis_IdSeminuevo + "_" + result[0].consImagen + txtTipoImg;
-            console.log( "newName", newName );
+            // console.log( "newName", newName );
             var pathname = rutaSave + newName;
-            console.log( "pathname", pathname );
+            // console.log( "pathname", pathname );
             require("fs").writeFile( pathname , req.body.imageInput.value, 'base64', function(err) {
                 //console.log(err);
                 if( err ){
@@ -99,32 +99,34 @@ seminuevo.prototype.post_insertimagensemi = function(req, res, next) {
 
 // "api/seminuevo/updateimagensemi"
 seminuevo.prototype.post_updateimagensemi = function(req, res, next) {
-    //console.log( "Hola" );
-    //console.log( req.body );
+    
     var self = this;
     var cis_IdSeminuevo     = req.body.IdSemi;
     var cis_TipoImagen      = req.body.tipoImg;
-    var cis_RutaImagen      = req.body.imageInput.filename;
     var cis_idImagenSemi    = req.body.Idimg;
-    var tipoImgtxt          = req.body.tipoImgtxt;
     // //console.log('QueryString = ' + req.query);
 
     var params = [
         { name: 'cis_IdSeminuevo',   value: cis_IdSeminuevo, type: self.model.types.INT },
         { name: 'cis_TipoImagen',    value: cis_TipoImagen, type: self.model.types.INT },
-        { name: 'cis_RutaImagen',    value: cis_RutaImagen, type: self.model.types.STRING },
-        { name: 'cis_idImagenSemi',  value: cis_idImagenSemi, type: self.model.types.INT },
-        { name: 'tipoImgtxt',        value: tipoImgtxt, type: self.model.types.STRING }
+        { name: 'cis_idImagenSemi',  value: cis_idImagenSemi, type: self.model.types.INT }
     ];
-    console.log( "Parametros", params );
+    //console.log( "Parametros", params );
+
+    //Variables para guardar la imagen
+    var rutaSave    = req.body.rutaTxt;
+    var prefijo     = req.body.prefijoTxt;
+    var txtTipoImg  = req.body.tipoImgtxt;
 
     this.model.query('catImgSemi_UPDATE_SP', params, function (error, result) {
         console.log( "error",error );
         console.log( "result",result );
         if (result.length > 0) {
-            //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
-            var newName = result[0].semiName
-            var pathname = pathSaveSemi + newName;
+            
+            var newName = prefijo + cis_IdSeminuevo + "_" + result[0].consImg + txtTipoImg;
+            console.log( "newName", newName );
+            var pathname = rutaSave + newName;
+            console.log( "pathname", pathname );
             require("fs").writeFile( pathname , req.body.imageInput.value, 'base64', function(err) {
                 //console.log(err);
                 if( err ){

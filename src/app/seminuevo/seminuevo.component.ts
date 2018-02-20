@@ -277,20 +277,22 @@ export class SeminuevoComponent implements OnInit {
             cancelButtonClass: 'btn btn-danger',
             buttonsStyling: false,
         }).then((result) => {
-
             if (result.value) {
-                this._semiService.updateImagenSemi( this.formImg )
-                .subscribe( serverResponse => {
-                    swal(
-                        'Guardado',
-                        'Se actualizo la imagen con éxito.',
-                        'success'
-                    );
-                    this.serverResponse = serverResponse;
-                    this.getImages(cis_IdSeminuevo);
-                    this.formImg.controls['RealImg'].setValue("");
-                },
-                error => this.errorMessage = <any>error );
+                this.formImg.controls["prefijoTxt"].setValue(this.prefijo);
+                this.formImg.controls["rutaTxt"].setValue(this.rutaSave);
+                console.log( "Update",this.formImg );
+                // this._semiService.updateImagenSemi( this.formImg )
+                // .subscribe( serverResponse => {
+                //     swal(
+                //         'Guardado',
+                //         'Se actualizo la imagen con éxito.',
+                //         'success'
+                //     );
+                //     this.serverResponse = serverResponse;
+                //     this.getImages(cis_IdSeminuevo);
+                //     this.formImg.controls['RealImg'].setValue("");
+                // },
+                // error => this.errorMessage = <any>error );
             } else if (result.dismiss === 'cancel') {
               swal(
                 'Canelado',
