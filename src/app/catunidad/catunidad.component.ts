@@ -314,6 +314,7 @@ export class CatunidadComponent implements OnInit {
                         'success'
                     );
                     this.serverResponse = serverResponse;
+                    location.reload();
                     this.getUnidades();
                     this.getImages(ci_IdCatUnidad);
                 },
@@ -740,7 +741,7 @@ export class CatunidadComponent implements OnInit {
               );
             }
         });
-    }
+    };
 
     //================================================================= M O D A L E S =================================================//
 
@@ -785,7 +786,7 @@ export class CatunidadComponent implements OnInit {
         }
     }
 
-    //========= MODAL INSERT FICHA ========//
+    //========= MODAL INSERT Atributos ========//
     openModalAtributos(ModalAtributos, cata_idCatUnidad) {
         this.getParametros("ATRIBUTO");
         this.formAtributo.controls["Atributo"].setValue("");

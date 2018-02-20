@@ -166,4 +166,84 @@ seminuevo.prototype.get_deleteimgsemi = function( req, res, next ){
     });
 };
 
+//api/seminuevo/atributos
+seminuevo.prototype.get_atributos = function( req, res, next ){
+    var self = this;
+    var ctse_IdSeminuevo = req.query.is_IdSeminuevo;
+    // console.log("Query", req.query);
+    var params = [
+        { name: 'ctse_IdSeminuevo', value: ctse_IdSeminuevo, type: self.model.types.INT }
+    ];
+
+    this.model.query("CatAtributosSemi_SELECT_SP", params, function( error, result ){
+        // console.log(result);
+        // console.log(error);
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+//api/seminuevo/getatributobyid
+seminuevo.prototype.get_getatributobyid = function( req, res, next ){
+    var self = this;
+    var ctse_idAtributo = req.query.ctse_idAtributo;
+    // console.log("Query", req.query);
+    var params = [
+        { name: 'ctse_idAtributo', value: ctse_idAtributo, type: self.model.types.INT }
+    ];
+    // console.log( "Parametros", params );
+    this.model.query("CatAtributosSemi_SELECTbyId_SP", params, function( error, result ){
+        // console.log(result);
+        // console.log(error);
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+//api/seminuevo/insertatributos
+seminuevo.prototype.get_insertatributos = function( req, res, next ){
+    var self = this;
+    var ctse_IdSeminuevo = req.query.ctse_IdSeminuevo;
+    var ctse_Descripcion = req.query.ctse_Descripcion;
+    console.log("Query", req.query);
+    var params = [
+        { name: 'ctse_IdSeminuevo', value: ctse_IdSeminuevo, type: self.model.types.INT },
+        { name: 'ctse_Descripcion', value: ctse_Descripcion, type: self.model.types.STRING }
+    ];
+
+    this.model.query("CatAtributosSemi_INSERT_SP", params, function( error, result ){
+        console.log(result);
+        console.log(error);
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+//api/seminuevo/deleteatributos
+seminuevo.prototype.get_deleteatributos = function( req, res, next ){
+    var self = this;
+    var ctse_idAtributo = req.query.ctse_idAtributo;
+    var ctse_IdSeminuevo = req.query.ctse_IdSeminuevo;
+    
+    var params = [
+        { name: 'ctse_idAtributo',  value: ctse_idAtributo, type: self.model.types.INT },
+        { name: 'ctse_IdSeminuevo', value: ctse_IdSeminuevo, type: self.model.types.INT }
+    ];
+
+    this.model.query("CatAtributosSemi_DELETE_SP", params, function( error, result ){
+        console.log(result);
+        console.log(error);
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 module.exports = seminuevo;

@@ -14,6 +14,7 @@
                         <th>Numero de serie</th>
                         <th>Modelo</th>
                         <th>Imagenes</th>
+                        <th>Atributos</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -24,6 +25,11 @@
                         <td>{{ seminuevo.is_Modelo }}</td>
                         <td> 
                             <button type="button" class="btn btn-success btn-circle" (click)="openImgModal(ModalImg, seminuevo.is_IdSeminuevo);">
+                                <i class="fa fa-plus" aria-hidden="true" ></i>
+                            </button> 
+                        </td>
+                        <td> 
+                            <button type="button" class="btn btn-success btn-circle" (click)="openModalAtributos(ModalAtributos, seminuevo.is_IdSeminuevo);">
                                 <i class="fa fa-plus" aria-hidden="true" ></i>
                             </button> 
                         </td>
@@ -103,5 +109,111 @@
                 </form>
             </div>
         </div> 
+    </div>
+</ng-template>
+
+<!-- M O D A L E S __ A T R I B U T O S -->
+
+<ng-template #ModalAtributos let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <div class="col-6">
+            <h4 class="modal-title text-muted">Atributos</h4>
+        </div>
+        <div class="col-6">
+            <button type="button" class="btn btn-success pull-right" (click)="addAtributo(1)" style="margin-top:3%;"> 
+                <i class="fa fa-plus" aria-hidden="true"></i> Agregar atributo 
+            </button>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="row div-space">
+            <div class="col space-12">
+                <table datatable class="table row-border hover" *ngIf="this.atr_var">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Atributo</th>
+                            <th>Actualizar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let atributo of resAtributos; let i = index;">
+                            <td> {{ i + 1 }} </td>
+                            <td> {{ atributo.ctse_Descripcion }} </td>
+                            <td>  
+                                <button type="button" class="btn btn-success btn-sm" (click)="updAtributo(2, atributo.ctse_idAtributo);">
+                                    Actualizar
+                                </button> 
+                                <button type="button" class="btn btn-danger pull-right" (click)="deleteAtributo(atributo.ctse_idAtributo);">
+                                    <i class="fa fa-trash" aria-hidden="true" ></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <hr>
+        <div *ngIf="showAddAtributo == 1">
+            <div class = "row">
+                <div class="col-6">
+                    <h4 class="modal-title text-muted">Agregar Atributo </h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h6 class="text-muted"> </h6>
+                    <form [formGroup]="formAtributo" (ngSubmit)="saveAtributos()">
+                        <div class="row">
+                            <div class="col">
+                                <h6 class="text-muted">Atributo</h6>
+                                <input class="form-control form-control-sm" formControlName="Atributo">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-outline-success" type="submit">
+                                Guardar
+                            </button>
+                            <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">
+                                Close
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="showAddAtributo == 2">
+            <div class = "row">
+                <div class="col-6">
+                    <h4 class="modal-title text-muted">Actualizar Atributo </h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h6 class="text-muted"> </h6>
+                    <form [formGroup]="formAtributo" (ngSubmit)="updateAtributos()">
+                        <div class="row">
+                            <div class="col">
+                                <h6 class="text-muted">Atributo</h6>
+                                <input class="form-control form-control-sm" formControlName="Atributo">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-outline-success" type="submit">
+                                Actualizar
+                            </button>
+                            <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">
+                                Close
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" *ngIf="showAddAtributo == 3">
+            <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">
+                Close
+            </button>
+        </div>
     </div>
 </ng-template>

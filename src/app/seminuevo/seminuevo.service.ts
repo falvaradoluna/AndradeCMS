@@ -8,6 +8,7 @@ import { HttpClient, HttpErrorResponse, HttpParams, HttpHeaders } from '@angular
 //Interfaces
 import { ISemImg } from "./semimg"
 import { IServerResponse } from "../promociones/ServerResponse";
+import { ICatAtributosSem } from "./satributo";
 
 @Injectable()
 export class SeminuevoService {
@@ -17,6 +18,9 @@ export class SeminuevoService {
   private _urlInsertImagenSemi      = "api/seminuevo/insertimagensemi";
   private _urlUpdateImagenSemi      = "api/seminuevo/updateimagensemi";
   private _urlDeleteImagenSemi      = "api/seminuevo/deleteimgsemi";
+  private _urlGetAtributos          = "api/seminuevo/atributos";
+  private _urlInsertAtributos       = "api/seminuevo/insertatributos";
+  private _urlDeleteAtributos       = "api/seminuevo/deleteatributos";
 
   constructor(private _http: HttpClient) { }
 
@@ -50,6 +54,35 @@ export class SeminuevoService {
         Params = Params.append("cis_idImagenSemi", parameters.cis_idImagenSemi);
 
         return this._http.get<IServerResponse[]>(this._urlDeleteImagenSemi, {params: Params})
+        .catch( this.handleError );
+    };
+
+    GetAtributos(parameters): Observable<ICatAtributosSem[]>{
+        
+        let Params = new HttpParams();
+        Params = Params.append("is_IdSeminuevo", parameters.is_IdSeminuevo);
+
+        return this._http.get<ICatAtributosSem[]>(this._urlGetAtributos, {params: Params})
+        .catch( this.handleError );
+    };
+
+    SaveAtributos(parameters): Observable<IServerResponse[]>{
+        
+        let Params = new HttpParams();
+        Params = Params.append("ctse_IdSeminuevo", parameters.ctse_IdSeminuevo);
+        Params = Params.append("ctse_Descripcion", parameters.ctse_Descripcion);
+
+        return this._http.get<IServerResponse[]>(this._urlInsertAtributos, {params: Params})
+        .catch( this.handleError );
+    };
+
+    DeleteAtributos(parameters): Observable<IServerResponse[]>{
+        
+        let Params = new HttpParams();
+        Params = Params.append("ctse_idAtributo",  parameters.ctse_idAtributo);
+        Params = Params.append("ctse_IdSeminuevo", parameters.ctse_IdSeminuevo);
+
+        return this._http.get<IServerResponse[]>(this._urlDeleteAtributos, {params: Params})
         .catch( this.handleError );
     };
 
