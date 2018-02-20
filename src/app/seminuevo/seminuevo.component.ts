@@ -281,18 +281,18 @@ export class SeminuevoComponent implements OnInit {
                 this.formImg.controls["prefijoTxt"].setValue(this.prefijo);
                 this.formImg.controls["rutaTxt"].setValue(this.rutaSave);
                 console.log( "Update",this.formImg );
-                // this._semiService.updateImagenSemi( this.formImg )
-                // .subscribe( serverResponse => {
-                //     swal(
-                //         'Guardado',
-                //         'Se actualizo la imagen con éxito.',
-                //         'success'
-                //     );
-                //     this.serverResponse = serverResponse;
-                //     this.getImages(cis_IdSeminuevo);
-                //     this.formImg.controls['RealImg'].setValue("");
-                // },
-                // error => this.errorMessage = <any>error );
+                this._semiService.updateImagenSemi( this.formImg )
+                .subscribe( serverResponse => {
+                    swal(
+                        'Guardado',
+                        'Se actualizo la imagen con éxito.',
+                        'success'
+                    );
+                    this.serverResponse = serverResponse;
+                    this.getImages(cis_IdSeminuevo);
+                    this.formImg.controls['RealImg'].setValue("");
+                },
+                error => this.errorMessage = <any>error );
             } else if (result.dismiss === 'cancel') {
               swal(
                 'Canelado',
