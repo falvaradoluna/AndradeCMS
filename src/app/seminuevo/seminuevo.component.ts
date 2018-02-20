@@ -22,6 +22,8 @@ import  swal  from "sweetalert2";
 import { SeminuevoService } from './seminuevo.service';
 import { ISemImg } from "./semimg";
 import { IServerResponse } from "../promociones/ServerResponse";
+import { CatunidadService } from "../catunidad/catunidad.service";
+import { IParametros } from "../catunidad/parametros";
 
 @Component({
   selector: 'app-seminuevo',
@@ -45,34 +47,77 @@ export class SeminuevoComponent implements OnInit {
   tipoImg       = new FormControl("");
   Idimg         = new FormControl("");
   tipoImgtxt    = new FormControl("");
+  rutaTxt       = new FormControl("");
+  prefijoTxt    = new FormControl("");
+  
+  //Variables de parametros;
+  prefijo:    any;
+  rutaSave:   any;
+  rutaGet:    any;
+  limitImg:   any;
+  limitAtr:   any;
+  atrLength:  any;
 
-  serverPathSemi = 'http://192.168.20.92:3420/imagesSemi/';
-
-  constructor(private _http: HttpClient, private modalService: NgbModal, public fb: FormBuilder, private _semiService: SeminuevoService) {
+  constructor(private _http: HttpClient, private modalService: NgbModal, public fb: FormBuilder, private _semiService: SeminuevoService, private _serviceUnidad: CatunidadService) {
     this.formImg = fb.group({
         "RealImg":      this.RealImg,
         "imageInput":   this.imageInput,
         "IdSemi":       this.IdSemi,
         "tipoImg":      this.tipoImg,
         "Idimg":        this.Idimg,
-        "tipoImgtxt":   this.tipoImgtxt
+        "tipoImgtxt":   this.tipoImgtxt,
+        "rutaTxt":      this.rutaTxt,
+        "prefijoTxt":   this.prefijoTxt
     });
    }
 
    resImganes:     ISemImg[] = [];
    serverResponse: IServerResponse[] = [];
+   resParametros:  IParametros[] = [];
 
   private _urlSeminuevo = "api/seminuevo/seminuevo";
 
   ngOnInit() {
     this.getSeminuevo();
+    this.getParametros("SEMINUEVO")
   }
+
+  getParametros(recurso){
+    this._serviceUnidad.GetParametros( { recurso: recurso } )
+    .subscribe( resParametros => {
+        this.resParametros = resParametros;
+        if( recurso == "ATRIBUTO" ){
+            if( this.resParametros[0].pr_TipoParametro == "LIMIT" ){
+                this.limitAtr = this.resParametros[0].pr_ValorString1;
+            }
+        }else{
+            if( this.resParametros[0].pr_TipoParametro == "PREFIJO" ){
+                this.prefijo = this.resParametros[0].pr_ValorString1;
+            }
+            if(this.resParametros[1].pr_TipoParametro == "RUTASAVE"){
+                this.rutaSave = this.resParametros[1].pr_ValorString1;
+            }
+            if(this.resParametros[2].pr_TipoParametro == "RUTAGET"){
+                this.rutaGet = this.resParametros[2].pr_ValorString1;
+            }
+            if(this.resParametros[3].pr_TipoParametro == "LIMIT"){
+                this.limitImg = this.resParametros[3].pr_ValorString1
+            }
+        }
+
+        console.log( "Atributo", this.limitAtr );
+        console.log("LIMITPA", this.limitImg);
+        console.log("PrefijoPA", this.prefijo);
+        console.log("RUTASAVEPA", this.rutaSave);
+        console.log("RUTAGETPA", this.rutaGet);
+    },
+    error => this.errorMessage = <any>error);
+};
 
   getSeminuevo(){
     this._http.get(this._urlSeminuevo).subscribe((res: Response) => {
         this.data = res;
         this.temp_var = true;
-        console.log( this.data );
       });
   };
 
@@ -81,12 +126,12 @@ export class SeminuevoComponent implements OnInit {
         .subscribe( resImganes => {
             this.img_var = true;
             this.resImganes = resImganes;
-            var pathServerPath = this.serverPathSemi;
+            var getRuta = this.rutaGet;
+            var prefijillo = this.prefijo;
             this.resImganes.forEach(function( item, key ){
-                item.cis_RutaImagen = pathServerPath + item.cis_RutaImagen;
+                item.pathImagen = getRuta + prefijillo + item.cis_IdSeminuevo + "_" + item.cis_ConsImg + item.ti_Nombre;
             });
-            console.log( this.resImganes );
-            //console.log( "ID de la unidad", this.ci_IdCatUnidad );
+            //console.log("ResImage", this.resImganes );
         },
         error => this.errorMessage = <any>error);
     };
@@ -147,18 +192,18 @@ export class SeminuevoComponent implements OnInit {
         }).then((result) => {
             if (result.value) {
                 console.log( this.formImg );
-                this._semiService.saveImagenSemi( this.formImg )
-                .subscribe( serverResponse => {
-                    swal(
-                        'Guardado',
-                        'Se guardo la promción con éxito.',
-                        'success'
-                    );
-                    this.formImg.controls['RealImg'].setValue("");
-                    this.serverResponse = serverResponse;
-                    this.getImages(this.cis_IdSeminuevo);
-                },
-                error => this.errorMessage = <any>error );
+                // this._semiService.saveImagenSemi( this.formImg )
+                // .subscribe( serverResponse => {
+                //     swal(
+                //         'Guardado',
+                //         'Se guardo la promción con éxito.',
+                //         'success'
+                //     );
+                //     this.formImg.controls['RealImg'].setValue("");
+                //     this.serverResponse = serverResponse;
+                //     this.getImages(this.cis_IdSeminuevo);
+                // },
+                // error => this.errorMessage = <any>error );
             } else if (result.dismiss === 'cancel') {
               swal(
                 'Canelado',

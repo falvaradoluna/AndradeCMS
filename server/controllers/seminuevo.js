@@ -59,15 +59,11 @@ seminuevo.prototype.post_insertimagensemi = function(req, res, next) {
     var self = this;
     var cis_IdSeminuevo    = req.body.IdSemi;
     var cis_TipoImagen     = req.body.tipoImg;
-    var cis_RutaImagen     = req.body.imageInput.filename;
-    var tipoImgtxt         = req.body.tipoImgtxt;
     // //console.log('QueryString = ' + req.query);
 
     var params = [
         { name: 'cis_IdSeminuevo',      value: cis_IdSeminuevo, type: self.model.types.INT },
-        { name: 'cis_TipoImagen',       value: cis_TipoImagen, type: self.model.types.INT },
-        { name: 'cis_RutaImagen',       value: cis_RutaImagen, type: self.model.types.STRING },
-        { name: 'tipoImgtxt',           value: tipoImgtxt, type: self.model.types.STRING }
+        { name: 'cis_TipoImagen',       value: cis_TipoImagen, type: self.model.types.INT }
     ];
     //console.log( "Parametros", params );
 
