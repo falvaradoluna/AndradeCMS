@@ -2,8 +2,6 @@ var SemiNuevoView = require('../views/reference'),
     ModelView = require('../models/dataAccess'),
     fs = require("fs");
 
-    var pathSaveSemi = "C:\\Desarrollo\\AndradeCMSDocumentos\\public\\imagesSemi\\";
-
 var seminuevo = function(conf) {
     this.conf = conf || {};
     this.view = new SemiNuevoView();
@@ -61,6 +59,11 @@ seminuevo.prototype.post_insertimagensemi = function(req, res, next) {
     var cis_TipoImagen     = req.body.tipoImg;
     // //console.log('QueryString = ' + req.query);
 
+    //Variables para guardar la imagen
+    var rutaSave    = req.body.rutaTxt;
+    var prefijo     = req.body.prefijoTxt;
+    var txtTipoImg  = req.body.tipoImgtxt;
+
     var params = [
         { name: 'cis_IdSeminuevo',      value: cis_IdSeminuevo, type: self.model.types.INT },
         { name: 'cis_TipoImagen',       value: cis_TipoImagen, type: self.model.types.INT }
@@ -72,8 +75,10 @@ seminuevo.prototype.post_insertimagensemi = function(req, res, next) {
         console.log("result",result);
         if (result.length > 0) {
             //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
-            var newName = result[0].semiName;
-            var pathname = pathSaveSemi + newName;
+            var newName = prefijo + cis_idImagenSemi + "_" + result[0].consImagen + txtTipoImg;
+            console.log( "newName", newName );
+            var pathname = rutaSave + newName;
+            console.log( "pathname", pathname );
             require("fs").writeFile( pathname , req.body.imageInput.value, 'base64', function(err) {
                 //console.log(err);
                 if( err ){

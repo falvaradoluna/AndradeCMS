@@ -177,7 +177,6 @@ export class SeminuevoComponent implements OnInit {
     };
 
     saveImage() {
-        console.log( this.formImg );
         swal({
             title: '¿Guardar la imagen?',
             type: 'warning',
@@ -191,19 +190,21 @@ export class SeminuevoComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
+                this.formImg.controls["prefijoTxt"].setValue(this.prefijo);
+                this.formImg.controls["rutaTxt"].setValue(this.rutaSave);
                 console.log( this.formImg );
-                // this._semiService.saveImagenSemi( this.formImg )
-                // .subscribe( serverResponse => {
-                //     swal(
-                //         'Guardado',
-                //         'Se guardo la promción con éxito.',
-                //         'success'
-                //     );
-                //     this.formImg.controls['RealImg'].setValue("");
-                //     this.serverResponse = serverResponse;
-                //     this.getImages(this.cis_IdSeminuevo);
-                // },
-                // error => this.errorMessage = <any>error );
+                this._semiService.saveImagenSemi( this.formImg )
+                .subscribe( serverResponse => {
+                    swal(
+                        'Guardado',
+                        'Se guardo la promción con éxito.',
+                        'success'
+                    );
+                    this.formImg.controls['RealImg'].setValue("");
+                    this.serverResponse = serverResponse;
+                    this.getImages(this.cis_IdSeminuevo);
+                },
+                error => this.errorMessage = <any>error );
             } else if (result.dismiss === 'cancel') {
               swal(
                 'Canelado',
