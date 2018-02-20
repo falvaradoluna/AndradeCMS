@@ -75,7 +75,7 @@ seminuevo.prototype.post_insertimagensemi = function(req, res, next) {
         console.log("result",result);
         if (result.length > 0) {
             //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
-            var newName = prefijo + cis_idImagenSemi + "_" + result[0].consImagen + txtTipoImg;
+            var newName = prefijo + cis_IdSeminuevo + "_" + result[0].consImagen + txtTipoImg;
             console.log( "newName", newName );
             var pathname = rutaSave + newName;
             console.log( "pathname", pathname );

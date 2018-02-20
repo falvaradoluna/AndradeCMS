@@ -33,11 +33,12 @@ import { IParametros } from "../catunidad/parametros";
 })
 export class SeminuevoComponent implements OnInit {
 
-  public errorMessage: any;
-  public data :       object;
-  public img_var:     Object = false;
-  public temp_var:    Object = false;
-  cis_IdSeminuevo:    any;
+  public errorMessage:  any;
+  public data :         object;
+  public img_var:       Object = false;
+  public temp_var:      Object = false;
+  cis_IdSeminuevo:      any;
+  imgLength:            any;
 
   //Formulario de la imagen
   formImg: FormGroup;
@@ -105,11 +106,11 @@ export class SeminuevoComponent implements OnInit {
             }
         }
 
-        console.log( "Atributo", this.limitAtr );
-        console.log("LIMITPA", this.limitImg);
-        console.log("PrefijoPA", this.prefijo);
-        console.log("RUTASAVEPA", this.rutaSave);
-        console.log("RUTAGETPA", this.rutaGet);
+        // console.log( "Atributo", this.limitAtr );
+        // console.log("LIMITPA", this.limitImg);
+        // console.log("PrefijoPA", this.prefijo);
+        // console.log("RUTASAVEPA", this.rutaSave);
+        // console.log("RUTAGETPA", this.rutaGet);
     },
     error => this.errorMessage = <any>error);
 };
@@ -131,7 +132,8 @@ export class SeminuevoComponent implements OnInit {
             this.resImganes.forEach(function( item, key ){
                 item.pathImagen = getRuta + prefijillo + item.cis_IdSeminuevo + "_" + item.cis_ConsImg + item.ti_Nombre;
             });
-            //console.log("ResImage", this.resImganes );
+            this.imgLength = this.resImganes.length;
+            console.log( "LenghtImg", this.imgLength);
         },
         error => this.errorMessage = <any>error);
     };
@@ -193,24 +195,32 @@ export class SeminuevoComponent implements OnInit {
                 this.formImg.controls["prefijoTxt"].setValue(this.prefijo);
                 this.formImg.controls["rutaTxt"].setValue(this.rutaSave);
                 console.log( this.formImg );
-                this._semiService.saveImagenSemi( this.formImg )
-                .subscribe( serverResponse => {
+                if( this.imgLength == this.limitImg ){
                     swal(
-                        'Guardado',
-                        'Se guardo la promción con éxito.',
-                        'success'
+                        'Alto',
+                        'Solo puedes guardar 5 imágenes.',
+                        'error'
                     );
-                    this.formImg.controls['RealImg'].setValue("");
-                    this.serverResponse = serverResponse;
-                    this.getImages(this.cis_IdSeminuevo);
-                },
-                error => this.errorMessage = <any>error );
+                }else{
+                    this._semiService.saveImagenSemi( this.formImg )
+                    .subscribe( serverResponse => {
+                        swal(
+                            'Guardado',
+                            'Se guardo la promción con éxito.',
+                            'success'
+                        );
+                        this.formImg.controls['RealImg'].setValue("");
+                        this.serverResponse = serverResponse;
+                        this.getImages(this.cis_IdSeminuevo);
+                    },
+                    error => this.errorMessage = <any>error );
+                }
             } else if (result.dismiss === 'cancel') {
-              swal(
-                'Canelado',
-                'No se guardo la promoción',
-                'error'
-              );
+                swal(
+                    'Canelado',
+                    'No se guardo la promoción',
+                    'error'
+                );
             }
         });
     };
