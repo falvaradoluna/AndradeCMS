@@ -16,7 +16,9 @@
                     <tr>
                         <th>#</th>
                         <th>Tipo Promocion</th>
-                        <th>Marca</th>  
+                        <th>Empresa</th>
+                        <th>Marca</th>
+                        <th>Sucursal</th>
                         <th>Descripcion</th> 
                         <th></th>
                     </tr>
@@ -25,7 +27,9 @@
                     <tr class="text-center" *ngFor="let Dpromo of resultadoPromociones; let i = index;">
                         <td> {{ i + 1 }}</td>
                         <td>{{ Dpromo.tip_nombre }}</td>
+                        <td>{{ Dpromo.em_Descripcion }}</td>
                         <td>{{ Dpromo.ma_NombreCto }}</td>
+                        <td>{{ Dpromo.su_NombreCto }}</td>
                         <td>{{ Dpromo.po_Descripcion }}</td>
                         <td> 
                             <button type="button" class="btn btn-success btn-circle" (click)="openU(contentU, Dpromo.po_IdPromocion, Dpromo.pathImagen);">
