@@ -12,7 +12,12 @@
                         <th>#</th>
                         <th>Modelo</th>
                         <th>Numero de serie</th>
+                        <th>Placas</th>
+                        <th>Color</th>
                         <th>Modelo</th>
+                        <th>Empresa</th>
+                        <th>Sucursal</th>
+                        <th>Marca</th>
                         <th>Imagenes</th>
                         <th>Atributos</th>
                     </tr>
@@ -22,7 +27,12 @@
                         <td>{{ seminuevo.is_IdSeminuevo }}</td>
                         <td>{{ seminuevo.is_Descripcion }}</td>
                         <td>{{ seminuevo.is_NoSerie }}</td>
+                        <td>{{ seminuevo.is_Placas }}</td>
+                        <td>{{ seminuevo.is_ColorExt }}</td>
                         <td>{{ seminuevo.is_Modelo }}</td>
+                        <td>{{ seminuevo.em_Descripcion }}</td>
+                        <td>{{ seminuevo.su_NombreCto }}</td>
+                        <td>{{ seminuevo.ms_Descripcion }}</td>
                         <td> 
                             <button type="button" class="btn btn-success btn-circle" (click)="openImgModal(ModalImg, seminuevo.is_IdSeminuevo);">
                                 <i class="fa fa-plus" aria-hidden="true" ></i>

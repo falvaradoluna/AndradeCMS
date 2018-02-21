@@ -13,6 +13,8 @@
                         <th>Catalogo</th>
                         <th>Modelo</th>
                         <th>Descripcion</th>
+                        <th>Empresa</th>
+                        <th>Marca</th>
                         <th>Imagenes</th>
                         <th>Fichas</th>
                         <th>Atributos</th>
@@ -25,6 +27,8 @@
                         <td>{{ unidad.cu_Catalogo }}</td>
                         <td>{{ unidad.cu_Modelo }}</td>
                         <td>{{ unidad.cu_Descripcion }}</td>
+                        <td>{{ unidad.em_Descripcion }}</td>
+                        <td>{{ unidad.ma_DescripMarca }}</td>
                         <td> 
                             <button type="button" class="btn btn-success btn-circle" (click)="openImgModal(ModalImg, unidad.cu_IdCatUnidad);">
                                 <i class="fa fa-plus" aria-hidden="true" ></i>
