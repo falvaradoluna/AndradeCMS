@@ -3,6 +3,7 @@ import { CommonModule }             from '@angular/common';
 import { PromocionesRoutingModule } from './promociones-routing.module';
 import { PromocionesComponent }     from './promociones.component';
 import { PromocionesService }       from './promociones.service';
+import { CatunidadService }         from "../catunidad/catunidad.service";
 import { FormsModule }              from '@angular/forms';
 import { NgbModule }                from '@ng-bootstrap/ng-bootstrap';
 import { SharedPipesModule, 
@@ -25,7 +26,8 @@ import {ReactiveFormsModule} from "@angular/forms";
         PromocionesComponent
     ],
     providers:[
-        PromocionesService
+        PromocionesService,
+        CatunidadService
     ]
 })
 export class PromocionesModule { }

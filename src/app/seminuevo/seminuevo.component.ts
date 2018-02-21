@@ -22,6 +22,9 @@ import  swal  from "sweetalert2";
 import { SeminuevoService } from './seminuevo.service';
 import { ISemImg } from "./semimg";
 import { IServerResponse } from "../promociones/ServerResponse";
+import { CatunidadService } from "../catunidad/catunidad.service";
+import { IParametros } from "../catunidad/parametros";
+import { ICatAtributosSem } from "./satributo";
 
 @Component({
   selector: 'app-seminuevo',
@@ -31,11 +34,16 @@ import { IServerResponse } from "../promociones/ServerResponse";
 })
 export class SeminuevoComponent implements OnInit {
 
-  public errorMessage: any;
-  public data :       object;
-  public img_var:     Object = false;
-  public temp_var:    Object = false;
-  cis_IdSeminuevo:    any;
+  public errorMessage:  any;
+  public data :         object;
+  public img_var:       Object = false;
+  public temp_var:      Object = false;
+  public atr_var:       Object = false;
+  cis_IdSeminuevo:      any;
+  imgLength:            any;
+  showAddAtributo:      any;
+  ctseidAtributo:       any;
+  isIdSeminuevo:        any;
 
   //Formulario de la imagen
   formImg: FormGroup;
@@ -45,34 +53,88 @@ export class SeminuevoComponent implements OnInit {
   tipoImg       = new FormControl("");
   Idimg         = new FormControl("");
   tipoImgtxt    = new FormControl("");
+  rutaTxt       = new FormControl("");
+  prefijoTxt    = new FormControl("");
 
-  serverPathSemi = 'http://192.168.20.92:3420/imagesSemi/';
+  //Formulario Atributos
+  formAtributo: FormGroup;
+  Atributo      = new FormControl("");
+  
+  //Variables de parametros;
+  prefijo:    any;
+  rutaSave:   any;
+  rutaGet:    any;
+  limitImg:   any;
+  limitAtr:   any;
+  atrLength:  any;
 
-  constructor(private _http: HttpClient, private modalService: NgbModal, public fb: FormBuilder, private _semiService: SeminuevoService) {
+  constructor(private _http: HttpClient, private modalService: NgbModal, public fb: FormBuilder, private _semiService: SeminuevoService, private _serviceUnidad: CatunidadService) {
     this.formImg = fb.group({
         "RealImg":      this.RealImg,
         "imageInput":   this.imageInput,
         "IdSemi":       this.IdSemi,
         "tipoImg":      this.tipoImg,
         "Idimg":        this.Idimg,
-        "tipoImgtxt":   this.tipoImgtxt
+        "tipoImgtxt":   this.tipoImgtxt,
+        "rutaTxt":      this.rutaTxt,
+        "prefijoTxt":   this.prefijoTxt
+    });
+
+    this.formAtributo = fb.group({
+        "Atributo": this.Atributo
     });
    }
 
-   resImganes:     ISemImg[] = [];
-   serverResponse: IServerResponse[] = [];
+   resImganes:      ISemImg[] = [];
+   serverResponse:  IServerResponse[] = [];
+   resParametros:   IParametros[] = [];
+   resAtributos:    ICatAtributosSem[] = [];
 
-  private _urlSeminuevo = "api/seminuevo/seminuevo";
+
+  private _urlSeminuevo     = "api/seminuevo/seminuevo";
+  private _urlGetAtrById    = "api/seminuevo/getatributobyid";
 
   ngOnInit() {
     this.getSeminuevo();
+    this.getParametros("SEMINUEVO")
   }
+
+  getParametros(recurso){
+    this._serviceUnidad.GetParametros( { recurso: recurso } )
+    .subscribe( resParametros => {
+        this.resParametros = resParametros;
+        if( recurso == "ATRIBUTO_SEMI" ){
+            if( this.resParametros[0].pr_TipoParametro == "LIMIT" ){
+                this.limitAtr = this.resParametros[0].pr_ValorString1;
+            }
+        }else{
+            if( this.resParametros[0].pr_TipoParametro == "PREFIJO" ){
+                this.prefijo = this.resParametros[0].pr_ValorString1;
+            }
+            if(this.resParametros[1].pr_TipoParametro == "RUTASAVE"){
+                this.rutaSave = this.resParametros[1].pr_ValorString1;
+            }
+            if(this.resParametros[2].pr_TipoParametro == "RUTAGET"){
+                this.rutaGet = this.resParametros[2].pr_ValorString1;
+            }
+            if(this.resParametros[3].pr_TipoParametro == "LIMIT"){
+                this.limitImg = this.resParametros[3].pr_ValorString1
+            }
+        }
+
+        // console.log( "Atributo", this.limitAtr );
+        // console.log("LIMITPA", this.limitImg);
+        // console.log("PrefijoPA", this.prefijo);
+        // console.log("RUTASAVEPA", this.rutaSave);
+        // console.log("RUTAGETPA", this.rutaGet);
+    },
+    error => this.errorMessage = <any>error);
+};
 
   getSeminuevo(){
     this._http.get(this._urlSeminuevo).subscribe((res: Response) => {
         this.data = res;
         this.temp_var = true;
-        console.log( this.data );
       });
   };
 
@@ -81,12 +143,13 @@ export class SeminuevoComponent implements OnInit {
         .subscribe( resImganes => {
             this.img_var = true;
             this.resImganes = resImganes;
-            var pathServerPath = this.serverPathSemi;
+            var getRuta = this.rutaGet;
+            var prefijillo = this.prefijo;
             this.resImganes.forEach(function( item, key ){
-                item.cis_RutaImagen = pathServerPath + item.cis_RutaImagen;
+                item.pathImagen = getRuta + prefijillo + item.cis_IdSeminuevo + "_" + item.cis_ConsImg + item.ti_Nombre;
             });
-            console.log( this.resImganes );
-            //console.log( "ID de la unidad", this.ci_IdCatUnidad );
+            this.imgLength = this.resImganes.length;
+            console.log( "LenghtImg", this.imgLength);
         },
         error => this.errorMessage = <any>error);
     };
@@ -132,7 +195,6 @@ export class SeminuevoComponent implements OnInit {
     };
 
     saveImage() {
-        console.log( this.formImg );
         swal({
             title: '¿Guardar la imagen?',
             type: 'warning',
@@ -146,25 +208,36 @@ export class SeminuevoComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
+                this.formImg.controls["prefijoTxt"].setValue(this.prefijo);
+                this.formImg.controls["rutaTxt"].setValue(this.rutaSave);
                 console.log( this.formImg );
-                this._semiService.saveImagenSemi( this.formImg )
-                .subscribe( serverResponse => {
+                if( this.imgLength == this.limitImg ){
                     swal(
-                        'Guardado',
-                        'Se guardo la promción con éxito.',
-                        'success'
+                        'Alto',
+                        'Solo puedes guardar 5 imágenes.',
+                        'error'
                     );
-                    this.formImg.controls['RealImg'].setValue("");
-                    this.serverResponse = serverResponse;
-                    this.getImages(this.cis_IdSeminuevo);
-                },
-                error => this.errorMessage = <any>error );
+                }else{
+                    this._semiService.saveImagenSemi( this.formImg )
+                    .subscribe( serverResponse => {
+                        swal(
+                            'Guardado',
+                            'Se guardo la promción con éxito.',
+                            'success'
+                        );
+                        this.formImg.controls['RealImg'].setValue("");
+                        this.serverResponse = serverResponse;
+                        this.getSeminuevo();
+                        this.getImages(this.cis_IdSeminuevo);
+                    },
+                    error => this.errorMessage = <any>error );
+                }
             } else if (result.dismiss === 'cancel') {
-              swal(
-                'Canelado',
-                'No se guardo la promoción',
-                'error'
-              );
+                swal(
+                    'Canelado',
+                    'No se guardo la promoción',
+                    'error'
+                );
             }
         });
     };
@@ -221,8 +294,10 @@ export class SeminuevoComponent implements OnInit {
             cancelButtonClass: 'btn btn-danger',
             buttonsStyling: false,
         }).then((result) => {
-
             if (result.value) {
+                this.formImg.controls["prefijoTxt"].setValue(this.prefijo);
+                this.formImg.controls["rutaTxt"].setValue(this.rutaSave);
+                console.log( "Update",this.formImg );
                 this._semiService.updateImagenSemi( this.formImg )
                 .subscribe( serverResponse => {
                     swal(
@@ -233,6 +308,7 @@ export class SeminuevoComponent implements OnInit {
                     this.serverResponse = serverResponse;
                     this.getImages(cis_IdSeminuevo);
                     this.formImg.controls['RealImg'].setValue("");
+                    location.reload();
                 },
                 error => this.errorMessage = <any>error );
             } else if (result.dismiss === 'cancel') {
@@ -284,6 +360,191 @@ export class SeminuevoComponent implements OnInit {
         });
     };
 
+    addAtributo(showForm){
+        this.showAddAtributo = showForm;
+        this.formAtributo.controls["Atributo"].setValue("");
+    };
+
+    updAtributo(showForm, ctse_idAtributo){
+        this.showAddAtributo = showForm;
+        this.ctseidAtributo = ctse_idAtributo;
+        
+        let Params = new HttpParams();
+        Params = Params.append("ctse_idAtributo", ctse_idAtributo);
+        this._http.get(this._urlGetAtrById, {params: Params}).subscribe((res: Response) => {
+            this.formAtributo.controls["Atributo"].setValue(res[0].ctse_Descripcion);
+        });
+    };
+
+    getAtributos(is_IdSeminuevo){
+        this._semiService.GetAtributos( { is_IdSeminuevo: is_IdSeminuevo } )
+        .subscribe( resAtributos => {
+            this.atr_var = true;
+            this.resAtributos = resAtributos;
+            this.atrLength = this.resAtributos.length;
+            //console.log("Atributos", this.resAtributos);
+            //console.log("Arreglo", this.atrLength);
+        },
+        error => this.errorMessage = <any>error);
+    };
+
+    saveAtributos(){
+        swal({
+            title: '¿Guardar el atributo?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Guardar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false,
+        }).then((result) => {
+            if (result.value) {
+                if(this.atrLength >= this.limitAtr){
+                    swal(
+                        'Alto',
+                        'Solo puedes agregar 5 atributos a la unidad.',
+                        'error'
+                      );
+                }else{
+                    var desAtributo = this.formAtributo.value.Atributo;
+                    this._semiService.SaveAtributos( {ctse_IdSeminuevo: this.isIdSeminuevo, ctse_Descripcion: desAtributo } )
+                    .subscribe( serverResponse => {
+                        if( serverResponse[0].success == 1 ){
+                            swal(
+                                'Guardado',
+                                serverResponse[0].msg,
+                                'success'
+                            );
+                            this.serverResponse = serverResponse;
+                            this.getAtributos(this.isIdSeminuevo);
+                            this.formAtributo.controls["Atributo"].setValue("");
+                            this.showAddAtributo = 3;
+                        }else{
+                            swal(
+                                'Ups',
+                                serverResponse[0].msg,
+                                'error'
+                            );
+                        }
+                        
+                    },
+                    error => this.errorMessage = <any>error );
+                }
+            } else if (result.dismiss === 'cancel') {
+              swal(
+                'Canelado',
+                'No se guardo el atributo.',
+                'error'
+              );
+            }
+        });
+    };
+
+    updateAtributos(ctse_idAtributo){
+        swal({
+            title: 'Actualizar el atributo?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Actualizar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false,
+        }).then((result) => {
+            if (result.value) {
+                var desAtributo = this.formAtributo.value.Atributo;
+                this._semiService.UpdateAtributos( 
+                    { 
+                        ctse_IdSeminuevo: this.isIdSeminuevo, 
+                        ctse_idAtributo: this.ctseidAtributo, 
+                        ctse_Descripcion: desAtributo } 
+                    )
+                .subscribe( serverResponse => {
+                    if( serverResponse[0].success == 1 ){
+                        swal(
+                            'Actualizado',
+                            serverResponse[0].msg,
+                            'success'
+                        );
+                        this.serverResponse = serverResponse;
+                        this.getAtributos(this.isIdSeminuevo);
+                        this.formAtributo.controls["Atributo"].setValue("");
+                        this.showAddAtributo = 3;
+                    }else{
+                        swal(
+                            'Ups',
+                            serverResponse[0].msg,
+                            'error'
+                        );
+                    }
+                    
+                },
+                error => this.errorMessage = <any>error );
+            } else if (result.dismiss === 'cancel') {
+              swal(
+                'Canelado',
+                'No se actualizo el atributo.',
+                'error'
+              );
+            }
+        });
+    };
+
+    deleteAtributo(ctseidAtributo){
+        swal({
+            title: 'Eliminar el atributo?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Eliminar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false,
+        }).then((result) => {
+            if (result.value) {
+                this._semiService.DeleteAtributos( 
+                    { 
+                        ctse_IdSeminuevo: this.isIdSeminuevo, 
+                        ctse_idAtributo: ctseidAtributo
+                    } )
+                .subscribe( serverResponse => {
+                    if( serverResponse[0].success == 1 ){
+                        swal(
+                            'Eliminado',
+                            serverResponse[0].msg,
+                            'success'
+                        );
+                        this.serverResponse = serverResponse;
+                        this.getAtributos(this.isIdSeminuevo);
+                        this.formAtributo.controls["Atributo"].setValue("");
+                        this.showAddAtributo = 3;
+                    }else{
+                        swal(
+                            'Ups',
+                            serverResponse[0].msg,
+                            'error'
+                        );
+                    }
+                    
+                },
+                error => this.errorMessage = <any>error );
+            } else if (result.dismiss === 'cancel') {
+              swal(
+                'Canelado',
+                'No se elimino el atributo.',
+                'error'
+              );
+            }
+        });
+    };
+
 
   //========= MODAL INSERT ========//
     openImgModal(ModalImg, cis_IdSeminuevo) {
@@ -294,6 +555,26 @@ export class SeminuevoComponent implements OnInit {
     }
 
     private getDismissReason(reason: any): string {
+        if (reason === ModalDismissReasons.ESC) {
+            return 'by pressing ESC';
+        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+            return 'by clicking on a backdrop';
+        } else {
+            return  `with: ${reason}`;
+        }
+    }
+
+      //========= MODAL Atributos ========//
+      openModalAtributos(ModalAtributos, is_IdSeminuevo) {
+        this.getParametros("ATRIBUTO_SEMI");
+        this.formAtributo.controls["Atributo"].setValue("");
+        this.modalService.open( ModalAtributos);
+        this.showAddAtributo = 3;
+        this.isIdSeminuevo = is_IdSeminuevo;
+        this.getAtributos(is_IdSeminuevo);
+    }
+
+    private getDismissReasonAtributos(reason: any): string {
         if (reason === ModalDismissReasons.ESC) {
             return 'by pressing ESC';
         } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {

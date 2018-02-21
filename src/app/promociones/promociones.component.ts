@@ -31,6 +31,8 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import { HttpClient, HttpErrorResponse, HttpParams, HttpHeaders } from '@angular/common/http';
 import  swal  from "sweetalert2";
+import { CatunidadService } from "../catunidad/catunidad.service";
+import { IParametros } from "../catunidad/parametros";
 
 
 @Component({
@@ -40,28 +42,35 @@ import  swal  from "sweetalert2";
     animations: [routerTransition()]
 })
 export class PromocionesComponent implements OnInit {
-
-    //ruta
-    public serverPath: any = "http://192.168.20.92:3420/promociones/";
+    
+    //Variables de parametros;
+    public prefijo:  any;
+    public rutaSave: any;
+    public rutaGet:  any;
 
     //Variables para el formulario de guardar una nueva promocion
     form: FormGroup;
     SelectTipoPromocion = new FormControl("", Validators.required);
-    SelectEmpresa = new FormControl("", Validators.required);
-    SelectSucursal = new FormControl("", Validators.required);
-    SelectMarca = new FormControl("", Validators.required);
-    TxtDescripcion = new FormControl("", Validators.required);
-    imageInput = new FormControl("");
-    idUsuario = new FormControl("");
-    RealImg = new FormControl("");
-    typeImg = new FormControl("");
-    typeImgUp = new FormControl("");
+    SelectEmpresa       = new FormControl("", Validators.required);
+    SelectSucursal      = new FormControl("", Validators.required);
+    SelectMarca         = new FormControl("", Validators.required);
+    TxtDescripcion      = new FormControl("", Validators.required);
+    imageInput          = new FormControl("");
+    idUsuario           = new FormControl("");
+    RealImg             = new FormControl("");
+    typeImg             = new FormControl("");
+    tipoImgtxt          = new FormControl("");
+    prefijotxt          = new FormControl("");
+    rutaSavetxt         = new FormControl("");
+    typeImgUp           = new FormControl("");
+    vigencia            = new FormControl("");
+    promoId             = new FormControl("");
 
     //Variables para el formualario de actualizar imagen
-    formUpdate: FormGroup;
-    RealImgUpdate = new FormControl("");
-    imageInputUpdate = new FormControl("");
-    promoIdUp = new FormControl("");
+    // formUpdate: FormGroup;
+    // RealImgUpdate       = new FormControl("");
+    // imageInputUpdate    = new FormControl("");
+    // promoIdUp           = new FormControl("");
     
     //Variables a utilizar en la clase
     errorMessage: any;
@@ -82,30 +91,28 @@ export class PromocionesComponent implements OnInit {
     public data : object;
     public temp_var: Object=false;
 
-    constructor(private _Promoservice: PromocionesService, 
+    constructor(private _serviceUnidad: CatunidadService, private _Promoservice: PromocionesService, 
                 private modalService: NgbModal,     
                 public fb: FormBuilder, 
-                private _http: HttpClient ) { 
+                private _http: HttpClient) { 
         this.form = fb.group({
-            "SelectTipoPromocion": this.SelectTipoPromocion,
-            "SelectEmpresa": this.SelectEmpresa,
-            "SelectSucursal": this.SelectSucursal,
-            "SelectMarca": this.SelectMarca,
-            "TxtDescripcion": this.TxtDescripcion,
-            "imageInput": this.imageInput,
-            "idUsuario": this.idUsuario,
-            "RealImg": this.RealImg,
-            "typeImg": this.typeImg,
-        });
+            "SelectTipoPromocion":  this.SelectTipoPromocion,
+            "SelectEmpresa":        this.SelectEmpresa,
+            "SelectSucursal":       this.SelectSucursal,
+            "SelectMarca":          this.SelectMarca,
+            "TxtDescripcion":       this.TxtDescripcion,
+            "imageInput":           this.imageInput,
+            "idUsuario":            this.idUsuario,
+            "RealImg":              this.RealImg,
+            "typeImg":              this.typeImg,
+            "tipoImgtxt":           this.tipoImgtxt,
+            "prefijotxt":           this.prefijotxt,
+            "rutaSavetxt":          this.rutaSavetxt,
+            "vigencia":             this.vigencia,
+            "promoId":              this.promoId
 
-        this.formUpdate = fb.group({
-            "RealImgUpdate": this.RealImgUpdate,
-            "imageInputUpdate": this.imageInputUpdate,
-            "promoIdUp": this.promoIdUp,
-            "typeImgUp": this.typeImgUp,
         });
-
-    }
+    };
 
     resultadoPromociones:       IPromociones[] = [];
     resultadoPromocionesById:   IPromocionesById[] = [];
@@ -114,24 +121,46 @@ export class PromocionesComponent implements OnInit {
     resultadoTPromocion:        ITipoPromocion[] = [];
     resultadoMarca:             IMarca[] = [];
     resultadoSucursal:          ISucursal[] = [];
+    resParametros:              IParametros[] = [];
 
 
     ngOnInit() {
+        this.getParametros("PROMOCION");
         this.getTablaPromociones();
         this.getEmpresas();
         this.getTipoPromocion();
-    }
+    };
+
+    getParametros(recurso){
+        this._serviceUnidad.GetParametros( { recurso: recurso } )
+        .subscribe( resParametros => {
+            this.resParametros = resParametros;
+            // console.log("Parametros",this.resParametros);
+            if( this.resParametros[0].pr_TipoParametro == "PREFIJO" ){
+                this.prefijo = this.resParametros[0].pr_ValorString1;
+            }
+            if(this.resParametros[1].pr_TipoParametro == "RUTASAVE"){
+                this.rutaSave = this.resParametros[1].pr_ValorString1;
+            }
+            if(this.resParametros[2].pr_TipoParametro == "RUTAGET"){
+                this.rutaGet = this.resParametros[2].pr_ValorString1;
+            }
+            // console.log("PrefijoPA", this.prefijo);
+            // console.log("RUTASAVEPA", this.rutaSave);
+            // console.log("RUTAGETPA", this.rutaGet);
+        },
+        error => this.errorMessage = <any>error);
+    };
 
     getTablaPromociones(): void{
         this._Promoservice.getPromoColumn()
         .subscribe( resultadoPromociones => {
-            var pathServer = this.serverPath;
             this.temp_var = true;
             this.resultadoPromociones = resultadoPromociones;
-            console.log("pathserver", pathServer );
+            var getRuta = this.rutaGet;
+            var prefijillo = this.prefijo;
             this.resultadoPromociones.forEach(function( item, key ){
-                item.pathImagen = pathServer + item.po_RutaImagen;
-                //item.pathImagen = 'file/promociones/' + item.po_RutaImagen;
+                item.pathImagen = getRuta + prefijillo + item.po_IdPromocion + item.ti_Nombre;
             });
         },
         error => this.errorMessage = <any>error);
@@ -180,7 +209,7 @@ export class PromocionesComponent implements OnInit {
         let reader = new FileReader();
         let file = $event.target.files[0]; 
         console.log( file.type );
-        if( file.type != "image/jpeg" && file.type != "image/png" && file.type != "application/pdf" ){
+        if( file.type != "image/jpeg" && file.type != "image/png" ){
             swal({
                 type: 'error',
                 title: 'Oops...',
@@ -188,10 +217,7 @@ export class PromocionesComponent implements OnInit {
               });
             this.form.controls['RealImg'].setValue("");
         }else{
-            var str = file.name;
-            var ext = '.' + str.split('.').pop();
-            console.log(ext)
-            this.form.controls["typeImg"].setValue(ext);
+            
             reader.readAsDataURL(file);
             reader.onload = () => {
                 this.form.controls['imageInput'].setValue({
@@ -202,6 +228,17 @@ export class PromocionesComponent implements OnInit {
             };
             this.form.controls['imageInput'].setValue(file ? file : '');
             this.form.controls['idUsuario'].setValue(JSON.parse(localStorage.getItem("UserData")).usu_id);
+            if( file.type == "image/jpeg" ){
+                var str = file.name;
+                var ext = '.' + str.split('.').pop();
+                this.form.controls['typeImg'].setValue(1);
+                this.form.controls["tipoImgtxt"].setValue(ext);
+            }else{
+                var str = file.name;
+                var ext = '.' + str.split('.').pop();
+                this.form.controls['typeImg'].setValue(2);
+                this.form.controls["tipoImgtxt"].setValue(ext);
+            }
         }   
     }
 
@@ -219,6 +256,9 @@ export class PromocionesComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
+                this.form.controls["rutaSavetxt"].setValue(this.rutaSave);
+                this.form.controls["prefijotxt"].setValue(this.prefijo);
+                console.log(this.form)
                 this._Promoservice.savePromocion( this.form )
                 .subscribe( serverResponse => {
                     swal(
@@ -238,51 +278,7 @@ export class PromocionesComponent implements OnInit {
               );
             }
         });
-    } 
-
-    onFileChangeUp($event){
-        let reader = new FileReader();
-        let file = $event.target.files[0]; 
-        if( file.type != "image/jpeg" && file.type != "image/png" ){
-            swal({
-                type: 'error',
-                title: 'Oops...',
-                text: 'Seleccione una imagen JPG/PNG'
-            });
-            this.formUpdate.controls['RealImgUpdate'].setValue("");
-        }else{
-            var str = file.name;
-            var ext = '.' + str.split('.').pop();
-            console.log(ext)
-            this.formUpdate.controls["typeImgUp"].setValue(ext);
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                this.formUpdate.controls['imageInputUpdate'].setValue({
-                    filename: file.name,
-                    filetype: file.type,
-                    value: reader.result.split(',')[1]
-                });
-            }; 
-            this.formUpdate.controls['imageInputUpdate'].setValue(file ? file : '');
-        }   
-    }
-
-    updateImage(promoId){
-        this.formUpdate.controls["promoIdUp"].setValue(promoId);
-        this._Promoservice.UpdateImage( this.formUpdate )
-        .subscribe( serverResponse => {
-            swal(
-                'Actualizado',
-                'Se actualizo la promoción con éxito',
-                'success'
-                );
-            this.serverResponse = serverResponse;
-
-	        this.ModalImg = this.serverPath + this.formUpdate.value.imageInputUpdate.filename;
-            //this.ModalImg = 'file/promociones/' + this.formUpdate.value.imageInputUpdate.filename;
-        },
-        error => this.errorMessage = <any>error );
-    }
+    };
 
     updatePromocion(promoid){
         swal({
@@ -298,19 +294,18 @@ export class PromocionesComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
-                this._Promoservice.UpdatePromocion({ 
-                    po_IdTipoPromocion: this.selectedTPromocion,
-                    po_idEmpresa: this.selectedEmpresa,
-                    po_IdSucursal: this.selectedSucursal,
-                    po_IdMarca: this.selectedMarca,
-                    po_Descripcion: this.descripcion,
-                    po_IdUsuario: JSON.parse(localStorage.getItem("UserData")).usu_id,
-                    po_IdPromocion: promoid
-                 })
+                this.form.controls["rutaSavetxt"].setValue(this.rutaSave);
+                this.form.controls["prefijotxt"].setValue(this.prefijo);
+                this._Promoservice.UpdatePromocion(this.form)
                 .subscribe( serverResponse => {
-                    this.updateImage(promoid);
-                    this.serverResponse = serverResponse;
+                    this.ModalImg = this.rutaGet + this.prefijo + this.form.value.promoId + this.form.value.tipoImgtxt;
+                    console.log(this.ModalImg);
                     this.getTablaPromociones();
+                    swal(
+                        'Guardado',
+                        'Se actualizo la promoción.',
+                        'success'
+                    );
                 },
                 error => this.errorMessage = <any>error );
             } else if (result.dismiss === 'cancel') {
@@ -379,19 +374,20 @@ export class PromocionesComponent implements OnInit {
 
     //========= MODAL UPDATE ========//
     openU(contentU, promoId, img) {
+        this.getParametros("PROMOCION");
         this.modalService.open( contentU, {  size: "lg" });
         this._Promoservice.GetPromocion_ById({ promoId: promoId })
         .subscribe( resultadoPromocionesById => {
             this.resultadoPromocionesById = resultadoPromocionesById;
+            console.log("Update",this.resultadoPromocionesById);
             this.onChangeEmpresa( this.resultadoPromocionesById[0].po_idEmpresa );
-            this.selectedTPromocion     = this.resultadoPromocionesById[0].po_IdTipoPromocion;
-            this.selectedEmpresa        = this.resultadoPromocionesById[0].po_idEmpresa;
-            this.selectedMarca          = this.resultadoPromocionesById[0].po_IdMarca;
-            this.selectedSucursal       = this.resultadoPromocionesById[0].po_IdSucursal;
-            this.descripcion            = this.resultadoPromocionesById[0].po_Descripcion;
-            this.ModalImg               = img;
-            this.idPromocion            = this.resultadoPromocionesById[0].po_IdPromocion;
-            console.log(this.ModalImg);
+            this.form.controls["SelectTipoPromocion"].setValue(this.resultadoPromocionesById[0].po_IdTipoPromocion);
+            this.form.controls["SelectEmpresa"].setValue(this.resultadoPromocionesById[0].po_idEmpresa);
+            this.form.controls["SelectSucursal"].setValue(this.resultadoPromocionesById[0].po_IdSucursal);
+            this.form.controls["SelectMarca"].setValue(this.resultadoPromocionesById[0].po_IdMarca);
+            this.form.controls["TxtDescripcion"].setValue(this.resultadoPromocionesById[0].po_Descripcion);
+            this.form.controls["promoId"].setValue(this.resultadoPromocionesById[0].po_IdPromocion);
+            this.ModalImg = img;
         },
         error => this.errorMessage = <any>error );
     }

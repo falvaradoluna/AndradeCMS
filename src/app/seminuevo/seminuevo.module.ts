@@ -10,6 +10,7 @@ import { SharedPipesModule,
          SortableTableModule }      from '../shared';
 import {ReactiveFormsModule}        from "@angular/forms";
 import { DataTablesModule }         from 'angular-datatables';
+import { CatunidadService } from "../catunidad/catunidad.service";
 
 @NgModule({
   imports: [
@@ -27,7 +28,8 @@ import { DataTablesModule }         from 'angular-datatables';
   ],
   providers:[
     SeminuevoService,
-    PromocionesService
+    PromocionesService,
+    CatunidadService
 ]
 })
 export class SeminuevoModule { }

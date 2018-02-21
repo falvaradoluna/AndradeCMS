@@ -16,9 +16,10 @@
                     <tr>
                         <th>#</th>
                         <th>Tipo Promocion</th>
-                        <th>Marca</th>  
+                        <th>Empresa</th>
+                        <th>Marca</th>
+                        <th>Sucursal</th>
                         <th>Descripcion</th> 
-                        <!-- <th></th> -->
                         <th></th>
                     </tr>
                 </thead>
@@ -26,12 +27,10 @@
                     <tr class="text-center" *ngFor="let Dpromo of resultadoPromociones; let i = index;">
                         <td> {{ i + 1 }}</td>
                         <td>{{ Dpromo.tip_nombre }}</td>
+                        <td>{{ Dpromo.em_Descripcion }}</td>
                         <td>{{ Dpromo.ma_NombreCto }}</td>
+                        <td>{{ Dpromo.su_NombreCto }}</td>
                         <td>{{ Dpromo.po_Descripcion }}</td>
-                        <!-- <td> <button type="button" class="btn btn-info btn-circle" (click)="openImg(contentImg, Dpromo.pathImagen, Dpromo.po_Descripcion, Dpromo.po_IdPromocion);"> 
-                            <i class="fa fa-file-image-o" aria-hidden="true"></i>
-                            </button> 
-                        </td> -->
                         <td> 
                             <button type="button" class="btn btn-success btn-circle" (click)="openU(contentU, Dpromo.po_IdPromocion, Dpromo.pathImagen);">
                                 <i class="fa fa-pencil" aria-hidden="true" ></i>
@@ -94,6 +93,12 @@
                     </div>
                 </div>
                 <div class="row div-space">
+                    <div class="col-6">
+                        <h6 class="text-muted">Vigencia </h6>
+                        <input class="col-6 form-control form-control-sm" type="date" name="vigencia" formControlName="vigencia">
+                    </div>
+                </div>
+                <div class="row div-space">
                     <div class="col">
                         <h6 class="text-muted">Imagen </h6>
                         <label class="btn btn-secondary btn-file">Browse
@@ -101,6 +106,9 @@
                             <input type="hidden" name="fileHidden" formControlName="imageInput"/> 
                             <input type="hidden" name="idUsuario" formControlName="idUsuario"/> 
                             <input type="hidden" name="typeImg" formControlName="typeImg"/> 
+                            <input type="hidden" name="tipoImgtxt" formControlName="tipoImgtxt"/>
+                            <input type="hidden" name="prefijotxt" formControlName="prefijotxt"/>
+                            <input type="hidden" name="rutaSavetxt" formControlName="rutaSavetxt"/>
                         </label>
                     </div>
                 </div> 
@@ -118,102 +126,78 @@
             <h4 class="modal-title text-muted">Actualizar promocion</h4>
         </div>
         <div class="modal-body">
-            <div class="row div-space">
-                <div class="col space-6">
-                    <h6 class="text-muted">Tipo Promocion </h6>
-                    <select class="form-control form-control-sm" name="inputTipoPromociones" [(ngModel)]="selectedTPromocion">
-                        <option value="0">Seleccione un tipo de promocion</option>
-                        <option *ngFor = "let TPromo of resultadoTPromocion;" [value]="TPromo.tip_id" > {{ TPromo.tip_nombre }} </option>
-                    </select>
-                </div>
-                <div class="col">
-                    <h6 class="text-muted">Empresa </h6>
-                    <select class="form-control form-control-sm" name="inputEmpresa" 
-                        [(ngModel)]="selectedEmpresa"
-                        (ngModelChange)="onChangeEmpresa($event)">
-                        <option value="0">Seleccione una empresa</option>
-                        <option *ngFor = "let empresa of resultadoEmpresas;" [value]="empresa.em_IdEmpresa" > {{ empresa.em_Descripcion }} </option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="row div-space">
-                <div class="col">
-                    <h6 class="text-muted">Sucursal</h6>
-                    <select class="form-control form-control-sm" name="inputSucursal" [(ngModel)]="selectedSucursal">
-                        <option value="0">Seleccione una sucursal</option>
-                        <option *ngFor="let sucursal of resultadoSucursal;" [value]="sucursal.su_IdSucursal">{{sucursal.su_NombreCto}}</option>
-                    </select>
-                </div>
-                <div class="col">
-                    <h6 class="text-muted">Marca</h6>
-                    <select class="form-control form-control-sm" name="inputMarca" [(ngModel)]="selectedMarca">
-                        <option value="0">Seleccione una marca</option>
-                        <option *ngFor = "let marca of resultadoMarca;" [value]="marca.ma_IdMarca"> {{ marca.ma_NombreCto }} </option>
-                    </select>
-                </div>
-            </div>
-        
-            <div class="row div-space">
-                <div class="col">
-                        <h6 class="text-muted">Descripcion</h6>
-                        <textarea class="col form-control form-control-sm" rows="4" cols="50" name="descripcion" [(ngModel)]="descripcion">
-                        </textarea>
-                </div>
-            </div>
-            <br>
-            <div class="col">
-                <img src="{{ModalImg}}" width="100%">
-            </div>
-            <div class="row div-space">
-                <form [formGroup]="formUpdate">
+            <form [formGroup]="form" (ngSubmit)="updatePromocion()">
+                <div class="row div-space">
+                    <div class="col space-6">
+                        <h6 class="text-muted">Tipo Promocion </h6>
+                        <select class="form-control form-control-sm" formControlName="SelectTipoPromocion">
+                            <option value="0">Seleccione un tipo de promocion</option>
+                            <option *ngFor = "let TPromo of resultadoTPromocion;" [value]="TPromo.tip_id" > {{ TPromo.tip_nombre }} </option>
+                        </select>
+                    </div>
                     <div class="col">
-                        <h6 class="text-muted">Imagen</h6>
+                        <h6 class="text-muted">Empresa </h6>
+                        <select class="form-control form-control-sm" formControlName="SelectEmpresa" 
+                            (ngModelChange)="onChangeEmpresa($event)">
+                            <option value="0">Seleccione una empresa</option>
+                            <option *ngFor = "let empresa of resultadoEmpresas;" [value]="empresa.em_IdEmpresa" > {{ empresa.em_Descripcion }} </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row div-space">
+                    <div class="col">
+                        <h6 class="text-muted">Sucursal </h6>
+                        <select class="form-control form-control-sm" formControlName="SelectSucursal">
+                            <option value="0">Seleccione una sucursal</option>
+                            <option *ngFor="let sucursal of resultadoSucursal;" [value]="sucursal.su_IdSucursal">{{sucursal.su_NombreCto}}</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <h6 class="text-muted">Marca </h6>
+                        <select class="form-control form-control-sm" formControlName="SelectMarca">
+                            <option value="0">Seleccione una marca</option>
+                            <option *ngFor = "let marca of resultadoMarca;" [value]="marca.ma_IdMarca"> {{ marca.ma_NombreCto }} </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row div-space">
+                    <div class="col">
+                        <h6 class="text-muted">Descripcion </h6>
+                        <textarea class="col form-control form-control-sm" rows="4" cols="50" formControlName="TxtDescripcion">
+                        </textarea>
+                    </div>
+                </div>
+                <div class="row div-space">
+                    <div class="col-6">
+                        <h6 class="text-muted">Vigencia </h6>
+                        <input class="col-6 form-control form-control-sm" type="date" name="vigencia" formControlName="vigencia">
+                    </div>
+                </div>
+                <br>
+                <div class="col">
+                    <img src="{{ModalImg}}" width="100%">
+                </div>
+                <div class="row div-space">
+                    <div class="col">
+                        <h6 class="text-muted">Imagen </h6>
                         <label class="btn btn-secondary btn-file">Browse
-                            <input name="file" type="file" (change)="onFileChangeUp($event)" formControlName="RealImgUpdate">
-                            <input type="hidden" name="fileHidden" formControlName="imageInputUpdate"/>
-                            <input type="hidden" name="fileHidden" formControlName="promoIdUp"/>
-                            <input type="hidden" name="fileHidden" formControlName="typeImgUp"/>
+                            <input name="file" type="file" (change)="onFileChange($event)" formControlName="RealImg">
+                            <input type="hidden" name="fileHidden" formControlName="imageInput"/> 
+                            <input type="hidden" name="idUsuario" formControlName="idUsuario"/> 
+                            <input type="hidden" name="typeImg" formControlName="typeImg"/> 
+                            <input type="hidden" name="tipoImgtxt" formControlName="tipoImgtxt"/>
+                            <input type="hidden" name="prefijotxt" formControlName="prefijotxt"/>
+                            <input type="hidden" name="rutaSavetxt" formControlName="rutaSavetxt"/>
+                            <input type="hidden" name="promoId" formControlName="promoId"/>
                         </label>
                     </div>
-                </form>    
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-outline-success" (click)="updatePromocion(idPromocion)">Actualizar</button>
-            <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
+                </div> 
+                <div class="modal-footer">
+                    <button class="btn btn-outline-success" type="submit">Actualizar</button>
+                    <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
+                </div>
+            </form>
         </div>
     </ng-template>
-
-    <!-- Inicia el modal VerImagen-->
-    <!-- <ng-template #contentImg let-c="close" let-d="dismiss">
-        <div class="modal-header">
-            <h4 class="modal-title text-muted">{{ModalDesc}}</h4>
-        </div>
-        <div class="modal-body">
-            <div class="row div-space text-center">
-                <div class="col space-12">
-                    <img src="{{ModalImg}}" width="100%">
-                    {{ModalImg}}
-                </div>
-            </div>    
-        </div>
-        <div class="row div-space">
-            <form [formGroup]="formUpdate">
-                <div class="col">
-                    <h6 class="text-muted">Imagen</h6>
-                    <label class="btn btn-secondary btn-file">Browse
-                        <input name="file" type="file" (change)="onFileChangeUp($event)" formControlName="RealImgUpdate">
-                        <input type="hidden" name="fileHidden" formControlName="imageInputUpdate"/>
-                        <input type="hidden" name="fileHidden" formControlName="promoIdUp"/>
-                    </label>
-                </div>
-            </form>    
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-outline-success" type="button" (click)="updateImage(ModalIdPromo)">Actualizar</button>
-            <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
-        </div>
-    </ng-template> -->
 </div>
 

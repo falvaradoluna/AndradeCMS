@@ -1,12 +1,15 @@
 export interface IPromociones {
-    idPromocion:        number,
-    idTipoPromocion:    number,
-    idEmpresa:          number,
-    idSucursal:         number,
-    idMarca:            number,
-    descripPromocion:   string,
-    po_RutaImagen:      string,
-    idUsuario:          number,
-    estatus:            number,
-    pathImagen:         string        
+    po_IdPromocion:        number,
+    po_IdTipoPromocion:    number,
+    po_ConsImg:            number,
+    po_idEmpresa:          number,
+    po_IdSucursal:         number,
+    po_IdMarca:            number,
+    po_Descripcion:        string,
+    po_IdUsuario:          string,
+    po_Estatus:            number,
+    po_timestamp:          number,
+    po_vigencia:           string,
+    ti_Nombre:             string,
+    pathImagen:            string
 }

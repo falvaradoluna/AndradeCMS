@@ -2,9 +2,6 @@ var CatUnView = require('../views/reference'),
     ModelView = require('../models/dataAccess'),
     fs = require("fs");
 
-    var pathSaveUni = "C:\\Desarrollo\\AndradeCMSDocumentos\\public\\imagesUnidades\\";
-    var pathSaveFic = "C:\\Desarrollo\\AndradeCMSDocumentos\\public\\fichas\\";
-
 var catunidad = function(conf) {
     this.conf = conf || {};
     this.view = new CatUnView();
@@ -15,6 +12,25 @@ var catunidad = function(conf) {
     this.response = function() {
         this[this.conf.funcionalidad](this.conf.req, this.conf.res, this.conf.next);
     };
+};
+
+//api/catunidad/getparametros
+catunidad.prototype.get_getparametros = function( req, res, next ){
+    var self = this;
+    var recurso = req.query.recurso;
+    // console.log("Query", req.query);
+    var params = [
+        { name: 'recurso', value: recurso, type: self.model.types.STRING }
+    ];
+
+    this.model.query("Parametros_GetParams_SP", params, function( error, result ){
+        // console.log(result);
+        // console.log(error);
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
 };
 
 //api/catunidad/unidadesnuevas
@@ -55,31 +71,30 @@ catunidad.prototype.get_imgunidad = function( req, res, next ){
 
 // "api/catunidad/insertimagen"
 catunidad.prototype.post_insertimagen = function(req, res, next) {
-    //console.log( "Hola" );
-    //console.log( req.body );
+    console.log("InsertIMG");
     var self = this;
     var ci_IdCatUnidad      = req.body.IdCatUnidad;
-    var ci_RutaImagen       = req.body.imageInput.filename;
     var ci_IdTipoImagen     = req.body.tipoImg;
-    var ci_tipo             = req.body.tipoImgtxt;
-    // //console.log('QueryString = ' + req.query);
-    console.log("TipoImagen", ci_tipo);
+
+    //Variables SaveImage
+    var ruta          = req.body.rutaSavetxtImg;
+    var TipoImagen    = req.body.tipoImgtxtImg;
+    var prefijoUnidad = req.body.prefijotxtImg;
+
     var params = [
         { name: 'ci_IdCatUnidad',   value: ci_IdCatUnidad, type: self.model.types.INT },
-        { name: 'ci_RutaImagen',    value: ci_RutaImagen, type: self.model.types.STRING },
-        { name: 'ci_IdTipoImagen',  value: ci_IdTipoImagen, type: self.model.types.INT },
-        { name: 'ci_tipo',          value: ci_tipo, type: self.model.types.STRING }
+        { name: 'ci_IdTipoImagen',  value: ci_IdTipoImagen, type: self.model.types.INT }
     ];
-    //console.log( "Parametros", params );
 
     this.model.query('catImg_INSERT_SP', params, function (error, result) {
-       console.log("Error", error);
-       console.log("result", result);
+       console.log("ruta", ruta);
+       console.log("TipoImagen", TipoImagen);
+       console.log("prefijoUnidad", prefijoUnidad);
         if (result.length > 0) {
-            //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
-            var newName = result[0].imgName;
-            var pathname = pathSaveUni + newName;
-            //var pathname = pathSaveUni + req.body.imageInput.filename;
+            var newName = prefijoUnidad + ci_IdCatUnidad + "_" + result[0].consImg + TipoImagen;
+            console.log("Name", newName);
+            var pathname = ruta + newName;
+            console.log("Path", pathname)
             require("fs").writeFile( pathname , req.body.imageInput.value, 'base64', function(err) {
                 //console.log(err);
                 if( err ){
@@ -89,7 +104,6 @@ catunidad.prototype.post_insertimagen = function(req, res, next) {
                     console.log('Se ha guardado');
                 }
             });
-         //console.log("resultaaaaaaa " + result[0]);
         }
         self.view.expositor(res, {
             error: error,
@@ -104,28 +118,29 @@ catunidad.prototype.post_updateimagen = function(req, res, next) {
     //console.log( req.body );
     var self = this;
     var ci_IdCatUnidad      = req.body.IdCatUnidad;
-    var ci_RutaImagen       = req.body.imageInput.filename;
     var ci_IdTipoImagen     = req.body.tipoImg;
     var ci_IdImagen         = req.body.Idimg;
-    var ci_tipo             = req.body.tipoImgtxt;
-    // //console.log('QueryString = ' + req.query);
+    console.log('QueryString = ' + req.body);
+
+    //Variables para armar el nombres
+    var ruta          = req.body.rutaSavetxtImg;
+    var TipoImagen    = req.body.tipoImgtxtImg;
+    var prefijoUnidad = req.body.prefijotxtImg;
 
     var params = [
         { name: 'ci_IdCatUnidad',   value: ci_IdCatUnidad, type: self.model.types.INT },
-        { name: 'ci_RutaImagen',    value: ci_RutaImagen, type: self.model.types.STRING },
         { name: 'ci_IdTipoImagen',  value: ci_IdTipoImagen, type: self.model.types.INT },
-        { name: 'ci_IdImagen',      value: ci_IdImagen, type: self.model.types.INT },
-        { name: 'ci_tipo',          value: ci_tipo, type: self.model.types.STRING }
+        { name: 'ci_IdImagen',      value: ci_IdImagen, type: self.model.types.INT }
     ];
-    //console.log( "Parametros", params );
+    console.log( "Parametros", params );
 
     this.model.query('catImg_UPDATE_SP', params, function (error, result) {
         console.log("error",error );
         console.log("result",result );
         if (result.length > 0) {
             //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
-            var newName = result[0].imgName
-            var pathname = pathSaveUni + newName;
+            var newName = prefijoUnidad + ci_IdCatUnidad + "_" + result[0].consImg + TipoImagen;
+            var pathname = ruta + newName;
             require("fs").writeFile( pathname , req.body.imageInput.value, 'base64', function(err) {
                 //console.log(err);
                 if( err ){
@@ -190,26 +205,27 @@ catunidad.prototype.post_insertficha = function(req, res, next) {
     //console.log( req.body );
     var self = this;
     var caf_idCatUnidad   = req.body.caf_idCatUnidad;
-    var caf_RutaFicha     = req.body.FichaInput.filename;
     var caf_IdTipoImages  = req.body.tipo;
-    var tipoFicha         = req.body.tipoFicha;
     // //console.log('QueryString = ' + req.query);
+
+    var ruta            = req.body.rutaSavetxt;
+    var tipoFicha       = req.body.tipoFicha;
+    var prefijoFicha   = req.body.prefijotxt;
 
     var params = [
         { name: 'caf_idCatUnidad',   value: caf_idCatUnidad, type: self.model.types.INT },
-        { name: 'caf_RutaFicha',     value: caf_RutaFicha, type: self.model.types.STRING },
-        { name: 'caf_IdTipoImages',  value: caf_IdTipoImages, type: self.model.types.INT },
-        { name: 'tipoFicha',         value: tipoFicha, type: self.model.types.STRING }
+        { name: 'caf_IdTipoImages',  value: caf_IdTipoImages, type: self.model.types.INT }
     ];
-    // console.log( "Parametros", params );
-
+    
     this.model.query('CatFic_INSERT_SP', params, function (error, result) {
         console.log("error", error);
         console.log("result", result);
         if (result.length > 0) {
             //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
-            var newName = result[0].ficName;
-            var pathname = pathSaveFic + newName;
+            var newName = prefijoFicha + caf_idCatUnidad + "_" + result[0].consFicha + tipoFicha;
+            console.log("newName", newName);
+            var pathname = ruta + newName;
+            console.log("pathname", pathname);
             require("fs").writeFile( pathname , req.body.FichaInput.value, 'base64', function(err) {
                 //console.log(err);
                 if( err ){
@@ -235,29 +251,29 @@ catunidad.prototype.post_updateficha = function(req, res, next) {
     var self = this;
     var caf_idFicha         = req.body.idFicha;
     var caf_idCatUnidad     = req.body.caf_idCatUnidad
-    var caf_RutaFicha       = req.body.FichaInput.filename;
     var caf_IdTipoImages    = req.body.tipo;
-    var tipoFicha           = req.body.tipoFicha;
     // //console.log('QueryString = ' + req.query);
+
+    //Variables save Ficha
+    var ruta            = req.body.rutaSavetxt;
+    var tipoFicha       = req.body.tipoFicha;
+    var prefijoFicha   = req.body.prefijotxt;
 
     var params = [
         { name: 'caf_idFicha',          value: caf_idFicha, type: self.model.types.INT },
         { name: 'caf_idCatUnidad',      value: caf_idCatUnidad, type: self.model.types.INT },
-        { name: 'caf_RutaFicha',        value: caf_RutaFicha, type: self.model.types.STRING },
-        { name: 'caf_IdTipoImages',     value: caf_IdTipoImages, type: self.model.types.INT },
-        { name: 'tipoFicha',            value: tipoFicha, type: self.model.types.STRING }
+        { name: 'caf_IdTipoImages',     value: caf_IdTipoImages, type: self.model.types.INT }
     ];
-    console.log( "Parametros", params );
 
     this.model.query('CatFic_UPDATE_SP', params, function (error, result) {
         console.log("error", error);
         console.log("result",result );
         if (result.length > 0) {
-            //var pathname = 'src/file/unidades/imgenes/' + req.body.imageInput.filename;
-            var newName = result[0].ficName;
-            var pathname = pathSaveFic + newName;
+            
+            var newName = prefijoFicha + caf_idCatUnidad + "_" + result[0].consFicha + tipoFicha;
+            var pathname = ruta + newName;
             require("fs").writeFile( pathname , req.body.FichaInput.value, 'base64', function(err) {
-                //console.log(err);
+                
                 if( err ){
                     console.log('Ha ocurrido un error: ' + err);
                 }
@@ -265,7 +281,7 @@ catunidad.prototype.post_updateficha = function(req, res, next) {
                     console.log('Se ha guardado');
                 }
             });
-         //console.log("resultaaaaaaa " + result[0]);
+            
         }
         self.view.expositor(res, {
             error: error,
@@ -390,6 +406,25 @@ catunidad.prototype.get_deleteatributos = function( req, res, next ){
     ];
 
     this.model.query("CatAtributos_DELETE_SP", params, function( error, result ){
+        // console.log(result);
+        // console.log(error);
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+//api/catunidad/countimg
+catunidad.prototype.get_countimg = function( req, res, next ){
+    var self = this;
+    var ci_IdCatUnidad = req.query.ci_IdCatUnidad;
+    // console.log("Query", req.query);
+    var params = [
+        { name: 'ci_IdCatUnidad', value: ci_IdCatUnidad, type: self.model.types.INT }
+    ];
+
+    this.model.query("catImg_CountTotalImagenes_SP", params, function( error, result ){
         // console.log(result);
         // console.log(error);
         self.view.expositor(res, {

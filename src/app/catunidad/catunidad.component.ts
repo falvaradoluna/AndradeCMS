@@ -24,6 +24,8 @@ import { ICatImg } from "./catimagenes";
 import { IServerResponse } from "../promociones/ServerResponse";
 import { ICatFichas } from "./catfichas";
 import { ICatAtributos } from "./atributos";
+import { IParametros } from "./parametros";
+import {  Compiler } from '@angular/core';
 
 @Component({
   selector: 'app-catunidad',
@@ -33,36 +35,43 @@ import { ICatAtributos } from "./atributos";
 })
 export class CatunidadComponent implements OnInit {
 
-    //RUta
-    serverPathImg = 'http://192.168.20.92:3420/imagesUnidades/';
-    serverPathFicha = 'http://192.168.20.92:3420/fichas/';
-
     public errorMessage: any;
-    public data :       object;
-    public temp_var:    Object = false;
-    public img_var:     Object = false;
-    public atr_var:     Object = false;
-    ci_IdCatUnidad:     any;
-    showFicha:          number;
-    rutaFicha:          any;
-    showIcono:          any;
-    cafIdCatUnidad:     any;
-    fichaId:            any;
-    showAddAtributo:    any;
-    cataIdCatUnidad:    any;
-    cataidAtributo:     any;
+    public data :        object;
+    public temp_var:     Object = false;
+    public img_var:      Object = false;
+    public atr_var:      Object = false;
+    ci_IdCatUnidad:      any;
+    showFicha:           number;
+    rutaFicha:           any;
+    showIcono:           any;
+    cafIdCatUnidad:      any;
+    fichaId:             any;
+    showAddAtributo:     any;
+    cataIdCatUnidad:     any;
+    cataidAtributo:      any;
+    countImagenes:       any;
 
+    //Variables de parametros;
+    prefijo:    any;
+    rutaSave:   any;
+    rutaGet:    any;
+    limitImg:   any;
+    limitAtr:   any;
+    atrLength:  any;
 
     //Formulario de la imagen
     formImg:    FormGroup;
-    RealImg     = new FormControl("");
-    imageInput  = new FormControl("");
-    IdCatUnidad = new FormControl("");
-    tipoImg     = new FormControl("");
-    Idimg       = new FormControl("");
-    tipoImgtxt  = new FormControl("");
+    RealImg             = new FormControl("");
+    imageInput          = new FormControl("");
+    IdCatUnidad         = new FormControl("");
+    tipoImg             = new FormControl("");
+    Idimg               = new FormControl("");
+    rutaSavetxtImg      = new FormControl("");
+    prefijotxtImg       = new FormControl("");
+    tipoImgtxtImg       = new FormControl("");
+    
 
-    //Formulario
+    //Formulario Ficha
     formFicha:      FormGroup;
     RealFicha       = new FormControl("");
     FichaInput      = new FormControl("");
@@ -70,20 +79,27 @@ export class CatunidadComponent implements OnInit {
     tipo            = new FormControl("");
     idFicha         = new FormControl("");
     tipoFicha       = new FormControl("");
+    prefijotxt      = new FormControl("");
+    rutaSavetxt     = new FormControl("");
+    tipoImgtxt      = new FormControl("");
 
 
     //Formulario Atributos
     formAtributo: FormGroup;
     Atributo      = new FormControl("");
 
-    constructor(private _http: HttpClient, private modalService: NgbModal, private _serviceUnidad: CatunidadService, public fb: FormBuilder) { 
+    constructor(private _http: HttpClient, private modalService: NgbModal, private _serviceUnidad: CatunidadService, public fb: FormBuilder, private _compiler: Compiler) {
+        this._compiler.clearCache();
+        
         this.formImg = fb.group({
-            "RealImg":      this.RealImg,
-            "imageInput":   this.imageInput,
-            "IdCatUnidad":  this.IdCatUnidad,
-            "tipoImg":      this.tipoImg,
-            "Idimg":        this.Idimg,
-            "tipoImgtxt":   this.tipoImgtxt
+            "RealImg":          this.RealImg,
+            "imageInput":       this.imageInput,
+            "IdCatUnidad":      this.IdCatUnidad,
+            "tipoImg":          this.tipoImg,
+            "Idimg":            this.Idimg,
+            "tipoImgtxtImg":    this.tipoImgtxtImg,
+            "prefijotxtImg":    this.prefijotxtImg,
+            "rutaSavetxtImg":   this.rutaSavetxtImg
         });
 
         this.formFicha = fb.group({
@@ -92,7 +108,9 @@ export class CatunidadComponent implements OnInit {
             "caf_idCatUnidad":  this.caf_idCatUnidad,
             "tipo":             this.tipo,
             "idFicha":          this.idFicha,
-            "tipoFicha":         this.tipoFicha
+            "tipoFicha":        this.tipoFicha,
+            "prefijotxt":       this.prefijotxt,
+            "rutaSavetxt":      this.rutaSavetxt
         });
 
         this.formAtributo = fb.group({
@@ -102,15 +120,51 @@ export class CatunidadComponent implements OnInit {
 
     private _urlgetUnidades = "api/catunidad/unidadesnuevas";
     private _urlGetAtrById  = "api/catunidad/getatributobyid";
+    private _urlCountImagen = "api/catunidad/countimg";
 
     resImganes:     ICatImg[] = [];
     serverResponse: IServerResponse[] = [];
     resFichas:      ICatFichas[] = [];
     resAtributos:   ICatAtributos[] = [];
+    resParametros:  IParametros[] = [];
+    imagesUnidad:   any = [];
+    fichasUnidad:   any = [];
 
     ngOnInit() {
         this.getUnidades();
     }
+
+    getParametros(recurso){
+        this._serviceUnidad.GetParametros( { recurso: recurso } )
+        .subscribe( resParametros => {
+            this.resParametros = resParametros;
+            if( recurso == "ATRIBUTO" ){
+                if( this.resParametros[0].pr_TipoParametro == "LIMIT" ){
+                    this.limitAtr = this.resParametros[0].pr_ValorString1;
+                }
+            }else{
+                if( this.resParametros[0].pr_TipoParametro == "PREFIJO" ){
+                    this.prefijo = this.resParametros[0].pr_ValorString1;
+                }
+                if(this.resParametros[1].pr_TipoParametro == "RUTASAVE"){
+                    this.rutaSave = this.resParametros[1].pr_ValorString1;
+                }
+                if(this.resParametros[2].pr_TipoParametro == "RUTAGET"){
+                    this.rutaGet = this.resParametros[2].pr_ValorString1;
+                }
+                if(this.resParametros[3].pr_TipoParametro == "LIMIT"){
+                    this.limitImg = this.resParametros[3].pr_ValorString1
+                }
+            }
+
+            console.log( "Atributo", this.limitAtr );
+            console.log("LIMITPA", this.limitImg);
+            console.log("PrefijoPA", this.prefijo);
+            console.log("RUTASAVEPA", this.rutaSave);
+            console.log("RUTAGETPA", this.rutaGet);
+        },
+        error => this.errorMessage = <any>error);
+    };
 
     getUnidades(){
         this._http.get(this._urlgetUnidades).subscribe((res: Response) => {
@@ -122,22 +176,33 @@ export class CatunidadComponent implements OnInit {
     getImages(ci_IdCatUnidad){
         this._serviceUnidad.GetImgsUnidad( { ci_IdCatUnidad: ci_IdCatUnidad } )
         .subscribe( resImganes => {
+            this.imagesUnidad = [];
             this.img_var = true;
             this.resImganes = resImganes;
-            var pathServerImg = this.serverPathImg;
+            var getRuta = this.rutaGet;
+            var prefijillo = this.prefijo;
+            var imagenesUnidad = this.imagesUnidad;
             this.resImganes.forEach(function( item, key ){
-                item.ci_RutaImagen = pathServerImg + item.ci_RutaImagen;
+               item.pathImagen = getRuta + prefijillo + item.ci_IdCatUnidad + "_" + item.ci_ConsImg + item.ti_Nombre; 
             });
-            console.log( this.resImganes );
-            console.log( "ID de la unidad", this.ci_IdCatUnidad );
+            this.imagesUnidad = imagenesUnidad;
         },
         error => this.errorMessage = <any>error);
     };    
 
+    countImag(ci_IdCatUnidad){
+        let Params = new HttpParams();
+        Params = Params.append("ci_IdCatUnidad", ci_IdCatUnidad);
+        this._http.get(this._urlCountImagen, {params: Params}).subscribe((res: Response) => {
+           this.countImagenes = res[0].TotalImages;
+           console.log("Res", res)
+           console.log("CountImg", this.countImagenes);
+          });
+    };
+
     onFileChange($event) {
         let reader = new FileReader();
         let file = $event.target.files[0]; 
-        console.log( file.type );
         if( file.type != "image/jpeg" && file.type != "image/png" ){
             swal({
                 type: 'error',
@@ -159,22 +224,20 @@ export class CatunidadComponent implements OnInit {
             if( file.type == "image/jpeg" ){
                 var str = file.name;
                 var ext = '.' + str.split('.').pop();
-                console.log(ext)
                 this.formImg.controls['tipoImg'].setValue(1);
-                this.formImg.controls["tipoImgtxt"].setValue(ext);
+                this.formImg.controls["tipoImgtxtImg"].setValue(ext);
             }else{
                 var str = file.name;
                 var ext = '.' + str.split('.').pop();
-                console.log(ext)
                 this.formImg.controls['tipoImg'].setValue(2);
-                this.formImg.controls["tipoImgtxt"].setValue(ext);
+                this.formImg.controls["tipoImgtxtImg"].setValue(ext);
             }
-            console.log( "ID de la unidad en el onchange", this.ci_IdCatUnidad );
-            console.log( "ID del form", this.formImg.value.IdCatUnidad );
         }   
     }
 
     saveImage() {
+        this.formImg.controls["rutaSavetxtImg"].setValue(this.rutaSave);
+        this.formImg.controls["prefijotxtImg"].setValue(this.prefijo);
         swal({
             title: '¿Guardar la imagen?',
             type: 'warning',
@@ -188,18 +251,29 @@ export class CatunidadComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
-                console.log( this.formImg );
-                this._serviceUnidad.saveImagen( this.formImg )
-                .subscribe( serverResponse => {
+                if( this.countImagenes == this.limitImg ){
                     swal(
-                        'Guardado',
-                        'Se guardo la promción con éxito.',
-                        'success'
-                    );
-                    this.serverResponse = serverResponse;
-                    this.getImages(this.ci_IdCatUnidad);
-                },
-                error => this.errorMessage = <any>error );
+                        'ALTO',
+                        'Solo puedes cargar 5 imagenes por unidad',
+                        'error'
+                      );
+                }else{
+                    this.formImg.controls["rutaSavetxtImg"].setValue(this.rutaSave);
+                    this.formImg.controls["prefijotxtImg"].setValue(this.prefijo);
+                    console.log( "Imagen", this.formImg );
+                    this._serviceUnidad.saveImagen( this.formImg )
+                    .subscribe( serverResponse => {
+                        swal(
+                            'Guardado',
+                            'Se guardo la imagen con éxito.',
+                            'success'
+                        );
+                        this.serverResponse = serverResponse;
+                        this.getImages(this.ci_IdCatUnidad);
+                        this.countImag(this.ci_IdCatUnidad);
+                    },
+                    error => this.errorMessage = <any>error );
+                }
             } else if (result.dismiss === 'cancel') {
               swal(
                 'Canelado',
@@ -210,44 +284,9 @@ export class CatunidadComponent implements OnInit {
         });
     };
 
-    onFileChangeUp($event, ci_IdImagen, ci_IdCatUnidad) {
-        let reader = new FileReader();
-        let file = $event.target.files[0]; 
-        console.log( file.type );
-        if( file.type != "image/jpeg" && file.type != "image/png" ){
-            swal({
-                type: 'error',
-                title: 'Oops...',
-                text: 'Seleccione una imagen JPG/PNG'
-              });
-            this.formImg.controls['RealImg'].setValue("");
-        }else{
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                this.formImg.controls['imageInput'].setValue({
-                    filename: file.name,
-                    filetype: file.type,
-                    value: reader.result.split(',')[1]
-                });
-            };
-            this.formImg.controls['imageInput'].setValue(file ? file : '');
-            if( file.type == "image/jpeg" ){
-                var str = file.name;
-                var ext = '.' + str.split('.').pop();
-                console.log(ext)
-                this.formImg.controls['tipoImg'].setValue(1);
-                this.formImg.controls["tipoImgtxt"].setValue(ext);
-            }else{
-                var str = file.name;
-                var ext = '.' + str.split('.').pop();
-                console.log(ext)
-                this.formImg.controls['tipoImg'].setValue(2);
-                this.formImg.controls["tipoImgtxt"].setValue(ext);
-            }
-        }   
-    };
-
     updateImage(ci_IdImagen, ci_IdCatUnidad){
+        this.formImg.controls["rutaSavetxtImg"].setValue(this.rutaSave);
+        this.formImg.controls["prefijotxtImg"].setValue(this.prefijo);
         this.formImg.controls['RealImg'].setValue("");
         this.formImg.controls['IdCatUnidad'].setValue(ci_IdCatUnidad);
         this.formImg.controls['Idimg'].setValue(ci_IdImagen);
@@ -264,6 +303,9 @@ export class CatunidadComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
+                this.formImg.controls["rutaSavetxtImg"].setValue(this.rutaSave);
+                this.formImg.controls["prefijotxtImg"].setValue(this.prefijo);
+                console.log( "UpdateFormImg", this.formImg );
                 this._serviceUnidad.updateImagen( this.formImg )
                 .subscribe( serverResponse => {
                     swal(
@@ -272,6 +314,8 @@ export class CatunidadComponent implements OnInit {
                         'success'
                     );
                     this.serverResponse = serverResponse;
+                    location.reload();
+                    this.getUnidades();
                     this.getImages(ci_IdCatUnidad);
                 },
                 error => this.errorMessage = <any>error );
@@ -285,24 +329,68 @@ export class CatunidadComponent implements OnInit {
         });
     };
 
+    deleteImage( ci_IdImagen, ci_IdCatUnidad ){
+        swal({
+            title: '¿Desactivar la imagen?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Desactivar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false,
+        }).then((result) => {
+            if (result.value) {
+                // console.log( "Id de la imagen", ci_IdImagen );
+                // console.log( "Id de la imagen", ci_IdCatUnidad );
+                this._serviceUnidad.DeleteImgs( {ci_IdCatUnidad:ci_IdCatUnidad, ci_IdImagen:ci_IdImagen} )
+                .subscribe( serverResponse => {
+                    this._compiler.clearCache();
+                    swal(
+                        'Desactivada',
+                        'Se desactivo la imagen con éxito.',
+                        'success'
+                    );
+                    this.countImag(ci_IdCatUnidad);
+                    this.serverResponse = serverResponse;
+                    this.getImages(ci_IdCatUnidad);
+                    this.formImg.controls['RealImg'].setValue("");;
+                },
+                error => this.errorMessage = <any>error );
+            } else if (result.dismiss === 'cancel') {
+              swal(
+                'Canelado',
+                'No se desactivo la imagen.',
+                'error'
+              );
+            }
+        });
+    };
+
     getFichas(caf_IdCatUnidad){
         this.resFichas = [];
         this.rutaFicha = "";
-
+        // console.log("Fichas unidad");
         this._serviceUnidad.GetFichasUnidad( { caf_IdCatUnidad: caf_IdCatUnidad } )
         .subscribe( resFichas => {
             this.resFichas = resFichas
-            var pathServerFicha = this.serverPathFicha;
+            this.fichasUnidad = [];
+            var getRuta = this.rutaGet;
+            var prefijillo = this.prefijo;
+            var respuestaFichas = [];
             this.resFichas.forEach(function( item, key ){
-                item.caf_RutaFicha = pathServerFicha + item.caf_RutaFicha;
+                respuestaFichas.push(getRuta + prefijillo + item.caf_idCatUnidad + "_" + item.caf_ConsImg + item.ti_Nombre);
             });
-            
+            this.fichasUnidad = respuestaFichas;
+            // console.log("fichasUnidad", this.fichasUnidad);
             if(this.resFichas[0] == undefined){
                 this.showFicha = 0;
             }else{
                 this.showFicha = 1;
-                this.rutaFicha = this.resFichas[0].caf_RutaFicha;
-                console.log(this.resFichas[0]);
+                this.rutaFicha = respuestaFichas;
+                console.log("rutaFicha", this.rutaFicha);
                 this.fichaId = this.resFichas[0].caf_idFicha;
             }
         },
@@ -312,7 +400,7 @@ export class CatunidadComponent implements OnInit {
     onFileChangeFicha($event) {
         let reader = new FileReader();
         let file = $event.target.files[0];
-        console.log( file );
+        // console.log( file );
         if( file.type != "application/pdf" ){
             swal({
                 type: 'error',
@@ -323,7 +411,7 @@ export class CatunidadComponent implements OnInit {
         }else{
             var str = file.name;
             var ext = '.' + str.split('.').pop();
-            console.log(ext)
+            // console.log(ext)
             this.formFicha.controls["tipoFicha"].setValue(ext);
             this.formFicha.controls['tipo'].setValue(3);
             this.formFicha.controls["caf_idCatUnidad"].setValue(this.cafIdCatUnidad);
@@ -340,7 +428,8 @@ export class CatunidadComponent implements OnInit {
     };
 
     saveFicha(){
-        console.log( this.formFicha );
+        this.formFicha.controls["rutaSavetxt"].setValue(this.rutaSave);
+        this.formFicha.controls["prefijotxt"].setValue(this.prefijo);
         if(this.showFicha == 0){
             var txtTitle    = "¿Guardar la ficha?";
             var txtButton   = "Guardar";
@@ -365,7 +454,9 @@ export class CatunidadComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
-                console.log( this.formFicha );
+                this.formFicha.controls["rutaSavetxt"].setValue(this.rutaSave);
+                this.formFicha.controls["prefijotxt"].setValue(this.prefijo);
+                console.log( "Ficha", this.formFicha );
                 this._serviceUnidad.saveFicha( this.formFicha )
                 .subscribe( serverResponse => {
                     swal(
@@ -389,6 +480,8 @@ export class CatunidadComponent implements OnInit {
 
     updateFicha(){
         this.formFicha.controls["idFicha"].setValue(this.fichaId);
+        this.formFicha.controls["rutaSavetxt"].setValue(this.rutaSave);
+        this.formFicha.controls["prefijotxt"].setValue(this.prefijo);
         swal({
             title: "¿Actualizar la ficha?",
             type: 'warning',
@@ -402,7 +495,9 @@ export class CatunidadComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
-                // console.log( "FormUpdate", this.formFicha );
+                this.formFicha.controls["rutaSavetxt"].setValue(this.rutaSave);
+                this.formFicha.controls["prefijotxt"].setValue(this.prefijo);
+                console.log( "FormUpdate", this.formFicha );
                 this._serviceUnidad.updateFicha( this.formFicha )
                 .subscribe( serverResponse => {
                     swal(
@@ -424,44 +519,6 @@ export class CatunidadComponent implements OnInit {
         });
     };
 
-    deleteImage( ci_IdImagen, ci_IdCatUnidad ){
-        swal({
-            title: '¿Desactivar la imagen?',
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Desactivar',
-            cancelButtonText: 'Cancelar',
-            confirmButtonClass: 'btn btn-success',
-            cancelButtonClass: 'btn btn-danger',
-            buttonsStyling: false,
-        }).then((result) => {
-            if (result.value) {
-                console.log( "Id de la imagen", ci_IdImagen );
-                console.log( "Id del seminuevo", ci_IdCatUnidad );
-                this._serviceUnidad.DeleteImgs( {ci_IdCatUnidad:ci_IdCatUnidad, ci_IdImagen:ci_IdImagen} )
-                .subscribe( serverResponse => {
-                    swal(
-                        'Desactivada',
-                        'Se desactivo la imagen con éxito.',
-                        'success'
-                    );
-                    this.serverResponse = serverResponse;
-                    this.getImages(ci_IdCatUnidad);
-                    this.formImg.controls['RealImg'].setValue("");
-                },
-                error => this.errorMessage = <any>error );
-            } else if (result.dismiss === 'cancel') {
-              swal(
-                'Canelado',
-                'No se desactivo la imagen.',
-                'error'
-              );
-            }
-        });
-    };
-
     deleteFicha( ci_IdImagen, ci_IdCatUnidad ){
         swal({
             title: '¿Desactivar la ficha?',
@@ -476,8 +533,8 @@ export class CatunidadComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
-                console.log( "Id de la ficha", this.fichaId );
-                console.log( "Id del unidad", this.cafIdCatUnidad );
+                // console.log( "Id de la ficha", this.fichaId );
+                // console.log( "Id del unidad", this.cafIdCatUnidad );
                 this._serviceUnidad.deleteFicha( {caf_idFicha: this.fichaId, caf_idCatUnidad: this.cafIdCatUnidad} )
                 .subscribe( serverResponse => {
                     swal(
@@ -505,8 +562,8 @@ export class CatunidadComponent implements OnInit {
         .subscribe( resAtributos => {
             this.atr_var = true;
             this.resAtributos = resAtributos;
-            console.log( this.resAtributos );
-            console.log( "ID de la unidad", cata_idCatUnidad );
+            this.atrLength = this.resAtributos.length;
+            console.log("Arreglo", this.atrLength);
         },
         error => this.errorMessage = <any>error);
     };
@@ -541,29 +598,39 @@ export class CatunidadComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
-                var desAtributo = this.formAtributo.value.Atributo;
-                this._serviceUnidad.SaveAtributos( { cata_idCatUnidad: this.cataIdCatUnidad , cata_Descripcion: desAtributo } )
-                .subscribe( serverResponse => {
-                    if( serverResponse[0].success == 1 ){
-                        swal(
-                            'Guardado',
-                            serverResponse[0].msg,
-                            'success'
-                        );
-                        this.serverResponse = serverResponse;
-                        this.getAtributos(this.cataIdCatUnidad);
-                        this.formAtributo.controls["Atributo"].setValue("");
-                        this.showAddAtributo = 3;
-                    }else{
-                        swal(
-                            'Ups',
-                            serverResponse[0].msg,
-                            'error'
-                        );
-                    }
-                    
-                },
-                error => this.errorMessage = <any>error );
+                console.log("atrLength", this.atrLength);
+                console.log("limitAtr", this.limitAtr);
+                if(this.atrLength >= this.limitAtr){
+                    swal(
+                        'Alto',
+                        'Solo puedes agregar 5 atributos a la unidad.',
+                        'error'
+                      );
+                }else{
+                    var desAtributo = this.formAtributo.value.Atributo;
+                    this._serviceUnidad.SaveAtributos( { cata_idCatUnidad: this.cataIdCatUnidad , cata_Descripcion: desAtributo } )
+                    .subscribe( serverResponse => {
+                        if( serverResponse[0].success == 1 ){
+                            swal(
+                                'Guardado',
+                                serverResponse[0].msg,
+                                'success'
+                            );
+                            this.serverResponse = serverResponse;
+                            this.getAtributos(this.cataIdCatUnidad);
+                            this.formAtributo.controls["Atributo"].setValue("");
+                            this.showAddAtributo = 3;
+                        }else{
+                            swal(
+                                'Ups',
+                                serverResponse[0].msg,
+                                'error'
+                            );
+                        }
+                        
+                    },
+                    error => this.errorMessage = <any>error );
+                }
             } else if (result.dismiss === 'cancel') {
               swal(
                 'Canelado',
@@ -640,9 +707,6 @@ export class CatunidadComponent implements OnInit {
             buttonsStyling: false,
         }).then((result) => {
             if (result.value) {
-                console.log( "DELETE" );
-                console.log( "Unidad", this.cataIdCatUnidad );
-                console.log( "Atributo", cataidAtributo );
                 this._serviceUnidad.DeleteAtributos( 
                     { 
                         cata_idCatUnidad: this.cataIdCatUnidad, 
@@ -677,16 +741,18 @@ export class CatunidadComponent implements OnInit {
               );
             }
         });
-    }
+    };
 
     //================================================================= M O D A L E S =================================================//
 
     //========= MODAL INSERT ========//
     openImgModal(ModalImg, ci_IdCatUnidad) {
+        this.getParametros("UNIDAD");
         this.modalService.open( ModalImg, { size: "lg" } );
-        console.log( "Id de la unidad", ci_IdCatUnidad );
+        // console.log( "Id de la unidad", ci_IdCatUnidad );
         this.getImages(ci_IdCatUnidad);
         this.ci_IdCatUnidad = ci_IdCatUnidad;
+        this.countImag(ci_IdCatUnidad);
     }
 
     private getDismissReason(reason: any): string {
@@ -701,9 +767,10 @@ export class CatunidadComponent implements OnInit {
 
     //========= MODAL INSERT FICHA ========//
     openFichaModal(ModalFicha, caf_IdCatUnidad) {
+        this.getParametros("FICHA");
         this.cafIdCatUnidad = 0;
         this.modalService.open( ModalFicha);
-        console.log( "Id de la unidad", caf_IdCatUnidad );
+        // console.log( "Id de la unidad", caf_IdCatUnidad );
         this.getFichas(caf_IdCatUnidad);
         this.cafIdCatUnidad = caf_IdCatUnidad;
         //this.ci_IdCatUnidad = ci_IdCatUnidad;
@@ -719,8 +786,9 @@ export class CatunidadComponent implements OnInit {
         }
     }
 
-    //========= MODAL INSERT FICHA ========//
+    //========= MODAL INSERT Atributos ========//
     openModalAtributos(ModalAtributos, cata_idCatUnidad) {
+        this.getParametros("ATRIBUTO");
         this.formAtributo.controls["Atributo"].setValue("");
         this.modalService.open( ModalAtributos);
         this.showAddAtributo = 3;

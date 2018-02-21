@@ -31,8 +31,8 @@
 
         <div class="nested-menu">
             <a class="list-group-item" (click)="addExpandClassTip('pages')">
-                <span *ngIf="changeIconTip == 0"><i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp; {{ 'Tipos' | translate }}</span>
-                <span *ngIf="changeIconTip == 1"><i class="fa fa-chevron-up" aria-hidden="true"></i>&nbsp; {{ 'Tipos' | translate }}</span>
+                <span *ngIf="changeIconTip == 0"><i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp; {{ 'Mantenimiento de catalogos' | translate }}</span>
+                <span *ngIf="changeIconTip == 1"><i class="fa fa-chevron-up" aria-hidden="true"></i>&nbsp; {{ 'Mantenimiento de catalogos' | translate }}</span>
             </a>
             <li class="nested" [class.expand]="showMenuTip === 'pages'">
                 <ul class="submenu">
@@ -51,6 +51,26 @@
                             <i class="fa fa-tint"></i>{{ 'Tipo Combustible' | translate }}
                         </a>
                     </li>
+                    <li>
+                        <a [routerLink]="['/control/moneda']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+                            <i class="fa fa-usd"></i>&nbsp;{{ 'Moneda' | translate }}
+                        </a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['/control/pais']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+                            <i class="fa fa-globe"></i>&nbsp;{{ 'País de origen' | translate }}
+                        </a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['/carline']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+                            <i class="fa fa-tachometer" aria-hidden="true"></i> {{ 'Carline' | translate }}
+                        </a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['/marcasemi']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+                            <i class="fa fa-thumb-tack" aria-hidden="true"></i> {{ 'Marcasemi' | translate }}
+                        </a>
+                    </li>
                 </ul>
             </li>
         </div>
@@ -64,20 +84,8 @@
     <a [routerLink]="['/seminuevo']" [routerLinkActive]="['router-link-active']" class="list-group-item">
         <i class="fa fa-taxi" aria-hidden="true"></i> {{ 'SemiNuevos' | translate }}
     </a>
-    <a [routerLink]="['/control/moneda']" [routerLinkActive]="['router-link-active']" class="list-group-item">
-        <i class="fa fa-usd"></i>&nbsp;{{ 'Moneda' | translate }}
-    </a>
-    <a [routerLink]="['/control/pais']" [routerLinkActive]="['router-link-active']" class="list-group-item">
-        <i class="fa fa-globe"></i>&nbsp;{{ 'País de origen' | translate }}
-    </a>
     <a [routerLink]="['/directorio']" [routerLinkActive]="['router-link-active']" class="list-group-item">
         <i class="fa fa-address-book" aria-hidden="true"></i> {{ 'Directorio' | translate }}
-    </a>
-    <a [routerLink]="['/carline']" [routerLinkActive]="['router-link-active']" class="list-group-item">
-        <i class="fa fa-tachometer" aria-hidden="true"></i> {{ 'Carline' | translate }}
-    </a>
-    <a [routerLink]="['/marcasemi']" [routerLinkActive]="['router-link-active']" class="list-group-item">
-        <i class="fa fa-thumb-tack" aria-hidden="true"></i> {{ 'Marcasemi' | translate }}
     </a>
       <!-- <a [routerLink]="['/']" [routerLinkActive]="" class="list-group-item">
             <i class="fa fa-file-o"></i>&nbsp;{{ 'Dictamen' | translate }}

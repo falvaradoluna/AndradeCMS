@@ -2,9 +2,6 @@ var PromoView = require('../views/reference'),
 ModelView = require('../models/dataAccess'),
 fs = require("fs");
 
-var pathSave = "C:\\Desarrollo\\AndradeCMSDocumentos\\public\\promociones\\";
-var prefijoPromo = "Promo_";
-
 var promociones = function(conf) {
     this.conf = conf || {};
     this.view = new PromoView();
@@ -24,7 +21,8 @@ promociones.prototype.get_promociones = function( req, res, next ){
     var params = [];
 
     this.model.query("Promo_GetPromociones_SP", params, function( error, result ){
-        // console.log( result );
+        console.log( result );
+        console.log(error);
         if( result.length > 0){
             //console.log( "Resultado: " + result );
         }
@@ -142,41 +140,41 @@ promociones.prototype.get_getpromocionbyid = function(req, res, next) {
 };
 
 // "api/promociones/updatepromocion"
-promociones.prototype.get_updatepromocion = function(req, res, next) {
-    var self = this;
-    var po_IdTipoPromocion = req.query.po_IdTipoPromocion;
-    var po_idEmpresa = req.query.po_idEmpresa;
-    var po_IdSucursal = req.query.po_IdSucursal;
-    var po_IdMarca = req.query.po_IdMarca;
-    var po_Descripcion = req.query.po_Descripcion;
-    //var po_RutaImagen = req.query.po_RutaImagen;
-    var po_IdUsuario = req.query.po_IdUsuario;
-    var po_IdPromocion = req.query.po_IdPromocion;
-    //console.log('QueryString = ' + JSON.stringify(req.query));
+// promociones.prototype.get_updatepromocion = function(req, res, next) {
+//     var self = this;
+//     var po_IdTipoPromocion = req.query.po_IdTipoPromocion;
+//     var po_idEmpresa = req.query.po_idEmpresa;
+//     var po_IdSucursal = req.query.po_IdSucursal;
+//     var po_IdMarca = req.query.po_IdMarca;
+//     var po_Descripcion = req.query.po_Descripcion;
+//     //var po_RutaImagen = req.query.po_RutaImagen;
+//     var po_IdUsuario = req.query.po_IdUsuario;
+//     var po_IdPromocion = req.query.po_IdPromocion;
+//     //console.log('QueryString = ' + JSON.stringify(req.query));
 
-    var params = [
-        { name: 'po_IdTipoPromocion', value: po_IdTipoPromocion, type: self.model.types.INT },
-        { name: 'po_idEmpresa', value: po_idEmpresa, type: self.model.types.INT },
-        { name: 'po_IdSucursal', value: po_IdSucursal, type: self.model.types.INT },
-        { name: 'po_IdMarca', value: po_IdMarca, type: self.model.types.INT },
-        { name: 'po_Descripcion', value: po_Descripcion, type: self.model.types.STRING },
-        //{ name: 'po_RutaImagen', value: po_RutaImagen, type: self.model.types.STRING },
-        { name: 'po_IdUsuario', value: po_IdUsuario, type: self.model.types.INT },
-        { name: 'po_IdPromocion', value: po_IdPromocion, type: self.model.types.INT }
-    ];
+//     var params = [
+//         { name: 'po_IdTipoPromocion', value: po_IdTipoPromocion, type: self.model.types.INT },
+//         { name: 'po_idEmpresa', value: po_idEmpresa, type: self.model.types.INT },
+//         { name: 'po_IdSucursal', value: po_IdSucursal, type: self.model.types.INT },
+//         { name: 'po_IdMarca', value: po_IdMarca, type: self.model.types.INT },
+//         { name: 'po_Descripcion', value: po_Descripcion, type: self.model.types.STRING },
+//         //{ name: 'po_RutaImagen', value: po_RutaImagen, type: self.model.types.STRING },
+//         { name: 'po_IdUsuario', value: po_IdUsuario, type: self.model.types.INT },
+//         { name: 'po_IdPromocion', value: po_IdPromocion, type: self.model.types.INT }
+//     ];
 
-    this.model.query('Promo_UpdatePromocion_SP', params, function (error, result) {
-        //console.log('Parametros: ' + params);
-        if (result.length > 0) {
+//     this.model.query('Promo_UpdatePromocion_SP', params, function (error, result) {
+//         //console.log('Parametros: ' + params);
+//         if (result.length > 0) {
 
-         //console.log("resultaaaaaaa " + result[0]);
-        }
-        self.view.expositor(res, {
-            error: error,
-            result: result,
-        });
-    });
-};
+//          //console.log("resultaaaaaaa " + result[0]);
+//         }
+//         self.view.expositor(res, {
+//             error: error,
+//             result: result,
+//         });
+//     });
+// };
 
 // "api/promociones/deletepromociones"
 promociones.prototype.get_deletepromociones = function(req, res, next) {
@@ -206,34 +204,39 @@ promociones.prototype.post_insertpromocion = function(req, res, next) {
     // console.log( req.body.imageInput.value );
     var self = this;
     var po_IdTipoPromocion  = req.body.SelectTipoPromocion;
+    var po_idTipoImagen     = req.body.typeImg;
     var po_idEmpresa        = req.body.SelectEmpresa;
     var po_IdSucursal       = req.body.SelectSucursal;
     var po_IdMarca          = req.body.SelectMarca;
     var po_Descripcion      = req.body.TxtDescripcion;
-    var po_RutaImagen       = req.body.imageInput.filename;
     var po_IdUsuario        = req.body.idUsuario;
-    var po_tipo             = req.body.typeImg;
-    //console.log('QueryString = ' + req.query);
+    var po_vigencia         = req.body.vigencia;
+    //Variables guardar
+    var ruta                = req.body.rutaSavetxt;
+    var TipoImagen          = req.body.tipoImgtxt;
+    var prefijoPromo        = req.body.prefijotxt;
+   
 
     var params = [
         { name: 'po_IdTipoPromocion',   value: po_IdTipoPromocion, type: self.model.types.INT },
+        { name: 'po_idTipoImagen',      value: po_idTipoImagen, type: self.model.types.INT },
         { name: 'po_idEmpresa',         value: po_idEmpresa, type: self.model.types.INT },
         { name: 'po_IdSucursal',        value: po_IdSucursal, type: self.model.types.INT },
         { name: 'po_IdMarca',           value: po_IdMarca, type: self.model.types.INT },
         { name: 'po_Descripcion',       value: po_Descripcion, type: self.model.types.STRING },
-        { name: 'po_RutaImagen',        value: po_RutaImagen, type: self.model.types.STRING },
         { name: 'po_IdUsuario',         value: po_IdUsuario, type: self.model.types.INT },
-        { name: 'po_tipo',              value: po_tipo, type: self.model.types.STRING }
+        { name: 'po_vigencia',          value: po_vigencia, type: self.model.types.STRING }
     ];
-
+    console.log('Parametros', params);
     this.model.query('Promo_InsertPromocion_SP', params, function (error, result) {
         console.log("Result",result);
         console.log("Error",error);
-        console.log("ResultImg",result[0].imgName);
+        console.log("LastId",result[0].lastId);
         if (result.length > 0) {
-            var newName = result[0].imgName;
-            var pathname = pathSave + newName;
-            //var pathname = 'src/file/promociones/' + req.body.imageInput.filename;
+            var LastId = result[0].lastId;
+            var newName = prefijoPromo + LastId + TipoImagen;
+            var pathname = ruta + newName;
+            //var pathname = 'src/file/promociones/' + newName;
             require("fs").writeFile( pathname , req.body.imageInput.value, 'base64', function(err) {
                 console.log(err);
                 if( err ){
@@ -252,41 +255,61 @@ promociones.prototype.post_insertpromocion = function(req, res, next) {
     });
 };
 
-//api/promociones/updateimage
-promociones.prototype.post_updateimage = function(req, res, next){
-    //console.log( req.body.imageInputUpdate.filename );
+// "api/promociones/updatepromocion"
+promociones.prototype.post_updatepromocion = function(req, res, next) {
+    console.log( "Update" );
     var self = this;
-    var po_RutaImagen = prefijoPromo + req.body.promoIdUp + req.body.typeImgUp;
-    var po_IdPromocion = req.body.promoIdUp;
-    console.log( "TipoImagen", req.body.typeImgUp );
-    console.log("RutaImg", po_RutaImagen);
+    var po_IdPromocion      = req.body.promoId;
+    var po_IdTipoPromocion  = req.body.SelectTipoPromocion;
+    var po_idTipoImagen     = req.body.typeImg;
+    var po_idEmpresa        = req.body.SelectEmpresa;
+    var po_IdSucursal       = req.body.SelectSucursal;
+    var po_IdMarca          = req.body.SelectMarca;
+    var po_Descripcion      = req.body.TxtDescripcion;
+    var po_IdUsuario        = req.body.idUsuario;
+    //Variables guardar
+    var ruta                = req.body.rutaSavetxt;
+    var TipoImagen          = req.body.tipoImgtxt;
+    var prefijoPromo        = req.body.prefijotxt;
+
     var params = [
-        { name: 'po_RutaImagen',   value: po_RutaImagen, type: self.model.types.STRING },
-        { name: 'po_IdPromocion',  value: po_IdPromocion, type: self.model.types.INT }
+        { name: 'po_IdPromocion',       value: po_IdPromocion, type: self.model.types.INT },
+        { name: 'po_IdTipoPromocion',   value: po_IdTipoPromocion, type: self.model.types.INT },
+        { name: 'po_idTipoImagen',      value: po_idTipoImagen, type: self.model.types.INT },
+        { name: 'po_idEmpresa',         value: po_idEmpresa, type: self.model.types.INT },
+        { name: 'po_IdSucursal',        value: po_IdSucursal, type: self.model.types.INT },
+        { name: 'po_IdMarca',           value: po_IdMarca, type: self.model.types.INT },
+        { name: 'po_Descripcion',       value: po_Descripcion, type: self.model.types.STRING },
+        { name: 'po_IdUsuario',         value: po_IdUsuario, type: self.model.types.INT }
     ];
-    this.model.query('Promo_UpdateImgPromo_SP', params, function (error, result) {
-        //console.log('Parametros: ' + params);
+    // console.log('Parametros', params);
+    // console.log("Ruta", ruta );
+    // console.log("TipoIMagen", TipoImagen);
+    // console.log("PrejiPromo", prefijoPromo);
+    this.model.query('Promo_UpdatePromocion_SP', params, function (error, result) {
+        // console.log("Result",result);
+        // console.log("Error",error);
         if (result.length > 0) {
-            var newName = prefijoPromo + po_IdPromocion
-            var pathname = pathSave + newName;
-            //var pathname = 'src/file/promociones/' + req.body.imageInputUpdate.filename;
-            require("fs").writeFile( pathname , req.body.imageInputUpdate.value, 'base64', function(err) {
+            var newName = prefijoPromo + po_IdPromocion + TipoImagen;
+            var pathname = ruta + newName;
+            console.log( "newName", newName);
+            console.log( "pathname", pathname);
+            //var pathname = 'src/file/promociones/' + newName;
+            require("fs").writeFile( pathname , req.body.imageInput.value, 'base64', function(err) {
+                console.log(err);
                 if( err ){
                     console.log('Ha ocurrido un error: ' + err);
                 }
                 else{
                     console.log('Se ha guardado');
                 }
-            }); 
-        }else{
-            console.log(error)
+            });
         }
         self.view.expositor(res, {
             error: error,
             result: result,
         });
     });
-   
-}
+};
 
 module.exports = promociones;
