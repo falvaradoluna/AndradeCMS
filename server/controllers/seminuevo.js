@@ -225,6 +225,29 @@ seminuevo.prototype.get_insertatributos = function( req, res, next ){
     });
 };
 
+//api/seminuevo/updateatributos
+seminuevo.prototype.get_updateatributos = function( req, res, next ){
+    var self = this;
+    var ctse_IdSeminuevo    = req.query.ctse_IdSeminuevo;
+    var ctse_idAtributo     = req.query.ctse_idAtributo;
+    var ctse_Descripcion    = req.query.ctse_Descripcion;
+    
+    var params = [
+        { name: 'ctse_IdSeminuevo',     value: ctse_IdSeminuevo, type: self.model.types.INT },
+        { name: 'ctse_idAtributo',      value: ctse_idAtributo, type: self.model.types.INT },
+        { name: 'ctse_Descripcion',     value: ctse_Descripcion, type: self.model.types.STRING }
+    ];
+
+    this.model.query("CatAtributosSemi_UPDATE_SP", params, function( error, result ){
+        console.log(result);
+        console.log(error);
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 //api/seminuevo/deleteatributos
 seminuevo.prototype.get_deleteatributos = function( req, res, next ){
     var self = this;

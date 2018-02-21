@@ -443,6 +443,58 @@ export class SeminuevoComponent implements OnInit {
         });
     };
 
+    updateAtributos(ctse_idAtributo){
+        swal({
+            title: 'Actualizar el atributo?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Actualizar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false,
+        }).then((result) => {
+            if (result.value) {
+                var desAtributo = this.formAtributo.value.Atributo;
+                this._semiService.UpdateAtributos( 
+                    { 
+                        ctse_IdSeminuevo: this.isIdSeminuevo, 
+                        ctse_idAtributo: this.ctseidAtributo, 
+                        ctse_Descripcion: desAtributo } 
+                    )
+                .subscribe( serverResponse => {
+                    if( serverResponse[0].success == 1 ){
+                        swal(
+                            'Actualizado',
+                            serverResponse[0].msg,
+                            'success'
+                        );
+                        this.serverResponse = serverResponse;
+                        this.getAtributos(this.isIdSeminuevo);
+                        this.formAtributo.controls["Atributo"].setValue("");
+                        this.showAddAtributo = 3;
+                    }else{
+                        swal(
+                            'Ups',
+                            serverResponse[0].msg,
+                            'error'
+                        );
+                    }
+                    
+                },
+                error => this.errorMessage = <any>error );
+            } else if (result.dismiss === 'cancel') {
+              swal(
+                'Canelado',
+                'No se actualizo el atributo.',
+                'error'
+              );
+            }
+        });
+    };
+
     deleteAtributo(ctseidAtributo){
         swal({
             title: 'Eliminar el atributo?',
@@ -512,7 +564,7 @@ export class SeminuevoComponent implements OnInit {
         }
     }
 
-      //========= MODAL INSERT FICHA ========//
+      //========= MODAL Atributos ========//
       openModalAtributos(ModalAtributos, is_IdSeminuevo) {
         this.getParametros("ATRIBUTO_SEMI");
         this.formAtributo.controls["Atributo"].setValue("");

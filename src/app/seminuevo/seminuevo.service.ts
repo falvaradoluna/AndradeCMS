@@ -20,6 +20,7 @@ export class SeminuevoService {
   private _urlDeleteImagenSemi      = "api/seminuevo/deleteimgsemi";
   private _urlGetAtributos          = "api/seminuevo/atributos";
   private _urlInsertAtributos       = "api/seminuevo/insertatributos";
+  private _urlUpdateAtributos       = "api/seminuevo/updateatributos"
   private _urlDeleteAtributos       = "api/seminuevo/deleteatributos";
 
   constructor(private _http: HttpClient) { }
@@ -73,6 +74,17 @@ export class SeminuevoService {
         Params = Params.append("ctse_Descripcion", parameters.ctse_Descripcion);
 
         return this._http.get<IServerResponse[]>(this._urlInsertAtributos, {params: Params})
+        .catch( this.handleError );
+    };
+
+    UpdateAtributos(parameters): Observable<IServerResponse[]>{
+        
+        let Params = new HttpParams();
+        Params = Params.append("ctse_IdSeminuevo",  parameters.ctse_IdSeminuevo);
+        Params = Params.append("ctse_idAtributo",   parameters.ctse_idAtributo);
+        Params = Params.append("ctse_Descripcion",  parameters.ctse_Descripcion);
+        console.log("Servicio", Params)
+        return this._http.get<IServerResponse[]>(this._urlUpdateAtributos, {params: Params})
         .catch( this.handleError );
     };
 
