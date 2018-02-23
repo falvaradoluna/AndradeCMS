@@ -622,7 +622,7 @@ export class CatunidadComponent implements OnInit {
                             this.showAddAtributo = 3;
                         }else{
                             swal(
-                                'Ups',
+                                'Alto',
                                 serverResponse[0].msg,
                                 'error'
                             );
@@ -675,7 +675,7 @@ export class CatunidadComponent implements OnInit {
                         this.showAddAtributo = 3;
                     }else{
                         swal(
-                            'Ups',
+                            'Alto',
                             serverResponse[0].msg,
                             'error'
                         );
