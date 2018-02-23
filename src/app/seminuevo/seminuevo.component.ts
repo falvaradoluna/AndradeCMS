@@ -424,7 +424,7 @@ export class SeminuevoComponent implements OnInit {
                             this.showAddAtributo = 3;
                         }else{
                             swal(
-                                'Ups',
+                                'Alto',
                                 serverResponse[0].msg,
                                 'error'
                             );
@@ -477,7 +477,7 @@ export class SeminuevoComponent implements OnInit {
                         this.showAddAtributo = 3;
                     }else{
                         swal(
-                            'Ups',
+                            'Alto',
                             serverResponse[0].msg,
                             'error'
                         );
