@@ -18,9 +18,11 @@ carline.prototype.get_carlines = function (req, res, next) {
     var self = this;
     var params = [];
 
-    this.model.query("[Catalogo].[SP_SelCarlineCMS]", params, function (error, result) {
-        if (result.length > 0) {
-        }
+    this.model.query("[dbo].[SP_SelCarlineCMS]", params, function (error, result) {
+        console.log( "error", error );
+        console.log( "result", result );
+        // if (result.length > 0) {
+        // }
         self.view.expositor(res, {
             error: error,
             result: result
@@ -36,7 +38,7 @@ carline.prototype.get_carlinebyid = function (req, res, next) {
         { name: 'idCarline', value: idCarline, type: self.model.types.INT }
     ];
 
-    this.model.query('[Catalogo].[SEL_CarlineById_SP]', params, function (error, result) {
+    this.model.query('[dbo].[SEL_CarlineById_SP]', params, function (error, result) {
 
         if (result.length > 0) {
         }
@@ -64,7 +66,7 @@ carline.prototype.get_updateCarline = function (req, res, next) {
         { name: 'pi_IdEmpresa', value: pi_IdEmpresa, type: self.model.types.INT }
     ];
 
-    this.model.query('[Catalogo].[SP_ActCarLineCMS]', params, function (error, result) {
+    this.model.query('[dbo].[SP_ActCarLineCMS]', params, function (error, result) {
 
         if (result.length > 0) {
         }
@@ -83,7 +85,7 @@ carline.prototype.get_deleteCarline = function (req, res, next) {
         { name: 'pi_id', value: pi_id, type: self.model.types.INT }
     ];
 
-    this.model.query('[Catalogo].[SP_ElimCarLineCMS]', params, function (error, result) {
+    this.model.query('[dbo].[SP_ElimCarLineCMS]', params, function (error, result) {
 
         if (result.length > 0) {
         }
@@ -107,7 +109,7 @@ carline.prototype.post_insertCarline = function (req, res, next) {
         { name: 'pi_IdEmpresa', value: pi_IdEmpresa, type: self.model.types.INT }
     ];
 
-    this.model.query('[Catalogo].[SP_InsCarlineCMS]', params, function (error, result) {
+    this.model.query('[dbo].[SP_InsCarlineCMS]', params, function (error, result) {
 
         if (result.length > 0) {
         }

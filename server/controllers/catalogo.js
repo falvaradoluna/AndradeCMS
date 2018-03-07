@@ -18,7 +18,7 @@ catalogo.prototype.get_empresas = function (req, res, next) {
     var self = this;
     var params = [];
 
-    this.model.query("[Catalogo].[SP_SelIdEmpresas]", params, function (error, result) {
+    this.model.query("[dbo].[SP_SelIdEmpresas]", params, function (error, result) {
         if (result.length > 0) {
         }
         self.view.expositor(res, {
@@ -32,7 +32,7 @@ catalogo.prototype.get_sucursales = function (req, res, next) {
     var self = this;
     var params = [];
 
-    this.model.query("[Catalogo].[SP_SelIdSucursal]", params, function (error, result) {
+    this.model.query("[dbo].[SP_SelIdSucursal]", params, function (error, result) {
         if (result.length > 0) {
         }
         self.view.expositor(res, {
@@ -46,7 +46,7 @@ catalogo.prototype.get_puestos = function (req, res, next) {
     var self = this;
     var params = [];
 
-    this.model.query("[Catalogo].[SP_SelIdPuestos]", params, function (error, result) {
+    this.model.query("[dbo].[SP_SelIdPuestos]", params, function (error, result) {
         if (result.length > 0) {
         }
         self.view.expositor(res, {
