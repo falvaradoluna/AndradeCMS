@@ -19,7 +19,7 @@ directorio.prototype.get_directorios = function (req, res, next) {
 
     var params = [];
 
-    this.model.query("[Catalogo].[SP_SelDirectorioCMS]", params, function (error, result) {
+    this.model.query("[dbo].[SP_SelDirectorioCMS]", params, function (error, result) {
 
         if (result.length > 0) {
         }
@@ -38,7 +38,7 @@ directorio.prototype.get_directoriobyid = function (req, res, next) {
         { name: 'idDirectorio', value: directorioId, type: self.model.types.INT }
     ];
 
-    this.model.query('[Catalogo].[SEL_DirectorioById_SP]', params, function (error, result) {
+    this.model.query('[dbo].[SEL_DirectorioById_SP]', params, function (error, result) {
 
         if (result.length > 0) {
         }
@@ -86,7 +86,7 @@ directorio.prototype.get_updateDirectorio = function (req, res, next) {
         { name: 'pn_IdUsuario', value: pn_IdUsuario, type: self.model.types.INT }
     ];
 
-    this.model.query('[Catalogo].[SP_ActDirectorioCMS]', params, function (error, result) {
+    this.model.query('[dbo].[SP_ActDirectorioCMS]', params, function (error, result) {
         if (result.length > 0) {
         }
         self.view.expositor(res, {
@@ -104,7 +104,7 @@ directorio.prototype.get_deleteDirectorio = function (req, res, next) {
         { name: 'pi_id', value: pi_id, type: self.model.types.INT }
     ];
 
-    this.model.query('[Catalogo].[SP_ElimDirectorioCMS]', params, function (error, result) {
+    this.model.query('[dbo].[SP_ElimDirectorioCMS]', params, function (error, result) {
 
         if (result.length > 0) {
         }
@@ -148,7 +148,7 @@ directorio.prototype.post_insertDirectorio = function (req, res, next) {
         { name: 'pn_IdUsuario', value: pn_IdUsuario, type: self.model.types.INT }
     ];
 
-    this.model.query('[Catalogo].[SP_InsDirectorioCMS]', params, function (error, result) {
+    this.model.query('[dbo].[SP_InsDirectorioCMS]', params, function (error, result) {
         
         if (result.length > 0) {
         }

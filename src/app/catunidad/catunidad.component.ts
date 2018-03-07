@@ -134,6 +134,13 @@ export class CatunidadComponent implements OnInit {
         this.getUnidades();
     }
 
+    getMessages(){
+        // this._http.get(this._urlgetUnidades).subscribe((res: Response) => {
+        //     this.data = res;
+        //     this.temp_var = true;
+        // });
+    }
+
     getParametros(recurso){
         this._serviceUnidad.GetParametros( { recurso: recurso } )
         .subscribe( resParametros => {
@@ -157,11 +164,11 @@ export class CatunidadComponent implements OnInit {
                 }
             }
 
-            console.log( "Atributo", this.limitAtr );
-            console.log("LIMITPA", this.limitImg);
-            console.log("PrefijoPA", this.prefijo);
-            console.log("RUTASAVEPA", this.rutaSave);
-            console.log("RUTAGETPA", this.rutaGet);
+            // console.log( "Atributo", this.limitAtr );
+            // console.log("LIMITPA", this.limitImg);
+            // console.log("PrefijoPA", this.prefijo);
+            // console.log("RUTASAVEPA", this.rutaSave);
+            // console.log("RUTAGETPA", this.rutaGet);
         },
         error => this.errorMessage = <any>error);
     };
@@ -622,7 +629,7 @@ export class CatunidadComponent implements OnInit {
                             this.showAddAtributo = 3;
                         }else{
                             swal(
-                                'Ups',
+                                'Alto',
                                 serverResponse[0].msg,
                                 'error'
                             );
@@ -675,7 +682,7 @@ export class CatunidadComponent implements OnInit {
                         this.showAddAtributo = 3;
                     }else{
                         swal(
-                            'Ups',
+                            'Alto',
                             serverResponse[0].msg,
                             'error'
                         );

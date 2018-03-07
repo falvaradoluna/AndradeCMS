@@ -19,7 +19,7 @@ marcasemi.prototype.get_marcasemis = function( req, res, next ){
     
     var params = [];
 
-    this.model.query("[Catalogo].[SP_SelMarcaSemiCMS]", params, function( error, result ){
+    this.model.query("[dbo].[SP_SelMarcaSemiCMS]", params, function( error, result ){
 
         if( result.length > 0){
         }
@@ -38,7 +38,7 @@ marcasemi.prototype.get_marcasemibyid = function(req, res, next) {
         { name: 'idDirectorio', value: directorioId, type: self.model.types.INT }
     ];
 
-    this.model.query('[Catalogo].[SEL_DirectorioById_SP]', params, function (error, result) {
+    this.model.query('[dbo].[SEL_DirectorioById_SP]', params, function (error, result) {
 
         if (result.length > 0) {
         }
@@ -66,7 +66,7 @@ marcasemi.prototype.get_updateMarcasemi = function(req, res, next) {
         { name: 'pi_IdEmpresa', value: pi_IdEmpresa, type: self.model.types.INT }
     ];
 
-    this.model.query('[Catalogo].[SP_ActMarcaSemiCMS]', params, function (error, result) {
+    this.model.query('[dbo].[SP_ActMarcaSemiCMS]', params, function (error, result) {
 
         if (result.length > 0) {
         }
@@ -85,7 +85,7 @@ marcasemi.prototype.get_deleteMarcasemi = function(req, res, next) {
         { name: 'pi_id', value: pi_id, type: self.model.types.INT }
     ];
 
-    this.model.query('[Catalogo].[SP_ElimMarcaSemiCMS]', params, function (error, result) {
+    this.model.query('[dbo].[SP_ElimMarcaSemiCMS]', params, function (error, result) {
 
         if (result.length > 0) {
         }
@@ -111,7 +111,7 @@ marcasemi.prototype.post_insertMarcasemi = function(req, res, next) {
         { name: 'pi_IdEmpresa', value: pi_IdEmpresa, type: self.model.types.INT }
     ];
 
-    this.model.query('[Catalogo].[SP_InsMarcaSemiCMS]', params, function (error, result) {
+    this.model.query('[dbo].[SP_InsMarcaSemiCMS]', params, function (error, result) {
 
         if (result.length > 0) {
         }
