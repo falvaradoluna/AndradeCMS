@@ -47,7 +47,120 @@
 
                                                    <!-- M O D A L E S -->
 
-<!-- Actializacion del directorio -->
+<!-- Agregar directorio -->
+<ng-template #contentAdd let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title text-muted">Agregar directorio</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row div-space">
+            <div class="col">
+                <div class="form-group">
+                    <h6 for="exampleInputEmail1" class="text-muted">Nombre</h6>
+                    <input class="form-control" [(ngModel)]="directorioAdd.pv_Nombre" type="text" placeholder="Nombre">
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <h6 for="exampleInputEmail1" class="text-muted">Apellido paterno</h6>
+                    <input class="form-control" [(ngModel)]="directorioAdd.pv_ApellidoPaterno" type="text" placeholder="Apellido paterno">
+                </div>
+            </div>
+
+        </div>
+        <div class="row div-space">
+            <div class="col">
+                <div class="form-group">
+                    <h6 for="exampleInputEmail1" class="text-muted">Apellido materno</h6>
+                    <input class="form-control" [(ngModel)]="directorioAdd.pv_ApellidoMaterno" type="text" placeholder="Apellido paterno">
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <h6 for="exampleInputEmail1" class="text-muted">Correo</h6>
+                    <input class="form-control" [(ngModel)]="directorioAdd.pv_Correo" type="text" placeholder="Correo">
+                </div>
+            </div>
+        </div>
+        <div class="row div-space">
+            <div class="col">
+                <div class="form-group">
+                    <h6 for="exampleInputEmail1" class="text-muted">Telefono</h6>
+                    <input class="form-control" [(ngModel)]="directorioAdd.pv_TelefonoOf" type="text" placeholder="Telefono">
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <h6 for="exampleInputEmail1" class="text-muted">Celular</h6>
+                    <input class="form-control" [(ngModel)]="directorioAdd.pv_TelefonoCel" type="text" placeholder="Celular">
+                </div>
+            </div>
+        </div>
+        <div class="row div-space">
+            <div class="col">
+                <div class="form-group">
+                    <h6 for="exampleInputEmail1" class="text-muted">WhatsApp</h6>
+                    <input class="form-control" [(ngModel)]="directorioAdd.pv_WhatsApp" type="text" placeholder="WhatsApp">
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <h6 for="exampleInputEmail1" class="text-muted">Facebook</h6>
+                    <input class="form-control" [(ngModel)]="directorioAdd.pv_FaceBook" type="text" placeholder="Facebook">
+                </div>
+            </div>
+        </div>
+        <div class="row div-space">
+            <div class="col">
+                <div class="form-group">
+                    <h6 for="exampleInputEmail1" class="text-muted">Empresa</h6>
+                    <select class="form-control form-control-sm" name="SelectEmpresas" [(ngModel)]="directorioAdd.pi_idEmpresa"
+                    (ngModelChange)="onChangeEmpresa($event)">
+                        <option value="0">Seleccione una empresa</option>
+                        <option *ngFor="let empresa of empresas;" [value]="empresa.em_IdEmpresa"> {{ empresa.em_Descripcion }} </option>
+                    </select>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <h6 for="exampleInputEmail1" class="text-muted"> Sucursal </h6>
+                    <select class="form-control form-control-sm" name="SelectEmpresas" [(ngModel)]="directorioAdd.pi_IdSucursal" >
+                        <option value="0">Seleccione una sucursal</option>
+                        <option *ngFor="let sucursal of sucurcalById;" [value]="sucursal.su_IdSucursal"> {{ sucursal.su_NombreCto }} </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row div-space vcenter">
+            <div class="col">
+                <div class="form-group">
+                    <h6 for="exampleInputEmail1" class="text-muted">Puesto</h6>
+                    <select class="form-control form-control-sm" name="SelectEmpresas" [(ngModel)]="directorioAdd.pi_IdPuesto" 
+                    (ngModelChange)="onChangePuesto($event)">
+                        <option value="0">Seleccione un puesto</option>
+                        <option *ngFor="let puesto of puestos;" [value]="puesto.pu_IdPuesto"> {{ puesto.pu_Descripcion }} </option>
+                    </select>
+                </div>
+            </div>
+            <div class="col" *ngIf="showCheckBox == 1">
+                <div class="form-group">
+                    <div class="col">
+                        <h6 for="exampleInputEmail1" class="text-muted">
+                            <input [(ngModel)]="checkboxValue" (change)="changeMail()" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+                            <label class="checkbox-inline" for="myonoffswitch">Recibe Correo &nbsp;&nbsp;</label>
+                        </h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-success" (click)="addDirectorio();">Agregar</button>
+        <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
+    </div>
+</ng-template>
+
+    <!-- Actializacion del directorio -->
 <ng-template #contentUpdate let-c="close" let-d="dismiss">
     <div class="modal-header">
         <h4 class="modal-title text-muted">Modificar directorio</h4>
@@ -55,202 +168,107 @@
     <div class="modal-body">
         <div class="row div-space">
             <div class="col">
-                    <div class="form-group">
-                            <label for="exampleInputEmail1">Nombre</label>
-                            <input class="form-control" [(ngModel)]="directorioTemp.di_Nombre" type="text" placeholder="Nombre">
-                        </div>
-            </div>
-            <div class="col">
-                    <div class="form-group">
-                            <label for="exampleInputEmail1">Apellido paterno</label>
-                            <input class="form-control" [(ngModel)]="directorioTemp.di_ApellidoPaterno" type="text" placeholder="Apellido paterno">
-                        </div>
-            </div>
-            
-        </div>
-        <div class="row div-space">
-            <div class="col">
-                    <div class="form-group">
-                            <label for="exampleInputEmail1">Apellido materno</label>
-                            <input class="form-control" [(ngModel)]="directorioTemp.di_ApellidoMaterno" type="text" placeholder="Apellido paterno">
-                        </div>
-            </div>
-            <div class="col">
-                    <div class="form-group">
-                            <label for="exampleInputEmail1">Correo</label>
-                            <input class="form-control" [(ngModel)]="directorioTemp.di_Correo" type="text" placeholder="Correo">
-                        </div>
-            </div>
-        </div>
-        <div class="row div-space">
-            <div class="col">
-                    <div class="form-group">
-                            <label for="exampleInputEmail1">Telefono</label>
-                            <input class="form-control" [(ngModel)]="directorioTemp.di_TelefonoOf" type="text" placeholder="Telefono">
-                        </div>
-            </div>
-            <div class="col">
-                    <div class="form-group">
-                            <label for="exampleInputEmail1">Celular</label>
-                            <input class="form-control" [(ngModel)]="directorioTemp.di_TelefonoCel" type="text" placeholder="Celular">
-                        </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Nombre</label>
+                    <input class="form-control" [(ngModel)]="directorioTemp.di_Nombre" type="text" placeholder="Nombre">
                 </div>
-        </div>
-        <div class="row div-space">
-            <div class="col">
-                    <div class="form-group">
-                            <label for="exampleInputEmail1">WhatsApp</label>
-                            <input class="form-control" [(ngModel)]="directorioTemp.di_WhatsApp" type="text" placeholder="WhatsApp">
-                        </div>
             </div>
             <div class="col">
-                    <div class="form-group">
-                            <label for="exampleInputEmail1">Facebook</label>
-                            <input class="form-control" [(ngModel)]="directorioTemp.di_FaceBook" type="text" placeholder="Facebook">
-                        </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Apellido paterno</label>
+                    <input class="form-control" [(ngModel)]="directorioTemp.di_ApellidoPaterno" type="text" placeholder="Apellido paterno">
                 </div>
+            </div>
+
         </div>
         <div class="row div-space">
-                <div class="col">
-                        <div class="form-group">
-                                <label for="exampleInputEmail1">Empresa</label>
-                                <select class="form-control form-control-sm" name="SelectEmpresas" [(ngModel)]="directorioTemp.em_IdEmpresa">
-                                    <option value="0">Seleccione una empresa</option>
-                                    <option *ngFor = "let empresa of empresas;" [value]="empresa.em_IdEmpresa" > {{ empresa.em_Descripcion }} </option>
-                                </select>
-                            </div>
-                    </div>
-                    <div class="col">
-                            <div class="form-group">
-                                    <label for="exampleInputEmail1">Sucursal</label>
-                                    <select class="form-control form-control-sm" name="SelectEmpresas" [(ngModel)]="directorioTemp.su_IdSucursal">
-                                        <option value="0">Seleccione una sucursal</option>
-                                        <option *ngFor = "let sucursal of sucursales;" [value]="sucursal.su_IdSucursal" > {{ sucursal.su_NombreCto }} </option>
-                                    </select>
-                                </div>
-                        </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Apellido materno</label>
+                    <input class="form-control" [(ngModel)]="directorioTemp.di_ApellidoMaterno" type="text" placeholder="Apellido paterno">
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Correo</label>
+                    <input class="form-control" [(ngModel)]="directorioTemp.di_Correo" type="text" placeholder="Correo">
+                </div>
+            </div>
         </div>
         <div class="row div-space">
-                <div class="col">
-                        <div class="form-group">
-                                <label for="exampleInputEmail1">Puesto</label>
-                                <select class="form-control form-control-sm" name="SelectEmpresas" [(ngModel)]="directorioTemp.pu_IdPuesto">
-                                    <option value="0">Seleccione un puesto</option>
-                                    <option *ngFor = "let puesto of puestos;" [value]="puesto.pu_IdPuesto" > {{ puesto.pu_Descripcion }} </option>
-                                </select>
-                            </div>
-                    </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Telefono</label>
+                    <input class="form-control" [(ngModel)]="directorioTemp.di_TelefonoOf" type="text" placeholder="Telefono">
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Celular</label>
+                    <input class="form-control" [(ngModel)]="directorioTemp.di_TelefonoCel" type="text" placeholder="Celular">
+                </div>
+            </div>
+        </div>
+        <div class="row div-space">
+            <div class="col">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">WhatsApp</label>
+                    <input class="form-control" [(ngModel)]="directorioTemp.di_WhatsApp" type="text" placeholder="WhatsApp">
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Facebook</label>
+                    <input class="form-control" [(ngModel)]="directorioTemp.di_FaceBook" type="text" placeholder="Facebook">
+                </div>
+            </div>
+        </div>
+        <div class="row div-space">
+            <div class="col">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Empresa</label>
+                    <select class="form-control form-control-sm" name="SelectEmpresas" [(ngModel)]="directorioTemp.em_IdEmpresa"
+                        (ngModelChange)="onChangeEmpresaUp($event)">
+                        <option value="0">Seleccione una empresa</option>
+                        <option *ngFor="let empresa of empresas;" [value]="empresa.em_IdEmpresa"> {{ empresa.em_Descripcion }} </option>
+                    </select>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Sucursal</label>
+                    <select class="form-control form-control-sm" name="SelectEmpresas" [(ngModel)]="directorioTemp.su_IdSucursal">
+                        <option value="0">Seleccione una sucursal</option>
+                        <option *ngFor="let sucursal of sucurcalById;" [value]="sucursal.su_IdSucursal"> {{ sucursal.su_NombreCto }} </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row div-space vcenter">
+            <div class="col">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Puesto</label>
+                    <select class="form-control form-control-sm" name="SelectEmpresas" [(ngModel)]="directorioTemp.pu_IdPuesto"
+                    (ngModelChange)="onChangePuestoUp($event)">
+                        <option value="0">Seleccione un puesto</option>
+                        <option *ngFor="let puesto of puestos;" [value]="puesto.pu_IdPuesto"> {{ puesto.pu_Descripcion }} </option>
+                    </select>
+                </div>
+            </div>
+            <div class="col" *ngIf="showCheckBox == 1">
+                <div class="form-group">
                     <div class="col">
-                        
-                        </div>
+                        <h6 for="exampleInputEmail1" class="text-muted">
+                            <input [(ngModel)]="checkboxValue" (change)="changeMail()" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+                            <label class="checkbox-inline" for="myonoffswitch">Recibe Correo &nbsp;&nbsp;</label>
+                        </h6>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline-success" (click)="updateDirectorio(); c('Close click');">Actualizar</button>
+        <button type="button" class="btn btn-outline-success" (click)="updateDirectorio();">Actualizar</button>
         <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
     </div>
 </ng-template>
-
-<!-- Actializacion del directorio -->
-<ng-template #contentAdd let-c="close" let-d="dismiss">
-        <div class="modal-header">
-            <h4 class="modal-title text-muted">Agregar directorio</h4>
-        </div>
-        <div class="modal-body">
-            <div class="row div-space">
-                <div class="col">
-                        <div class="form-group">
-                                <label for="exampleInputEmail1">Nombre</label>
-                                <input class="form-control" [(ngModel)]="directorioAdd.pv_Nombre" type="text" placeholder="Nombre">
-                            </div>
-                </div>
-                <div class="col">
-                        <div class="form-group">
-                                <label for="exampleInputEmail1">Apellido paterno</label>
-                                <input class="form-control" [(ngModel)]="directorioAdd.pv_ApellidoPaterno" type="text" placeholder="Apellido paterno">
-                            </div>
-                </div>
-                
-            </div>
-            <div class="row div-space">
-                <div class="col">
-                        <div class="form-group">
-                                <label for="exampleInputEmail1">Apellido materno</label>
-                                <input class="form-control" [(ngModel)]="directorioAdd.pv_ApellidoMaterno" type="text" placeholder="Apellido paterno">
-                            </div>
-                </div>
-                <div class="col">
-                        <div class="form-group">
-                                <label for="exampleInputEmail1">Correo</label>
-                                <input class="form-control" [(ngModel)]="directorioAdd.pv_Correo" type="text" placeholder="Correo">
-                            </div>
-                </div>
-            </div>
-            <div class="row div-space">
-                <div class="col">
-                        <div class="form-group">
-                                <label for="exampleInputEmail1">Telefono</label>
-                                <input class="form-control" [(ngModel)]="directorioAdd.pv_TelefonoOf" type="text" placeholder="Telefono">
-                            </div>
-                </div>
-                <div class="col">
-                        <div class="form-group">
-                                <label for="exampleInputEmail1">Celular</label>
-                                <input class="form-control" [(ngModel)]="directorioAdd.pv_TelefonoCel" type="text" placeholder="Celular">
-                            </div>
-                    </div>
-            </div>
-            <div class="row div-space">
-                <div class="col">
-                        <div class="form-group">
-                                <label for="exampleInputEmail1">WhatsApp</label>
-                                <input class="form-control" [(ngModel)]="directorioAdd.pv_WhatsApp" type="text" placeholder="WhatsApp">
-                            </div>
-                </div>
-                <div class="col">
-                        <div class="form-group">
-                                <label for="exampleInputEmail1">Facebook</label>
-                                <input class="form-control" [(ngModel)]="directorioAdd.pv_FaceBook" type="text" placeholder="Facebook">
-                            </div>
-                    </div>
-            </div>
-            <div class="row div-space">
-                    <div class="col">
-                            <div class="form-group">
-                                    <label for="exampleInputEmail1">Empresa</label>
-                                    <select class="form-control form-control-sm" name="SelectEmpresas" [(ngModel)]="directorioAdd.pi_idEmpresa">
-                                        <option value="0">Seleccione una empresa</option>
-                                        <option *ngFor = "let empresa of empresas;" [value]="empresa.em_IdEmpresa" > {{ empresa.em_Descripcion }} </option>
-                                    </select>
-                                </div>
-                        </div>
-                        <div class="col">
-                                <div class="form-group">
-                                        <label for="exampleInputEmail1">Sucursal</label>
-                                        <select class="form-control form-control-sm" name="SelectEmpresas" [(ngModel)]="directorioAdd.pi_IdSucursal">
-                                            <option value="0">Seleccione una sucursal</option>
-                                            <option *ngFor = "let sucursal of sucursales;" [value]="sucursal.su_IdSucursal" > {{ sucursal.su_NombreCto }} </option>
-                                        </select>
-                                    </div>
-                            </div>
-            </div>
-            <div class="row div-space">
-                    <div class="col">
-                            <div class="form-group">
-                                    <label for="exampleInputEmail1">Puesto</label>
-                                    <select class="form-control form-control-sm" name="SelectEmpresas" [(ngModel)]="directorioAdd.pi_IdPuesto">
-                                        <option value="0">Seleccione un puesto</option>
-                                        <option *ngFor = "let puesto of puestos;" [value]="puesto.pu_IdPuesto" > {{ puesto.pu_Descripcion }} </option>
-                                    </select>
-                                </div>
-                        </div>
-                        <div class="col">
-                            
-                            </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-outline-success" (click)="addDirectorio(); c('Close click');">Agregar</button>
-            <button type="button" class="btn btn-outline-danger" (click)="c('Close click');">Close</button>
-        </div>
-    </ng-template>

@@ -1,4 +1,4 @@
 export interface IResponse {
-    success: number;
-    msg: string;
+    success:    number;
+    msg:        string;
 }

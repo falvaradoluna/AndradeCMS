@@ -69,6 +69,7 @@ export class DirectorioService {
         Params = Params.append('pv_FaceBook', parameters.di_FaceBook);
         Params = Params.append('pn_Orden', '1');
         Params = Params.append('pn_IdUsuario', idUsuario);
+        Params = Params.append('di_recibeCorreo', parameters.di_recibeCorreo);
 
         return this._http.get<IResponse[]>(this.url + 'updateDirectorio', { params: Params })
             .catch(this.handleError);
