@@ -142,7 +142,7 @@ export class PromocionesComponent implements OnInit {
             if(this.resParametros[1].pr_TipoParametro == "RUTASAVE"){
                 this.rutaSave = this.resParametros[1].pr_ValorString1;
             }
-            if(this.resParametros[2].pr_TipoParametro == "RUTAGET"){
+            if(this.resParametros[2].pr_TipoParametro == "RUTAGETLOC"){
                 this.rutaGet = this.resParametros[2].pr_ValorString1;
             }
             // console.log("PrefijoPA", this.prefijo);

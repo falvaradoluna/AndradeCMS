@@ -134,7 +134,7 @@ export class CatunidadComponent implements OnInit {
 
     ngOnInit() {
         this.getUnidades();
-        this.getSizeImg();
+        //this.getSizeImg();
     }
 
     getMessages(){
@@ -144,11 +144,11 @@ export class CatunidadComponent implements OnInit {
         // });
     }
 
-    getSizeImg(){
-        this._serviceUnidad.GetParametrosSize()
-        .subscribe( paramsSize => {
-            this.paramsSize = paramsSize;
-            console.log('paramsSize', this.paramsSize);
+    // getSizeImg(){
+    //     this._serviceUnidad.GetParametrosSize()
+    //     .subscribe( paramsSize => {
+    //         this.paramsSize = paramsSize;
+    //         console.log('paramsSize', this.paramsSize);
             // if( recurso == "ATRIBUTO" ){
             //     if( this.resParametros[0].pr_TipoParametro == "LIMIT" ){
             //         this.limitAtr = this.resParametros[0].pr_ValorString1;
@@ -173,15 +173,15 @@ export class CatunidadComponent implements OnInit {
             // console.log("PrefijoPA", this.prefijo);
             // console.log("RUTASAVEPA", this.rutaSave);
             // console.log("RUTAGETPA", this.rutaGet);
-        },
-        error => this.errorMessage = <any>error);
-    };
+    //     },
+    //     error => this.errorMessage = <any>error);
+    // };
 
     getParametros(recurso){
         this._serviceUnidad.GetParametros( { recurso: recurso } )
         .subscribe( resParametros => {
             this.resParametros = resParametros;
-            console.log(this.resParametros);
+            // console.log("resParametros", this.resParametros);
             if( recurso == "ATRIBUTO" ){
                 if( this.resParametros[0].pr_TipoParametro == "LIMIT" ){
                     this.limitAtr = this.resParametros[0].pr_ValorString1;
@@ -193,19 +193,19 @@ export class CatunidadComponent implements OnInit {
                 if(this.resParametros[1].pr_TipoParametro == "RUTASAVE"){
                     this.rutaSave = this.resParametros[1].pr_ValorString1;
                 }
-                if(this.resParametros[2].pr_TipoParametro == "RUTAGET"){
-                    this.rutaGet = this.resParametros[2].pr_ValorString1;
+                if(this.resParametros[2].pr_TipoParametro == "LIMIT"){
+                    this.limitImg = this.resParametros[2].pr_ValorString1;
                 }
-                if(this.resParametros[3].pr_TipoParametro == "LIMIT"){
-                    this.limitImg = this.resParametros[3].pr_ValorString1
+                if(this.resParametros[3].pr_TipoParametro == "RUTAGETLOC"){
+                    this.rutaGet = this.resParametros[3].pr_ValorString1
                 }
             }
             
-            console.log( "Atributo", this.limitAtr );
-            console.log("LIMITPA", this.limitImg);
-            console.log("PrefijoPA", this.prefijo);
-            console.log("RUTASAVEPA", this.rutaSave);
-            console.log("RUTAGETPA", this.rutaGet);
+            // console.log( "Atributo", this.limitAtr );
+            // console.log("LIMITPA", this.limitImg);
+            // console.log("PrefijoPA", this.prefijo);
+            // console.log("RUTASAVEPA", this.rutaSave);
+            // console.log("RUTAGETPA", this.rutaGet);
         },
         error => this.errorMessage = <any>error);
     };
@@ -239,7 +239,7 @@ export class CatunidadComponent implements OnInit {
         Params = Params.append("ci_IdCatUnidad", ci_IdCatUnidad);
         this._http.get(this._urlCountImagen, {params: Params}).subscribe((res: Response) => {
            this.countImagenes = res[0].TotalImages;
-           console.log("Res", res)
+           //console.log("Res", res)
            console.log("CountImg", this.countImagenes);
           });
     };
