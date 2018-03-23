@@ -58,6 +58,7 @@ export class CatunidadComponent implements OnInit {
     limitImg:   any;
     limitAtr:   any;
     atrLength:  any;
+    sizeMaxImg: any;
 
     //Formulario de la imagen
     formImg:    FormGroup;
@@ -127,11 +128,13 @@ export class CatunidadComponent implements OnInit {
     resFichas:      ICatFichas[] = [];
     resAtributos:   ICatAtributos[] = [];
     resParametros:  IParametros[] = [];
+    paramsSize:     IParametros[] = [];
     imagesUnidad:   any = [];
     fichasUnidad:   any = [];
 
     ngOnInit() {
         this.getUnidades();
+        this.getSizeImg();
     }
 
     getMessages(){
@@ -141,10 +144,44 @@ export class CatunidadComponent implements OnInit {
         // });
     }
 
+    getSizeImg(){
+        this._serviceUnidad.GetParametrosSize()
+        .subscribe( paramsSize => {
+            this.paramsSize = paramsSize;
+            console.log('paramsSize', this.paramsSize);
+            // if( recurso == "ATRIBUTO" ){
+            //     if( this.resParametros[0].pr_TipoParametro == "LIMIT" ){
+            //         this.limitAtr = this.resParametros[0].pr_ValorString1;
+            //     }
+            // }else{
+            //     if( this.resParametros[0].pr_TipoParametro == "PREFIJO" ){
+            //         this.prefijo = this.resParametros[0].pr_ValorString1;
+            //     }
+            //     if(this.resParametros[1].pr_TipoParametro == "RUTASAVE"){
+            //         this.rutaSave = this.resParametros[1].pr_ValorString1;
+            //     }
+            //     if(this.resParametros[2].pr_TipoParametro == "RUTAGET"){
+            //         this.rutaGet = this.resParametros[2].pr_ValorString1;
+            //     }
+            //     if(this.resParametros[3].pr_TipoParametro == "LIMIT"){
+            //         this.limitImg = this.resParametros[3].pr_ValorString1
+            //     }
+            // }
+            
+            // console.log( "Atributo", this.limitAtr );
+            // console.log("LIMITPA", this.limitImg);
+            // console.log("PrefijoPA", this.prefijo);
+            // console.log("RUTASAVEPA", this.rutaSave);
+            // console.log("RUTAGETPA", this.rutaGet);
+        },
+        error => this.errorMessage = <any>error);
+    };
+
     getParametros(recurso){
         this._serviceUnidad.GetParametros( { recurso: recurso } )
         .subscribe( resParametros => {
             this.resParametros = resParametros;
+            console.log(this.resParametros);
             if( recurso == "ATRIBUTO" ){
                 if( this.resParametros[0].pr_TipoParametro == "LIMIT" ){
                     this.limitAtr = this.resParametros[0].pr_ValorString1;
@@ -163,12 +200,12 @@ export class CatunidadComponent implements OnInit {
                     this.limitImg = this.resParametros[3].pr_ValorString1
                 }
             }
-
-            // console.log( "Atributo", this.limitAtr );
-            // console.log("LIMITPA", this.limitImg);
-            // console.log("PrefijoPA", this.prefijo);
-            // console.log("RUTASAVEPA", this.rutaSave);
-            // console.log("RUTAGETPA", this.rutaGet);
+            
+            console.log( "Atributo", this.limitAtr );
+            console.log("LIMITPA", this.limitImg);
+            console.log("PrefijoPA", this.prefijo);
+            console.log("RUTASAVEPA", this.rutaSave);
+            console.log("RUTAGETPA", this.rutaGet);
         },
         error => this.errorMessage = <any>error);
     };
@@ -210,36 +247,37 @@ export class CatunidadComponent implements OnInit {
     onFileChange($event) {
         let reader = new FileReader();
         let file = $event.target.files[0]; 
-        if( file.type != "image/jpeg" && file.type != "image/png" ){
-            swal({
-                type: 'error',
-                title: 'Oops...',
-                text: 'Seleccione una imagen JPG/PNG'
-              });
-            this.formImg.controls['RealImg'].setValue("");
-        }else{
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                this.formImg.controls['imageInput'].setValue({
-                    filename: file.name,
-                    filetype: file.type,
-                    value: reader.result.split(',')[1]
-                });
-            };
-            this.formImg.controls['imageInput'].setValue(file ? file : '');
-            this.formImg.controls['IdCatUnidad'].setValue(this.ci_IdCatUnidad);
-            if( file.type == "image/jpeg" ){
-                var str = file.name;
-                var ext = '.' + str.split('.').pop();
-                this.formImg.controls['tipoImg'].setValue(1);
-                this.formImg.controls["tipoImgtxtImg"].setValue(ext);
-            }else{
-                var str = file.name;
-                var ext = '.' + str.split('.').pop();
-                this.formImg.controls['tipoImg'].setValue(2);
-                this.formImg.controls["tipoImgtxtImg"].setValue(ext);
-            }
-        }   
+        console.log( "Imagen", file.size );
+        // if( file.type != "image/jpeg" && file.type != "image/png" ){
+        //     swal({
+        //         type: 'error',
+        //         title: 'Oops...',
+        //         text: 'Seleccione una imagen JPG/PNG'
+        //       });
+        //     this.formImg.controls['RealImg'].setValue("");
+        // }else{
+        //     reader.readAsDataURL(file);
+        //     reader.onload = () => {
+        //         this.formImg.controls['imageInput'].setValue({
+        //             filename: file.name,
+        //             filetype: file.type,
+        //             value: reader.result.split(',')[1]
+        //         });
+        //     };
+        //     this.formImg.controls['imageInput'].setValue(file ? file : '');
+        //     this.formImg.controls['IdCatUnidad'].setValue(this.ci_IdCatUnidad);
+        //     if( file.type == "image/jpeg" ){
+        //         var str = file.name;
+        //         var ext = '.' + str.split('.').pop();
+        //         this.formImg.controls['tipoImg'].setValue(1);
+        //         this.formImg.controls["tipoImgtxtImg"].setValue(ext);
+        //     }else{
+        //         var str = file.name;
+        //         var ext = '.' + str.split('.').pop();
+        //         this.formImg.controls['tipoImg'].setValue(2);
+        //         this.formImg.controls["tipoImgtxtImg"].setValue(ext);
+        //     }
+        // }   
     }
 
     saveImage() {

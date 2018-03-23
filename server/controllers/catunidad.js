@@ -33,6 +33,25 @@ catunidad.prototype.get_getparametros = function( req, res, next ){
     });
 };
 
+//api/catunidad/getparametrossize
+catunidad.prototype.get_getparametrossize = function( req, res, next ){
+    var self = this;
+    //var recurso = req.query.recurso;
+    // console.log("Query", req.query);
+    var params = [
+        //{ name: 'recurso', value: recurso, type: self.model.types.STRING }
+    ];
+
+    this.model.query("[dbo].[Parametros_GetParamsMaxSize_SP]", params, function( error, result ){
+        console.log(result);
+        console.log(error);
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 //api/catunidad/unidadesnuevas
 catunidad.prototype.get_unidadesnuevas = function( req, res, next ){
     var self = this;
