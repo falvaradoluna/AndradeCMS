@@ -8,6 +8,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedPipesModule,
          SortableTableModule } from '../shared';
 import { DataTablesModule } from 'angular-datatables';
+import { PromocionesService } from '../promociones/promociones.service';
 
 @NgModule({
     imports: [
@@ -23,7 +24,8 @@ import { DataTablesModule } from 'angular-datatables';
         DirectorioComponent
     ],
     providers: [
-        DirectorioService
+        DirectorioService,
+        PromocionesService
     ]
 })
 export class DirectorioModule { }

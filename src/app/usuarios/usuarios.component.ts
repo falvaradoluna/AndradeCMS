@@ -3,7 +3,7 @@ import { routerTransition } from '../router.animations';
 //import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { trigger,style,transition,animate,keyframes,query,stagger,group, state, animateChild } from '@angular/animations';
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, ModalDismissReasons, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {
     ReactiveFormsModule,
     FormsModule,
@@ -35,6 +35,8 @@ export class UsuariosComponent implements OnInit {
     public data: Object;
     public temp_var: Object = false;
     public resultadoPuestos: any;
+    private modalRef: NgbModalRef;
+	private closeResult: string;
 
     usu_id:   any;
     CorreoId: any
@@ -126,85 +128,134 @@ export class UsuariosComponent implements OnInit {
         });
     }
 
-    saveUsuario(){
-        // if(!this.validar_email(this.formInsUsu.value.TxtCorreo)){   
-        //     swal(
-        //         'Alto',
-        //         'Ingresa una cuenta de correo valida.',
-        //         'warning'
-        //     );
-        // }else if(!this.validar_pass(this.formInsUsu.value.TxtPass)){
-        //     swal(
-        //         'Alto',
-        //         'La contraseña debe contener minimo 8 caracteres, minúsculas, mayúsculas y 1 caracter "$ _ -" ',
-        //         'warning'
-        //     );
-        // }else{
-            let Params = new HttpParams();
-            Params = Params.append("usu_nombre",    this.formInsUsu.value.TxtNombre);
-            Params = Params.append("usu_apellidoP", this.formInsUsu.value.TxtApellidoP);
-            Params = Params.append("usu_apellidoM", this.formInsUsu.value.TxtApellidoM);
-            Params = Params.append("usu_puesto",    this.formInsUsu.value.SelectPuesto);
-            Params = Params.append("usu_empresa",   this.formInsUsu.value.SelectEmpresa);
-            Params = Params.append("usu_sucursal",  this.formInsUsu.value.SelectSucursal);
-            Params = Params.append("usu_correo",    this.formInsUsu.value.TxtCorreo);
-            Params = Params.append("usu_Pass",      this.formInsUsu.value.TxtPass);
-            console.log("Parametros", Params)
-            console.log("Formulario", this.formInsUsu);
-            this._http.get(this._urlInsertUsu, {params: Params}).subscribe((res: Response) => {
-                if( res[0].success == 1 ){
-                    swal(
-                        'Listo',
-                        res[0].msg,
-                        'success'
-                    );
-                }else{
-                    swal(
-                        'Error',
-                        res[0].msg,
-                        'error'
-                    );
-                }
-            });
-        //}
+    saveUsuario() {
+        swal({
+            title: 'Desea guardar el usuario?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Guardar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false,
+        }).then((result) => {
+            if (result.value) {
+                // if(!this.validar_email(this.formInsUsu.value.TxtCorreo)){   
+                //     swal(
+                //         'Alto',
+                //         'Ingresa una cuenta de correo valida.',
+                //         'warning'
+                //     );
+                // }else if(!this.validar_pass(this.formInsUsu.value.TxtPass)){
+                //     swal(
+                //         'Alto',
+                //         'La contraseña debe contener minimo 8 caracteres, minúsculas, mayúsculas y 1 caracter "$ _ -" ',
+                //         'warning'
+                //     );
+                // }else{
+                let Params = new HttpParams();
+                Params = Params.append("usu_nombre", this.formInsUsu.value.TxtNombre);
+                Params = Params.append("usu_apellidoP", this.formInsUsu.value.TxtApellidoP);
+                Params = Params.append("usu_apellidoM", this.formInsUsu.value.TxtApellidoM);
+                Params = Params.append("usu_puesto", this.formInsUsu.value.SelectPuesto);
+                Params = Params.append("usu_empresa", this.formInsUsu.value.SelectEmpresa);
+                Params = Params.append("usu_sucursal", this.formInsUsu.value.SelectSucursal);
+                Params = Params.append("usu_correo", this.formInsUsu.value.TxtCorreo);
+                Params = Params.append("usu_Pass", this.formInsUsu.value.TxtPass);
+                console.log("Parametros", Params)
+                console.log("FormularioInsert", this.formInsUsu);
+                this._http.get(this._urlInsertUsu, { params: Params }).subscribe((res: Response) => {
+                    if (res[0].success == 1) {
+                        swal(
+                            'Listo',
+                            res[0].msg,
+                            'success'
+                        );
+                        this.getUsuarios();
+                        setTimeout(() => {
+							this.modalRef.close();
+						}, 500);
+                    } else {
+                        swal(
+                            'Error',
+                            res[0].msg,
+                            'error'
+                        );
+                    }
+                });
+                //}
+            } else if (result.dismiss === 'cancel') {
+                swal(
+                    'Canelado',
+                    'No se guardo el usuario.',
+                    'error'
+                );
+            }
+        });
     }
 
-    updateUsuario(){
-        // if(!this.validar_email(this.formUpUsu.value.TxtCorreo)){   
-        //     swal(
-        //         'Alto',
-        //         'Ingresa una cuenta de correo valida.',
-        //         'warning'
-        //     );
-        // }else{
-            let Params = new HttpParams();
-            Params = Params.append("usu_nombre",    this.formUpUsu.value.TxtNombre);
-            Params = Params.append("usu_apellidoP", this.formUpUsu.value.TxtApellidoP);
-            Params = Params.append("usu_apellidoM", this.formUpUsu.value.TxtApellidoM);
-            Params = Params.append("usu_puesto",    this.formUpUsu.value.SelectPuesto);
-            Params = Params.append("usu_empresa",   this.formUpUsu.value.SelectEmpresa);
-            Params = Params.append("usu_sucursal",  this.formUpUsu.value.SelectSucursal);
-            Params = Params.append("usu_correo",    this.formUpUsu.value.TxtCorreo);
-            Params = Params.append("CorreoId",      this.CorreoId);
-            Params = Params.append("usu_id",        this.usu_id);
-            //console.log( this.formUpUsu.value );
-            this._http.get(this._urlUpdUsuario, {params: Params}).subscribe((res: Response) => {
-                if( res[0].success == 1 ){
-                    swal(
-                        'Listo',
-                        res[0].msg,
-                        'success'
-                    );
-                    this.getUsuarios();
-                }else{
-                    swal(
-                        'Error',
-                        res[0].msg,
-                        'error'
-                    );
-                }
-            });
-        //}
+    updateUsuario() {
+        swal({
+            title: 'Desea guardar el usuario?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Guardar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false,
+        }).then((result) => {
+            if (result.value) {
+                // if(!this.validar_email(this.formUpUsu.value.TxtCorreo)){   
+                //     swal(
+                //         'Alto',
+                //         'Ingresa una cuenta de correo valida.',
+                //         'warning'
+                //     );
+                // }else{
+                let Params = new HttpParams();
+                Params = Params.append("usu_nombre", this.formUpUsu.value.TxtNombre);
+                Params = Params.append("usu_apellidoP", this.formUpUsu.value.TxtApellidoP);
+                Params = Params.append("usu_apellidoM", this.formUpUsu.value.TxtApellidoM);
+                Params = Params.append("usu_puesto", this.formUpUsu.value.SelectPuesto);
+                Params = Params.append("usu_empresa", this.formUpUsu.value.SelectEmpresa);
+                Params = Params.append("usu_sucursal", this.formUpUsu.value.SelectSucursal);
+                Params = Params.append("usu_correo", this.formUpUsu.value.TxtCorreo);
+                Params = Params.append("CorreoId", this.CorreoId);
+                Params = Params.append("usu_id", this.usu_id);
+                //console.log( this.formUpUsu.value );
+                this._http.get(this._urlUpdUsuario, { params: Params }).subscribe((res: Response) => {
+                    if (res[0].success == 1) {
+                        swal(
+                            'Listo',
+                            res[0].msg,
+                            'success'
+                        );
+                        this.getUsuarios();
+                        setTimeout(() => {
+							this.modalRef.close();
+						}, 500);
+                    } else {
+                        swal(
+                            'Error',
+                            res[0].msg,
+                            'error'
+                        );
+                    }
+                });
+                //}
+            } else if (result.dismiss === 'cancel') {
+                swal(
+                    'Canelado',
+                    'No se guardo el usuario.',
+                    'error'
+                );
+            }
+        });
     };
 
     validar_email( email ){
@@ -256,9 +307,24 @@ export class UsuariosComponent implements OnInit {
 
     //========= MODAL INSERT TIPO UNIDAD ========//
     openInsUs(InserUser){
-        this.modalService.open( InserUser, { size: "lg" } );
+        this.modalRef = this.modalService.open( InserUser, { size: "lg" } );
+        this.modalRef.result.then((result) => {
+			this.closeResult = `Closed with: ${result}`;
+		}, (reason) => {
+			this.closeResult = `Dismissed ${this.getDismissReasonInsUs(reason)}`;
+		});
         this.getEmpresas();
         this.GetPuestos();
+        this.formInsUsu = this.fb.group({
+            "SelectPuesto":     0,
+            "SelectEmpresa":    0,
+            "SelectSucursal":   0,
+            "TxtPass":          '',
+            "TxtCorreo":        '',
+            "TxtNombre":        '',
+            "TxtApellidoM":     '',
+            "TxtApellidoP":     ''
+        });
     }
 
     private getDismissReasonInsUs(reason: any): string {
@@ -273,7 +339,12 @@ export class UsuariosComponent implements OnInit {
 
     //========= MODAL UPDATE TIPO UNIDAD ========//
     openUpUs(UpdateUser, usu_id, CorreoId){
-        this.modalService.open( UpdateUser, { size: "lg" } );
+        this.modalRef = this.modalService.open( UpdateUser, { size: "lg" } );
+        this.modalRef.result.then((result) => {
+			this.closeResult = `Closed with: ${result}`;
+		}, (reason) => {
+			this.closeResult = `Dismissed ${this.getDismissReasonInsUs(reason)}`;
+		});
         this.CorreoId   = CorreoId;
         this.usu_id     = usu_id
         let Params = new HttpParams();

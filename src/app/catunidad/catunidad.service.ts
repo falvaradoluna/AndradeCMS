@@ -17,6 +17,7 @@ export class CatunidadService {
 
     //Rutas para las peticiones a la api
     private _urlParametros      = "api/catunidad/getparametros";
+    private _urlSizeParametro   = "api/catunidad/getparametrossize";
     private _urlgetImg          = "api/catunidad/imgunidad";
     private _urlInsertImagen    = "api/catunidad/insertimagen";
     private _urlUpdateImagen    = "api/catunidad/updateimagen";
@@ -38,6 +39,15 @@ export class CatunidadService {
         Params = Params.append("recurso", parameters.recurso);
 
         return this._http.get<IParametros[]>(this._urlParametros, {params: Params})
+        .catch( this.handleError );
+    };
+
+    GetParametrosSize(): Observable<IParametros[]>{
+        
+        // let Params = new HttpParams();
+        // Params = Params.append("recurso", parameters.recurso);
+
+        return this._http.get<IParametros[]>(this._urlSizeParametro)
         .catch( this.handleError );
     };
 

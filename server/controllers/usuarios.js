@@ -76,16 +76,17 @@ usuarios.prototype.get_insertusuario = function( req, res, next ){
         { name: 'usu_Pass',         value: usu_Pass, type: self.model.types.STRING }
     ];
 
-    // this.model.query("Usu_InsUsuario_SP", params, function( error, result ){
-    //     // console.log( result );
-    //     if( result.length > 0){
-    //         //console.log( "Resultado: " + result );
-    //     }
-    //     self.view.expositor(res, {
-    //         error: error,
-    //         result: result
-    //     });
-    // });
+    this.model.query("Usu_InsUsuario_SP", params, function( error, result ){
+        console.log( 'result', result );
+        console.log( 'error', error );
+        if( result.length > 0){
+            //console.log( "Resultado: " + result );
+        }
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
 };
 
 //api/usuario/delete
