@@ -1,6 +1,7 @@
 module.exports = {
     login:          require('./controllers/login'),
     empresa:        require('./controllers/empresa'),
+    existenciaunidad: require('./controllers/existenciaunidad'),
     promociones:    require("./controllers/promociones"),
     directorio:     require("./controllers/directorio"),
     carline:        require("./controllers/carline"),
