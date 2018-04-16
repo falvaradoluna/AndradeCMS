@@ -22,7 +22,8 @@ existenciaunidad.prototype.get_existeUnidad = function( req, res, next ){
     var params = [
         {name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT},
         {name: 'idCatalogoUnidad', value: req.query.idCatalogoUnidad, type: self.model.types.INT},
-        {name: 'modelo', value: req.query.modelo, type: self.model.types.STRING}
+        {name: 'modelo', value: req.query.modelo, type: self.model.types.STRING},
+        {name: 'Sucursal', value: req.query.Sucursal, type: self.model.types.INT}
     ];
     
     
